@@ -2,7 +2,7 @@
 <%@include file="/WEB-INF/jsp/common/taglibs.jspf"%>
 <div class="lead header">
   <div class="pull-left">
-      <%--<img src="${ctx}/static/images/favicon.png"/>--%>
+  	<h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;智能社区服务管理系统</h2>
   </div>
 </div>
 
