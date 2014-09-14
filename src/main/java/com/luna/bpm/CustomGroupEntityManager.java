@@ -5,31 +5,35 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.mossle.api.org.OrgConnector;
-import com.mossle.api.org.OrgDTO;
-
 import org.activiti.engine.identity.Group;
 import org.activiti.engine.impl.persistence.entity.GroupEntity;
 import org.activiti.engine.impl.persistence.entity.GroupEntityManager;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.luna.sys.organization.entity.Organization;
+import com.luna.sys.organization.repository.OrganizationRepository;
+import com.luna.sys.user.entity.User;
+import com.luna.sys.user.entity.UserOrganizationJob;
+import com.luna.sys.user.repository.UserRepository;
 
 public class CustomGroupEntityManager extends GroupEntityManager {
     private static Logger logger = LoggerFactory
             .getLogger(CustomGroupEntityManager.class);
-    private OrgConnector orgConnector;
+    private UserRepository userRepository;
+    private OrganizationRepository orgRepository;
 
     @Override
     public List<Group> findGroupsByUser(String userId) {
         logger.debug("findGroupsByUser : {}", userId);
-
+        User user=userRepository.findOne(Long.parseLong(userId));
         List<Group> groups = new ArrayList<Group>();
 
-        for (OrgDTO orgDto : orgConnector.getOrgsByUserId(userId)) {
-            GroupEntity groupEntity = new GroupEntity(orgDto.getId());
-            groupEntity.setName(orgDto.getName());
-            groupEntity.setType(orgDto.getTypeName());
+        for (UserOrganizationJob orgjob : user.getOrganizationJobs()) {
+        	Organization org=orgRepository.getOne(orgjob.getOrganizationId());
+            GroupEntity groupEntity = new GroupEntity(String.valueOf(org.getId()));
+            groupEntity.setName(org.getName());
+            groupEntity.setType(org.getType().name());
             groups.add(groupEntity);
         }
 
@@ -37,7 +41,11 @@ public class CustomGroupEntityManager extends GroupEntityManager {
     }
 
     @Resource
-    public void setOrgConnector(OrgConnector orgConnector) {
-        this.orgConnector = orgConnector;
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+    @Resource
+    public void setOrganizationRepository(OrganizationRepository orgRepository) {
+        this.orgRepository = orgRepository;
     }
 }
