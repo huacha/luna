@@ -8,13 +8,11 @@ import org.activiti.bpmn.model.ActivitiListener;
 import org.activiti.bpmn.model.BaseElement;
 import org.activiti.bpmn.model.ImplementationType;
 import org.activiti.bpmn.model.UserTask;
-
 import org.activiti.engine.delegate.TaskListener;
 import org.activiti.engine.impl.bpmn.parser.BpmnParse;
 import org.activiti.engine.impl.bpmn.parser.handler.UserTaskParseHandler;
 import org.activiti.engine.impl.task.TaskDefinition;
 import org.activiti.engine.parse.BpmnParseHandler;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,9 +60,9 @@ public class ProxyUserTaskBpmnParseHandler implements BpmnParseHandler {
                         .createDelegateExpressionTaskListener(activitiListener));
     }
 
-    public Collection<Class<? extends BaseElement>> getHandledTypes() {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public Collection<Class<? extends BaseElement>> getHandledTypes() {
         List types = Collections.singletonList(UserTask.class);
-
         return types;
     }
 

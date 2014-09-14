@@ -15,10 +15,8 @@ import org.activiti.engine.impl.task.TaskDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CustomActivityBehaviorFactory extends
-        DefaultActivityBehaviorFactory {
-    private static Logger log = LoggerFactory
-            .getLogger(CustomUserTaskActivityBehavior.class);
+public class CustomActivityBehaviorFactory extends DefaultActivityBehaviorFactory {
+    private static Logger log = LoggerFactory.getLogger(CustomUserTaskActivityBehavior.class);
 
     // test
     public UserTaskActivityBehavior createUserTaskActivityBehavior(

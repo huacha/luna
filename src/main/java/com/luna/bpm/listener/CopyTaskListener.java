@@ -11,14 +11,17 @@ import org.activiti.engine.impl.el.ExpressionManager;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.luna.bpm.persistence.domain.BpmConfUser;
 import com.luna.bpm.persistence.manager.BpmConfUserManager;
 import com.luna.bpm.support.DefaultTaskListener;
 
 public class CopyTaskListener extends DefaultTaskListener {
-    public static final int TYPE_COPY = 3;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public static final int TYPE_COPY = 3;
     private static Logger logger = LoggerFactory
             .getLogger(CopyTaskListener.class);
     

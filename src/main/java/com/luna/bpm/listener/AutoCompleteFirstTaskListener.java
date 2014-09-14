@@ -1,24 +1,24 @@
 package com.luna.bpm.listener;
 
-import com.luna.bpm.cmd.CompleteTaskWithCommentCmd;
-import com.luna.bpm.support.DefaultTaskListener;
-
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.impl.context.Context;
 import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
-import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.impl.pvm.PvmActivity;
 import org.activiti.engine.impl.pvm.PvmTransition;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.stereotype.Component;
+import com.luna.bpm.cmd.CompleteTaskWithCommentCmd;
+import com.luna.bpm.support.DefaultTaskListener;
 
 public class AutoCompleteFirstTaskListener extends DefaultTaskListener {
-    private static Logger logger = LoggerFactory
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static Logger logger = LoggerFactory
             .getLogger(AutoCompleteFirstTaskListener.class);
 
     @Override

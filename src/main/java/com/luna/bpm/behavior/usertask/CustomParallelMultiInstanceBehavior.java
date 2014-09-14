@@ -11,7 +11,11 @@ import org.slf4j.LoggerFactory;
 
 public class CustomParallelMultiInstanceBehavior extends
         ParallelMultiInstanceBehavior {
-    private static Logger log = LoggerFactory
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static Logger log = LoggerFactory
             .getLogger(CustomParallelMultiInstanceBehavior.class);
 
     public CustomParallelMultiInstanceBehavior(ActivityImpl activity,

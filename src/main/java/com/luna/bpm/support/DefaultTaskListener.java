@@ -8,7 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DefaultTaskListener implements TaskListener {
-    private static Logger logger = LoggerFactory
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static Logger logger = LoggerFactory
             .getLogger(DefaultTaskListener.class);
 
     public void notify(DelegateTask delegateTask) {

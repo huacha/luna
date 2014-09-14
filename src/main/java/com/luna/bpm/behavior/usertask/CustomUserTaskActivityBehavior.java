@@ -13,8 +13,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class CustomUserTaskActivityBehavior extends UserTaskActivityBehavior {
-    private static Logger log = LoggerFactory
-            .getLogger(CustomUserTaskActivityBehavior.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static Logger log = LoggerFactory.getLogger(CustomUserTaskActivityBehavior.class);
     private JdbcTemplate jdbcTemplate; // 只是一个通过activiti引擎获取spring对象的例子
 
     public CustomUserTaskActivityBehavior(TaskDefinition taskDefinition) {

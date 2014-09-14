@@ -11,7 +11,11 @@ import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.impl.context.Context;
 
 public class DelegateTaskListener extends DefaultTaskListener {
-    private DelegateService delegateService;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private DelegateService delegateService;
 
     @Override
     public void onAssignment(DelegateTask delegateTask) throws Exception {
