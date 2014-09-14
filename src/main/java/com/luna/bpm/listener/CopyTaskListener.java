@@ -22,7 +22,6 @@ public class CopyTaskListener extends DefaultTaskListener {
     private static Logger logger = LoggerFactory
             .getLogger(CopyTaskListener.class);
     
-    @Autowired
     private BpmConfUserManager bpmConfUserManager;
 
     @Override
