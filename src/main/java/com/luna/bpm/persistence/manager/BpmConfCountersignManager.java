@@ -4,7 +4,6 @@ package com.luna.bpm.persistence.manager;
 
 import org.springframework.data.jpa.repository.Query;
 
-import com.luna.bpm.persistence.domain.BpmConfBase;
 import com.luna.bpm.persistence.domain.BpmConfCountersign;
 import com.luna.common.repository.BaseRepository;
 
