@@ -3,24 +3,18 @@ package com.luna.bpm.cmd;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.activiti.engine.delegate.Expression;
-import org.activiti.engine.impl.bpmn.parser.BpmnParse;
 import org.activiti.engine.impl.context.Context;
-import org.activiti.engine.impl.form.DefaultFormHandler;
 import org.activiti.engine.impl.interceptor.Command;
 import org.activiti.engine.impl.interceptor.CommandContext;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.PvmActivity;
 import org.activiti.engine.impl.pvm.PvmTransition;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
-import org.activiti.engine.impl.task.TaskDefinition;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class FindPreviousActivitiesCmd implements Command<List<PvmActivity>> {
-    private static Logger logger = LoggerFactory
-            .getLogger(FindPreviousActivitiesCmd.class);
+    private static Logger logger = LoggerFactory.getLogger(FindPreviousActivitiesCmd.class);
     private String processDefinitionId;
     private String activityId;
 
@@ -36,6 +30,7 @@ public class FindPreviousActivitiesCmd implements Command<List<PvmActivity>> {
                 .findDeployedProcessDefinitionById(processDefinitionId);
 
         if (processDefinitionEntity == null) {
+        	logger.error("cannot find processDefinition : {}",processDefinitionId);
             throw new IllegalArgumentException(
                     "cannot find processDefinition : " + processDefinitionId);
         }

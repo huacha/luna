@@ -12,7 +12,6 @@ import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.impl.pvm.delegate.ActivityExecution;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.impl.pvm.process.ProcessDefinitionImpl;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -138,7 +137,8 @@ public class CounterSignCmd implements Command<Object> {
     /**
      * <li>给串行实例集合中添加一个审批人
      */
-    private void addSequentialInstance() {
+    @SuppressWarnings("unchecked")
+	private void addSequentialInstance() {
         ExecutionEntity execution = getActivieExecutions().get(0);
 
         if (getActivity().getProperty("type").equals("subProcess")) {
@@ -150,8 +150,7 @@ public class CounterSignCmd implements Command<Object> {
             }
         }
 
-        Collection<String> col = (Collection<String>) execution
-                .getVariable(collectionVariableName);
+        Collection<String> col = (Collection<String>) execution.getVariable(collectionVariableName);
         col.add(assignee);
         execution.setVariable(collectionVariableName, col);
         setLoopVariable(execution, "nrOfInstances",
@@ -196,10 +195,10 @@ public class CounterSignCmd implements Command<Object> {
     /**
      * <li>冲串行列表中移除未完成的用户(当前执行的用户无法移除)
      */
-    private void removeSequentialInstance() {
+    @SuppressWarnings("unchecked")
+	private void removeSequentialInstance() {
         ExecutionEntity executionEntity = getActivieExecutions().get(0);
-        Collection<String> col = (Collection<String>) executionEntity
-                .getVariable(collectionVariableName);
+        Collection<String> col = (Collection<String>) executionEntity.getVariable(collectionVariableName);
         log.info("移除前审批列表 : {}", col.toString());
         col.remove(assignee);
         executionEntity.setVariable(collectionVariableName, col);
