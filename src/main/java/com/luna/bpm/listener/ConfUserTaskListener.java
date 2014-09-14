@@ -1,24 +1,18 @@
 package com.luna.bpm.listener;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.Resource;
-
-import com.luna.bpm.persistence.domain.BpmConfUser;
-import com.luna.bpm.persistence.manager.BpmConfUserManager;
-import com.luna.bpm.support.DefaultTaskListener;
 
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.impl.context.Context;
 import org.activiti.engine.impl.el.ExpressionManager;
-import org.activiti.engine.impl.persistence.entity.TaskEntity;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.luna.bpm.persistence.domain.BpmConfUser;
+import com.luna.bpm.persistence.manager.BpmConfUserManager;
+import com.luna.bpm.support.DefaultTaskListener;
 
 public class ConfUserTaskListener extends DefaultTaskListener {
     private static Logger logger = LoggerFactory
@@ -28,8 +22,7 @@ public class ConfUserTaskListener extends DefaultTaskListener {
     @Override
     public void onCreate(DelegateTask delegateTask) throws Exception {
         List<BpmConfUser> bpmConfUsers = bpmConfUserManager
-                .find("from BpmConfUser where bpmConfNode.bpmConfBase.processDefinitionId=? and bpmConfNode.code=?",
-                        delegateTask.getProcessDefinitionId(), delegateTask
+                .find(delegateTask.getProcessDefinitionId(), delegateTask
                                 .getExecution().getCurrentActivityId());
         logger.debug("{}", bpmConfUsers);
 
