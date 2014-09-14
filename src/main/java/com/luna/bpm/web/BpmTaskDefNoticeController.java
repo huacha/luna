@@ -64,12 +64,12 @@ public class BpmTaskDefNoticeController {
     public String input(@RequestParam(value = "id", required = false) Long id,
             Model model) {
         if (id != null) {
-            BpmTaskDefNotice bpmTaskDefNotice = bpmTaskDefNoticeManager.get(id);
+            BpmTaskDefNotice bpmTaskDefNotice = bpmTaskDefNoticeManager.getOne(id);
             model.addAttribute("model", bpmTaskDefNotice);
         }
 
         List<BpmMailTemplate> bpmMailTemplates = bpmMailTemplateManager
-                .getAll();
+                .findAll();
         model.addAttribute("bpmMailTemplates", bpmMailTemplates);
 
         return "bpm/bpm-task-def-notice-input";

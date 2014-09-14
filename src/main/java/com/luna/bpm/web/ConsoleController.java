@@ -2,17 +2,27 @@ package com.luna.bpm.web;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-
 import java.util.List;
 import java.util.Map;
-import java.util.Map;
-
-import javax.annotation.Resource;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.mossle.api.process.ProcessConnector;
+import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.impl.interceptor.Command;
+import org.activiti.engine.repository.Deployment;
+import org.activiti.engine.repository.ProcessDefinition;
+import org.apache.commons.io.IOUtils;
+import org.restlet.engine.io.IoUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.luna.bpm.Page;
 import com.luna.bpm.cmd.ChangeSubTaskCmd;
 import com.luna.bpm.cmd.JumpCmd;
 import com.luna.bpm.cmd.ListActivityCmd;
@@ -21,36 +31,7 @@ import com.luna.bpm.cmd.ProcessDefinitionDiagramCmd;
 import com.luna.bpm.cmd.ReOpenProcessCmd;
 import com.luna.bpm.cmd.SyncProcessCmd;
 import com.luna.bpm.cmd.UpdateProcessCmd;
-
-import com.mossle.core.page.Page;
-import com.mossle.core.util.IoUtils;
-
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricActivityInstance;
-import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.history.HistoricTaskInstance;
-import org.activiti.engine.impl.ServiceImpl;
-import org.activiti.engine.impl.interceptor.Command;
-import org.activiti.engine.repository.Deployment;
-import org.activiti.engine.repository.ProcessDefinition;
-import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.Task;
-
-import org.apache.commons.io.IOUtils;
-
-import org.springframework.stereotype.Controller;
-
-import org.springframework.ui.Model;
-
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.luna.bpm.component.ActivitiProcessConnector;
 
 /**
  * 管理控制台.
@@ -58,15 +39,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("bpm")
 public class ConsoleController {
+	@Autowired
     private ProcessEngine processEngine;
-    private ProcessConnector processConnector;
+    @Autowired
+    private ActivitiProcessConnector activitiProcessConnector;
 
     /**
      * 部署列表.
      */
     @RequestMapping("console-listDeployments")
     public String listDeployments(@ModelAttribute Page page, Model model) {
-        page = processConnector.findDeployments(page);
+        page = activitiProcessConnector.findDeployments(page);
         model.addAttribute("page", page);
 
         return "bpm/console-listDeployments";
@@ -136,7 +119,7 @@ public class ConsoleController {
      */
     @RequestMapping("console-listProcessDefinitions")
     public String listProcessDefinitions(@ModelAttribute Page page, Model model) {
-        page = processConnector.findProcessDefinitions(page);
+        page = activitiProcessConnector.findProcessDefinitions(page);
         model.addAttribute("page", page);
 
         return "bpm/console-listProcessDefinitions";
@@ -212,7 +195,7 @@ public class ConsoleController {
      */
     @RequestMapping("console-listProcessInstances")
     public String listProcessInstances(@ModelAttribute Page page, Model model) {
-        page = processConnector.findProcessInstances(page);
+        page = activitiProcessConnector.findProcessInstances(page);
         model.addAttribute("page", page);
 
         return "bpm/console-listProcessInstances";
@@ -260,7 +243,7 @@ public class ConsoleController {
      */
     @RequestMapping("console-listTasks")
     public String listTasks(@ModelAttribute Page page, Model model) {
-        page = processConnector.findTasks(page);
+        page = activitiProcessConnector.findTasks(page);
         model.addAttribute("page", page);
 
         return "bpm/console-listTasks";
@@ -273,7 +256,7 @@ public class ConsoleController {
     @RequestMapping("console-listHistoricProcessInstances")
     public String listHistoricProcessInstances(@ModelAttribute Page page,
             Model model) {
-        page = processConnector.findHistoricProcessInstances(page);
+        page = activitiProcessConnector.findHistoricProcessInstances(page);
 
         model.addAttribute("page", page);
 
@@ -286,7 +269,7 @@ public class ConsoleController {
     @RequestMapping("console-listHistoricActivityInstances")
     public String listHistoricActivityInstances(@ModelAttribute Page page,
             Model model) {
-        page = processConnector.findHistoricActivityInstances(page);
+        page = activitiProcessConnector.findHistoricActivityInstances(page);
         model.addAttribute("page", page);
 
         return "bpm/console-listHistoricActivityInstances";
@@ -297,7 +280,7 @@ public class ConsoleController {
      */
     @RequestMapping("console-listHistoricTasks")
     public String listHistoricTasks(@ModelAttribute Page page, Model model) {
-        page = processConnector.findHistoricTaskInstances(page);
+        page = activitiProcessConnector.findHistoricTaskInstances(page);
         model.addAttribute("page", page);
 
         return "bpm/console-listHistoricTasks";
@@ -346,7 +329,7 @@ public class ConsoleController {
         InputStream is = processEngine.getRepositoryService()
                 .getResourceAsStream(processDefinition.getDeploymentId(),
                         processDefinition.getResourceName());
-        String xml = IoUtils.readString(is);
+        String xml = IoUtils.toString(is);
 
         model.addAttribute("xml", xml);
 
@@ -437,14 +420,4 @@ public class ConsoleController {
         return "redirect:/bpm/console-listTasks.do";
     }
 
-    // ~ ======================================================================
-    @Resource
-    public void setProcessEngine(ProcessEngine processEngine) {
-        this.processEngine = processEngine;
-    }
-
-    @Resource
-    public void setProcessConnector(ProcessConnector processConnector) {
-        this.processConnector = processConnector;
-    }
 }

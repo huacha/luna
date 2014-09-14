@@ -1,66 +1,45 @@
 package com.luna.bpm.web;
 
 import java.io.InputStream;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.mossle.api.process.ProcessConnector;
-import com.mossle.api.user.UserConnector;
+import org.activiti.engine.FormService;
+import org.activiti.engine.HistoryService;
+import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.form.StartFormData;
+import org.activiti.engine.form.TaskFormData;
+import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricVariableInstance;
+import org.activiti.engine.impl.interceptor.Command;
+import org.activiti.engine.repository.ProcessDefinition;
+import org.apache.commons.io.IOUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.luna.bpm.Page;
 import com.luna.bpm.cmd.CounterSignCmd;
 import com.luna.bpm.cmd.DelegateTaskCmd;
 import com.luna.bpm.cmd.HistoryProcessInstanceDiagramCmd;
 import com.luna.bpm.cmd.ProcessDefinitionDiagramCmd;
 import com.luna.bpm.cmd.RollbackTaskCmd;
 import com.luna.bpm.cmd.WithdrawTaskCmd;
+import com.luna.bpm.component.ActivitiProcessConnector;
 import com.luna.bpm.persistence.domain.BpmCategory;
 import com.luna.bpm.persistence.domain.BpmProcess;
 import com.luna.bpm.persistence.manager.BpmCategoryManager;
 import com.luna.bpm.persistence.manager.BpmProcessManager;
-
-import com.mossle.core.page.Page;
-
-import com.mossle.security.util.SpringSecurityUtils;
-
-import org.activiti.engine.FormService;
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.IdentityService;
-import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.TaskService;
-import org.activiti.engine.form.FormProperty;
-import org.activiti.engine.form.StartFormData;
-import org.activiti.engine.form.TaskFormData;
-import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.history.HistoricTaskInstance;
-import org.activiti.engine.history.HistoricVariableInstance;
-import org.activiti.engine.impl.ServiceImpl;
-import org.activiti.engine.impl.cmd.GetDeploymentProcessDefinitionCmd;
-import org.activiti.engine.impl.interceptor.Command;
-import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
-import org.activiti.engine.repository.ProcessDefinition;
-import org.activiti.engine.task.DelegationState;
-import org.activiti.engine.task.Task;
-
-import org.apache.commons.io.IOUtils;
-
-import org.springframework.stereotype.Controller;
-
-import org.springframework.ui.Model;
-
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * 我的流程 待办流程 已办未结
@@ -68,16 +47,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("bpm")
 public class WorkspaceController {
+	@Autowired
     private BpmCategoryManager bpmCategoryManager;
+	@Autowired
     private BpmProcessManager bpmProcessManager;
+    @Autowired
     private ProcessEngine processEngine;
-    private UserConnector userConnector;
-    private ProcessConnector processConnector;
+    @Autowired
+    private ActivitiProcessConnector activitiProcessConnector;
 
     @RequestMapping("workspace-home")
     public String home(Model model) {
-        List<BpmCategory> bpmCategories = bpmCategoryManager.getAll("priority",
-                true);
+        List<BpmCategory> bpmCategories = bpmCategoryManager.findAll(new Sort(new String[]{"priority"}));
         model.addAttribute("bpmCategories", bpmCategories);
 
         return "bpm/workspace-home";
@@ -130,9 +111,9 @@ public class WorkspaceController {
     @RequestMapping("workspace-listRunningProcessInstances")
     public String listRunningProcessInstances(@ModelAttribute Page page,
             Model model) {
-        String userId = SpringSecurityUtils.getCurrentUserId();
+    	String userId = (String) SecurityUtils.getSubject().getPrincipal();//以当前用户名代替用户id
 
-        page = processConnector.findRunningProcessInstances(userId, page);
+        page = activitiProcessConnector.findRunningProcessInstances(userId, page);
         model.addAttribute("page", page);
 
         return "bpm/workspace-listRunningProcessInstances";
@@ -146,9 +127,8 @@ public class WorkspaceController {
     @RequestMapping("workspace-listCompletedProcessInstances")
     public String listCompletedProcessInstances(@ModelAttribute Page page,
             Model model) {
-        String userId = SpringSecurityUtils.getCurrentUserId();
-
-        page = processConnector.findCompletedProcessInstances(userId, page);
+    	String userId = (String) SecurityUtils.getSubject().getPrincipal();//以当前用户名代替用户id
+        page = activitiProcessConnector.findCompletedProcessInstances(userId, page);
         model.addAttribute("page", page);
 
         return "bpm/workspace-listCompletedProcessInstances";
@@ -163,8 +143,8 @@ public class WorkspaceController {
     public String listInvolvedProcessInstances(@ModelAttribute Page page,
             Model model) {
         // TODO: finished(), unfinished()
-        String userId = SpringSecurityUtils.getCurrentUserId();
-        page = processConnector.findInvolvedProcessInstances(userId, page);
+    	String userId = (String) SecurityUtils.getSubject().getPrincipal();//以当前用户名代替用户id
+    	page = activitiProcessConnector.findInvolvedProcessInstances(userId, page);
         model.addAttribute("page", page);
 
         return "bpm/workspace-listInvolvedProcessInstances";
@@ -201,8 +181,8 @@ public class WorkspaceController {
      */
     @RequestMapping("workspace-listPersonalTasks")
     public String listPersonalTasks(@ModelAttribute Page page, Model model) {
-        String userId = SpringSecurityUtils.getCurrentUserId();
-        page = processConnector.findPersonalTasks(userId, page);
+    	String userId = (String) SecurityUtils.getSubject().getPrincipal();//以当前用户名代替用户id
+    	page = activitiProcessConnector.findPersonalTasks(userId, page);
         model.addAttribute("page", page);
 
         return "bpm/workspace-listPersonalTasks";
@@ -215,8 +195,8 @@ public class WorkspaceController {
      */
     @RequestMapping("workspace-listGroupTasks")
     public String listGroupTasks(@ModelAttribute Page page, Model model) {
-        String userId = SpringSecurityUtils.getCurrentUserId();
-        page = processConnector.findGroupTasks(userId, page);
+    	String userId = (String) SecurityUtils.getSubject().getPrincipal();//以当前用户名代替用户id
+        page = activitiProcessConnector.findGroupTasks(userId, page);
         model.addAttribute("page", page);
 
         return "bpm/workspace-listGroupTasks";
@@ -229,8 +209,8 @@ public class WorkspaceController {
      */
     @RequestMapping("workspace-listHistoryTasks")
     public String listHistoryTasks(@ModelAttribute Page page, Model model) {
-        String userId = SpringSecurityUtils.getCurrentUserId();
-        page = processConnector.findHistoryTasks(userId, page);
+    	String userId = (String) SecurityUtils.getSubject().getPrincipal();//以当前用户名代替用户id
+        page = activitiProcessConnector.findHistoryTasks(userId, page);
         model.addAttribute("page", page);
 
         return "bpm/workspace-listHistoryTasks";
@@ -243,8 +223,8 @@ public class WorkspaceController {
      */
     @RequestMapping("workspace-listDelegatedTasks")
     public String listDelegatedTasks(@ModelAttribute Page page, Model model) {
-        String userId = SpringSecurityUtils.getCurrentUserId();
-        page = processConnector.findGroupTasks(userId, page);
+    	String userId = (String) SecurityUtils.getSubject().getPrincipal();//以当前用户名代替用户id
+        page = activitiProcessConnector.findGroupTasks(userId, page);
         model.addAttribute("page", page);
 
         return "bpm/workspace-listDelegatedTasks";
@@ -293,8 +273,7 @@ public class WorkspaceController {
      */
     @RequestMapping("workspace-claimTask")
     public String claimTask(@RequestParam("taskId") String taskId) {
-        String userId = SpringSecurityUtils.getCurrentUserId();
-
+    	String userId = (String) SecurityUtils.getSubject().getPrincipal();//以当前用户名代替用户id
         TaskService taskService = processEngine.getTaskService();
         taskService.claim(taskId, userId);
 
@@ -437,29 +416,4 @@ public class WorkspaceController {
         return "redirect:/bpm/workspace-listPersonalTasks.do";
     }
 
-    // ~ ======================================================================
-    @Resource
-    public void setBpmCategoryManager(BpmCategoryManager bpmCategoryManager) {
-        this.bpmCategoryManager = bpmCategoryManager;
-    }
-
-    @Resource
-    public void setBpmProcessManager(BpmProcessManager bpmProcessManager) {
-        this.bpmProcessManager = bpmProcessManager;
-    }
-
-    @Resource
-    public void setProcessEngine(ProcessEngine processEngine) {
-        this.processEngine = processEngine;
-    }
-
-    @Resource
-    public void setUserConnector(UserConnector userConnector) {
-        this.userConnector = userConnector;
-    }
-
-    @Resource
-    public void setProcessConnector(ProcessConnector processConnector) {
-        this.processConnector = processConnector;
-    }
 }
