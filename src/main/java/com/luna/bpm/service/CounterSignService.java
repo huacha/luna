@@ -10,6 +10,7 @@ import org.activiti.engine.runtime.Execution;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.luna.bpm.persistence.domain.BpmConfCountersign;
@@ -26,6 +27,8 @@ public class CounterSignService {
 	private RuntimeService runtimeService;
 	private TaskService taskService;
 	private HistoryService historyService;
+	
+	@Autowired
 	private BpmConfCountersignManager bpmConfCountersignManager;
 
 	public Boolean canComplete(Execution execution, Integer nrOfInstances,
