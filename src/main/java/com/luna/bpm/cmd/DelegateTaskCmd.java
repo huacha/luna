@@ -4,8 +4,6 @@ import org.activiti.engine.impl.context.Context;
 import org.activiti.engine.impl.interceptor.Command;
 import org.activiti.engine.impl.interceptor.CommandContext;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.luna.bpm.delegate.DelegateService;
 import com.luna.common.utils.SpringUtils;
@@ -14,8 +12,7 @@ import com.luna.common.utils.SpringUtils;
  * 委托任务.
  */
 public class DelegateTaskCmd implements Command<Void> {
-    private static Logger logger = LoggerFactory
-            .getLogger(DelegateTaskCmd.class);
+//    private static Logger logger = LoggerFactory.getLogger(DelegateTaskCmd.class);
     private String taskId;
     private String attorney;
 

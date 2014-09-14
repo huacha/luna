@@ -44,7 +44,6 @@ import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.impl.ServiceImpl;
 import org.activiti.engine.impl.cmd.GetDeploymentProcessDefinitionCmd;
-import org.activiti.engine.impl.cmd.GetDeploymentProcessDefinitionCmd;
 import org.activiti.engine.impl.interceptor.Command;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.repository.ProcessDefinition;
@@ -88,7 +87,7 @@ public class WorkspaceController {
     public void graphProcessDefinition(
             @RequestParam("bpmProcessId") Long bpmProcessId,
             HttpServletResponse response) throws Exception {
-        BpmProcess bpmProcess = bpmProcessManager.get(bpmProcessId);
+        BpmProcess bpmProcess = bpmProcessManager.getOne(bpmProcessId);
         String processDefinitionId = bpmProcess.getBpmConfBase()
                 .getProcessDefinitionId();
 
