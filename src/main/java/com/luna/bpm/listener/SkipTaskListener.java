@@ -3,8 +3,13 @@ package com.luna.bpm.listener;
 import java.util.Collections;
 import java.util.List;
 
-import com.mossle.api.org.OrgConnector;
-import com.mossle.api.user.UserConnector;
+import org.activiti.engine.delegate.DelegateTask;
+import org.activiti.engine.impl.context.Context;
+import org.activiti.engine.impl.el.ExpressionManager;
+import org.activiti.engine.impl.persistence.entity.HistoricProcessInstanceEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.luna.bpm.cmd.CompleteTaskWithCommentCmd;
 import com.luna.bpm.persistence.domain.BpmConfRule;
@@ -12,23 +17,11 @@ import com.luna.bpm.persistence.manager.BpmConfRuleManager;
 import com.luna.bpm.support.DefaultTaskListener;
 import com.luna.bpm.support.MapVariableScope;
 
-import com.mossle.core.spring.ApplicationContextHelper;
-
-import org.activiti.engine.delegate.DelegateTask;
-import org.activiti.engine.impl.context.Context;
-import org.activiti.engine.impl.el.ExpressionManager;
-import org.activiti.engine.impl.identity.Authentication;
-import org.activiti.engine.impl.persistence.entity.HistoricProcessInstanceEntity;
-import org.activiti.engine.impl.persistence.entity.TaskEntity;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Component;
-
 public class SkipTaskListener extends DefaultTaskListener {
     private static Logger logger = LoggerFactory
             .getLogger(SkipTaskListener.class);
+    @Autowired
+    BpmConfRuleManager bpmConfRuleManager;
 
     @Override
     public void onCreate(DelegateTask delegateTask) throws Exception {
@@ -39,10 +32,7 @@ public class SkipTaskListener extends DefaultTaskListener {
                 .getCommandContext().getHistoricProcessInstanceEntityManager()
                 .findHistoricProcessInstance(processInstanceId);
 
-        List<BpmConfRule> bpmConfRules = ApplicationContextHelper
-                .getBean(BpmConfRuleManager.class)
-                .find("from BpmConfRule where bpmConfNode.bpmConfBase.processDefinitionId=? and bpmConfNode.code=?",
-                        processDefinitionId, taskDefinitionKey);
+        List<BpmConfRule> bpmConfRules =bpmConfRuleManager.find(processDefinitionId, taskDefinitionKey);
         logger.debug("delegateTask.getId : {}", delegateTask.getId());
         logger.debug("taskDefinitionKey : {}", taskDefinitionKey);
         logger.debug("processDefinitionId : {}", processDefinitionId);
