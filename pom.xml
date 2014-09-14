@@ -260,7 +260,6 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<version>${spring.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -427,10 +426,15 @@
             <artifactId>yuicompressor</artifactId>
             <version>${yui.compressor.version}</version>
         </dependency>
-        
 
 
 
+
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+			<version>2.0.1</version>
+		</dependency>
 	</dependencies>
 
 
