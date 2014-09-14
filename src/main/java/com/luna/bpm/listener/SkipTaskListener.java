@@ -16,12 +16,19 @@ import com.luna.bpm.persistence.domain.BpmConfRule;
 import com.luna.bpm.persistence.manager.BpmConfRuleManager;
 import com.luna.bpm.support.DefaultTaskListener;
 import com.luna.bpm.support.MapVariableScope;
+import com.luna.sys.organization.repository.OrganizationRepository;
+import com.luna.sys.user.repository.UserRepository;
 
 public class SkipTaskListener extends DefaultTaskListener {
     private static Logger logger = LoggerFactory
             .getLogger(SkipTaskListener.class);
     @Autowired
     BpmConfRuleManager bpmConfRuleManager;
+
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private OrganizationRepository orgRepository;
 
     @Override
     public void onCreate(DelegateTask delegateTask) throws Exception {
@@ -39,38 +46,35 @@ public class SkipTaskListener extends DefaultTaskListener {
         logger.debug("processInstanceId : {}", processInstanceId);
         logger.debug("bpmConfRules : {}", bpmConfRules);
 
-        UserConnector userConnector = ApplicationContextHelper
-                .getBean(UserConnector.class);
-        OrgConnector orgConnector = (OrgConnector) ApplicationContextHelper
-                .getBean(OrgConnector.class);
         ExpressionManager expressionManager = Context
                 .getProcessEngineConfiguration().getExpressionManager();
         MapVariableScope mapVariableScope = new MapVariableScope();
         String initiator = historicProcessInstanceEntity.getStartUserId();
         mapVariableScope.setVariable("initiator",
-                userConnector.findById(initiator));
+        		userRepository.findOne(Long.parseLong(initiator)));
 
         for (BpmConfRule bpmConfRule : bpmConfRules) {
             String value = bpmConfRule.getValue();
 
             if ("职位".equals(value)) {
-                // 获得发起人的职位
-                int initiatorLevel = orgConnector
-                        .getJobLevelByUserId(initiator);
-
-                // 获得审批人的职位
-                int assigneeLevel = orgConnector
-                        .getJobLevelByUserId(delegateTask.getAssignee());
-
-                // 比较
-                if (initiatorLevel >= assigneeLevel) {
-                    logger.info("skip task : {}", delegateTask.getId());
-                    logger.info("initiatorLevel : {}, assigneeLevel : {}",
-                            initiatorLevel, assigneeLevel);
-                    new CompleteTaskWithCommentCmd(delegateTask.getId(),
-                            Collections.<String, Object> emptyMap(), "跳过")
-                            .execute(Context.getCommandContext());
-                }
+            	//TODO yanyong
+//                // 获得发起人的职位
+//            	int initiatorLevel = orgConnector
+//                        .getJobLevelByUserId(initiator);
+//
+//                // 获得审批人的职位
+//                int assigneeLevel = orgConnector
+//                        .getJobLevelByUserId(delegateTask.getAssignee());
+//
+//                // 比较
+//                if (initiatorLevel >= assigneeLevel) {
+//                    logger.info("skip task : {}", delegateTask.getId());
+//                    logger.info("initiatorLevel : {}, assigneeLevel : {}",
+//                            initiatorLevel, assigneeLevel);
+//                    new CompleteTaskWithCommentCmd(delegateTask.getId(),
+//                            Collections.<String, Object> emptyMap(), "跳过")
+//                            .execute(Context.getCommandContext());
+//                }
             } else {
                 Boolean result = (Boolean) expressionManager.createExpression(
                         value).getValue(mapVariableScope);

@@ -89,14 +89,14 @@ public abstract class BaseNotice {
 	}
 
 	public void sendMail(User user, String subject, String content) {
-		//TODO
+		//TODO yanyong
 //		MailFacade mailFacade = ApplicationContextHelper
 //				.getBean(MailFacade.class);
 //		mailFacade.sendMail(user.getEmail(), subject, content);
 	}
 
 	public void sendSiteMessage(User user, String subject, String content) {
-		//TODO
+		//TODO yanyong
 //		MsgConnector msgConnector = ApplicationContextHelper
 //				.getBean(MsgConnector.class);
 //		msgConnector.send(subject, content, String.valueOf(user.getId()), null);
