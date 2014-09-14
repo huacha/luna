@@ -25,7 +25,11 @@ import com.luna.bpm.support.DefaultTaskListener;
  * </p>
  */
 public class NoticeTaskListener extends DefaultTaskListener {
-    private ArrivalNotice arrivalNotice = new ArrivalNotice();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private ArrivalNotice arrivalNotice = new ArrivalNotice();
     private CompleteNotice completeNotice = new CompleteNotice();
 
     @Override

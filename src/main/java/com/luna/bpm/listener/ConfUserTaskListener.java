@@ -16,7 +16,12 @@ import com.luna.bpm.persistence.manager.BpmConfUserManager;
 import com.luna.bpm.support.DefaultTaskListener;
 
 public class ConfUserTaskListener extends DefaultTaskListener {
-    private static Logger logger = LoggerFactory
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private static Logger logger = LoggerFactory
             .getLogger(ConfUserTaskListener.class);
     
     @Autowired

@@ -8,23 +8,24 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.activiti.engine.delegate.DelegateTask;
+import org.activiti.engine.impl.context.Context;
+import org.activiti.engine.impl.el.ExpressionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import com.luna.bpm.expr.Expr;
 import com.luna.bpm.expr.ExprProcessor;
 import com.luna.bpm.support.DefaultTaskListener;
 
-import org.activiti.engine.delegate.DelegateTask;
-import org.activiti.engine.impl.context.Context;
-import org.activiti.engine.impl.el.ExpressionManager;
-import org.activiti.engine.impl.persistence.entity.TaskEntity;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.jdbc.core.JdbcTemplate;
-
 public class TaskConfTaskListener extends DefaultTaskListener implements
         ExprProcessor {
-    private static Logger logger = LoggerFactory
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static Logger logger = LoggerFactory
             .getLogger(TaskConfTaskListener.class);
     private JdbcTemplate jdbcTemplate;
 
@@ -67,7 +68,7 @@ public class TaskConfTaskListener extends DefaultTaskListener implements
     public List<String> process(List<String> left, List<String> right,
             String operation) {
         if ("||".equals(operation)) {
-            Set<String> set = new HashSet();
+            Set<String> set = new HashSet<String>();
             set.addAll(left);
             set.addAll(right);
 
