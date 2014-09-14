@@ -9,6 +9,7 @@ import org.activiti.engine.impl.context.Context;
 import org.activiti.engine.impl.el.ExpressionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.luna.bpm.persistence.domain.BpmConfUser;
 import com.luna.bpm.persistence.manager.BpmConfUserManager;
@@ -17,6 +18,8 @@ import com.luna.bpm.support.DefaultTaskListener;
 public class ConfUserTaskListener extends DefaultTaskListener {
     private static Logger logger = LoggerFactory
             .getLogger(ConfUserTaskListener.class);
+    
+    @Autowired
     private BpmConfUserManager bpmConfUserManager;
 
     @Override
