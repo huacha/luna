@@ -1,33 +1,24 @@
 package com.luna.bpm.web;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.table.TableModel;
 
-import com.luna.bpm.persistence.domain.BpmCategory;
-import com.luna.bpm.persistence.manager.BpmCategoryManager;
-
-import com.mossle.core.hibernate.PropertyFilter;
-import com.mossle.core.mapper.BeanMapper;
-import com.mossle.core.page.Page;
-import com.mossle.core.spring.MessageHelper;
-
-import com.mossle.ext.export.Exportor;
-import com.mossle.ext.export.TableModel;
-
+import org.hibernate.pretty.MessageHelper;
 import org.springframework.stereotype.Controller;
-
 import org.springframework.ui.Model;
-
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.luna.bpm.Page;
+import com.luna.bpm.persistence.domain.BpmCategory;
+import com.luna.bpm.persistence.manager.BpmCategoryManager;
+import com.luna.common.utils.BeanMapper;
 
 @Controller
 @RequestMapping("bpm")
@@ -38,10 +29,8 @@ public class BpmCategoryController {
     private BeanMapper beanMapper = new BeanMapper();
 
     @RequestMapping("bpm-category-list")
-    public String list(@ModelAttribute Page page,
-            @RequestParam Map<String, Object> parameterMap, Model model) {
-        List<PropertyFilter> propertyFilters = PropertyFilter
-                .buildFromMap(parameterMap);
+    public String list(@ModelAttribute Page page,@RequestParam Map<String, Object> parameterMap, Model model) {
+        List<PropertyFilter> propertyFilters = PropertyFilter.buildFromMap(parameterMap);
         page = bpmCategoryManager.pagedQuery(page, propertyFilters);
         model.addAttribute("page", page);
 
@@ -52,7 +41,7 @@ public class BpmCategoryController {
     public String input(@RequestParam(value = "id", required = false) Long id,
             Model model) {
         if (id != null) {
-            BpmCategory bpmCategory = bpmCategoryManager.get(id);
+            BpmCategory bpmCategory = bpmCategoryManager.findOne(id);
             model.addAttribute("model", bpmCategory);
         }
 
@@ -66,7 +55,7 @@ public class BpmCategoryController {
         Long id = bpmCategory.getId();
 
         if (id != null) {
-            dest = bpmCategoryManager.get(id);
+            dest = bpmCategoryManager.findOne(id);
             beanMapper.copy(bpmCategory, dest);
         } else {
             dest = bpmCategory;
@@ -83,8 +72,7 @@ public class BpmCategoryController {
     @RequestMapping("bpm-category-remove")
     public String remove(@RequestParam("selectedItem") List<Long> selectedItem,
             RedirectAttributes redirectAttributes) {
-        List<BpmCategory> bpmCategories = bpmCategoryManager
-                .findByIds(selectedItem);
+        List<BpmCategory> bpmCategories = bpmCategoryManager.findByIds(selectedItem);
         bpmCategoryManager.removeAll(bpmCategories);
 
         messageHelper.addFlashMessage(redirectAttributes,
@@ -97,8 +85,7 @@ public class BpmCategoryController {
     public void export(@ModelAttribute Page page,
             @RequestParam Map<String, Object> parameterMap,
             HttpServletResponse response) throws Exception {
-        List<PropertyFilter> propertyFilters = PropertyFilter
-                .buildFromMap(parameterMap);
+        List<PropertyFilter> propertyFilters = PropertyFilter.buildFromMap(parameterMap);
         page = bpmCategoryManager.pagedQuery(page, propertyFilters);
 
         List<BpmCategory> bpmCategories = (List<BpmCategory>) page.getResult();

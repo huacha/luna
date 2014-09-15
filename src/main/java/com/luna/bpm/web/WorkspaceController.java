@@ -3,7 +3,6 @@ package com.luna.bpm.web;
 import java.io.InputStream;
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import org.activiti.engine.FormService;
@@ -18,8 +17,6 @@ import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.impl.interceptor.Command;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.apache.commons.io.IOUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
@@ -40,6 +37,8 @@ import com.luna.bpm.persistence.domain.BpmCategory;
 import com.luna.bpm.persistence.domain.BpmProcess;
 import com.luna.bpm.persistence.manager.BpmCategoryManager;
 import com.luna.bpm.persistence.manager.BpmProcessManager;
+import com.luna.sys.user.entity.User;
+import com.luna.sys.user.web.bind.annotation.CurrentUser;
 
 /**
  * 我的流程 待办流程 已办未结
@@ -109,9 +108,11 @@ public class WorkspaceController {
     }
 
     @RequestMapping("workspace-listRunningProcessInstances")
-    public String listRunningProcessInstances(@ModelAttribute Page page,
+    public String listRunningProcessInstances(@CurrentUser User user,@ModelAttribute Page page,
             Model model) {
-    	String userId = (String) SecurityUtils.getSubject().getPrincipal();//以当前用户名代替用户id
+    	
+    	//使用自定义的注解@CurrentUser，可以获取到当前用户！
+    	String userId = user.getId().toString();
 
         page = activitiProcessConnector.findRunningProcessInstances(userId, page);
         model.addAttribute("page", page);
@@ -125,9 +126,9 @@ public class WorkspaceController {
      * @return
      */
     @RequestMapping("workspace-listCompletedProcessInstances")
-    public String listCompletedProcessInstances(@ModelAttribute Page page,
+    public String listCompletedProcessInstances(@CurrentUser User user,@ModelAttribute Page page,
             Model model) {
-    	String userId = (String) SecurityUtils.getSubject().getPrincipal();//以当前用户名代替用户id
+    	String userId = user.getId().toString();
         page = activitiProcessConnector.findCompletedProcessInstances(userId, page);
         model.addAttribute("page", page);
 
@@ -140,10 +141,10 @@ public class WorkspaceController {
      * @return
      */
     @RequestMapping("workspace-listInvolvedProcessInstances")
-    public String listInvolvedProcessInstances(@ModelAttribute Page page,
+    public String listInvolvedProcessInstances(@CurrentUser User user,@ModelAttribute Page page,
             Model model) {
         // TODO: finished(), unfinished()
-    	String userId = (String) SecurityUtils.getSubject().getPrincipal();//以当前用户名代替用户id
+    	String userId = user.getId().toString();
     	page = activitiProcessConnector.findInvolvedProcessInstances(userId, page);
         model.addAttribute("page", page);
 
@@ -180,8 +181,8 @@ public class WorkspaceController {
      * @return
      */
     @RequestMapping("workspace-listPersonalTasks")
-    public String listPersonalTasks(@ModelAttribute Page page, Model model) {
-    	String userId = (String) SecurityUtils.getSubject().getPrincipal();//以当前用户名代替用户id
+    public String listPersonalTasks(@CurrentUser User user,@ModelAttribute Page page, Model model) {
+    	String userId = user.getId().toString();
     	page = activitiProcessConnector.findPersonalTasks(userId, page);
         model.addAttribute("page", page);
 
@@ -194,8 +195,8 @@ public class WorkspaceController {
      * @return
      */
     @RequestMapping("workspace-listGroupTasks")
-    public String listGroupTasks(@ModelAttribute Page page, Model model) {
-    	String userId = (String) SecurityUtils.getSubject().getPrincipal();//以当前用户名代替用户id
+    public String listGroupTasks(@CurrentUser User user,@ModelAttribute Page page, Model model) {
+    	String userId = user.getId().toString();
         page = activitiProcessConnector.findGroupTasks(userId, page);
         model.addAttribute("page", page);
 
@@ -208,8 +209,8 @@ public class WorkspaceController {
      * @return
      */
     @RequestMapping("workspace-listHistoryTasks")
-    public String listHistoryTasks(@ModelAttribute Page page, Model model) {
-    	String userId = (String) SecurityUtils.getSubject().getPrincipal();//以当前用户名代替用户id
+    public String listHistoryTasks(@CurrentUser User user,@ModelAttribute Page page, Model model) {
+    	String userId = user.getId().toString();
         page = activitiProcessConnector.findHistoryTasks(userId, page);
         model.addAttribute("page", page);
 
@@ -222,8 +223,8 @@ public class WorkspaceController {
      * @return
      */
     @RequestMapping("workspace-listDelegatedTasks")
-    public String listDelegatedTasks(@ModelAttribute Page page, Model model) {
-    	String userId = (String) SecurityUtils.getSubject().getPrincipal();//以当前用户名代替用户id
+    public String listDelegatedTasks(@CurrentUser User user,@ModelAttribute Page page, Model model) {
+    	String userId = user.getId().toString();
         page = activitiProcessConnector.findGroupTasks(userId, page);
         model.addAttribute("page", page);
 
@@ -272,8 +273,8 @@ public class WorkspaceController {
      * @return
      */
     @RequestMapping("workspace-claimTask")
-    public String claimTask(@RequestParam("taskId") String taskId) {
-    	String userId = (String) SecurityUtils.getSubject().getPrincipal();//以当前用户名代替用户id
+    public String claimTask(@CurrentUser User user,@RequestParam("taskId") String taskId) {
+    	String userId = user.getId().toString();
         TaskService taskService = processEngine.getTaskService();
         taskService.claim(taskId, userId);
 

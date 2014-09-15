@@ -28,9 +28,6 @@ public class SuperiorAssigneeRule implements AssigneeRule {
      */
     public String process(String initiator) {
     	
-    	//TODO 由于shiro的API中只能取到用户名，而不是用户id,所以用下面的代码代替了用户id传给了流程引擎。需要特别注意！！！
-    	//TODO String userId = (String) SecurityUtils.getSubject().getPrincipal();//以当前用户名代替用户id
-    	
     	//TODO 需要知道他到底获取的是什么。是机构id还是用户id？？？
         return orgConnector.getSuperiorId(initiator);
     }
