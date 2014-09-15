@@ -6,8 +6,6 @@ import java.util.List;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.apache.shiro.SecurityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
@@ -20,11 +18,13 @@ import com.luna.bpm.process.entity.BpmDelegateInfo;
 import com.luna.bpm.process.repository.BpmDelegateHistoryManager;
 import com.luna.bpm.process.repository.BpmDelegateInfoManager;
 import com.luna.bpm.process.service.DelegateService;
+import com.luna.sys.user.entity.User;
+import com.luna.sys.user.web.bind.annotation.CurrentUser;
 
 @Controller
 @RequestMapping("bpm")
 public class DelegateController {
-	private static Logger logger = LoggerFactory.getLogger(DelegateController.class);
+//	private static Logger logger = LoggerFactory.getLogger(DelegateController.class);
 	@Autowired
 	private ProcessEngine processEngine;
 	@Autowired
@@ -35,8 +35,6 @@ public class DelegateController {
 	private BpmDelegateInfoManager bpmDelegateInfoManager;
 	@Autowired
 	private BpmDelegateHistoryManager bpmDelegateHistoryManager;
-	@Autowired
-	private UserConnector userConnector;
 
 	/**
 	 * 自动委托列表 TODO 可以指定多个自动委托人？
@@ -87,11 +85,12 @@ public class DelegateController {
 	 */
 	@RequestMapping("delegate-autoDelegate")
 	public String autoDelegate(
+			@CurrentUser User user,
 			@RequestParam(value = "startTime", required = false) Date startTime,
 			@RequestParam(value = "endTime", required = false) Date endTime,
 			@RequestParam("processDefinitionId") String processDefinitionId,
 			@RequestParam("attorney") String attorney) throws Exception {
-		String userId = (String) SecurityUtils.getSubject().getPrincipal();// 以当前用户名代替用户id
+		String userId = user.getId().toString();
 
 		if ((processDefinitionId != null)
 				&& "".equals(processDefinitionId.trim())) {

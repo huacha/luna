@@ -21,10 +21,11 @@ import com.luna.bpm.category.repository.BpmCategoryManager;
 import com.luna.common.utils.BeanMapper;
 import com.luna.common.utils.export.Exportor;
 import com.luna.common.utils.export.TableModel;
+import com.luna.common.web.controller.BaseCRUDController;
 
 @Controller
 @RequestMapping("bpm")
-public class BpmCategoryController {
+public class BpmCategoryController extends BaseCRUDController<BpmCategory, Long>{
     private BpmCategoryManager bpmCategoryManager;
     private MessageHelper messageHelper;
     private Exportor exportor;

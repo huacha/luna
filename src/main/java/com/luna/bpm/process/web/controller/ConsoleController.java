@@ -290,7 +290,8 @@ public class ConsoleController {
     /**
      * 自由流执行之前，选择跳转到哪个节点.
      */
-    @RequestMapping("console-prepareJump")
+    @SuppressWarnings("rawtypes")
+	@RequestMapping("console-prepareJump")
     public String prepareJump(@RequestParam("executionId") String executionId,
             Model model) {
         Command<Map<String, String>> cmd = new ListActivityCmd(executionId);

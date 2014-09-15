@@ -33,6 +33,7 @@ import com.luna.common.web.controller.permission.PermissionList;
  * <p>Date: 13-2-23 下午1:20
  * <p>Version: 1.0
  */
+@SuppressWarnings("rawtypes")
 public abstract class BaseCRUDController<M extends AbstractEntity, ID extends Serializable>
         extends BaseController<M, ID> {
 

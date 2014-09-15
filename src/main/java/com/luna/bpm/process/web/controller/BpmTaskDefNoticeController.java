@@ -22,6 +22,7 @@ import com.luna.bpm.process.entity.BpmTaskDefNotice;
 import com.luna.bpm.process.repository.BpmMailTemplateManager;
 import com.luna.bpm.process.repository.BpmProcessManager;
 import com.luna.bpm.process.repository.BpmTaskDefNoticeManager;
+import com.luna.common.Constants;
 import com.luna.common.utils.BeanMapper;
 import com.luna.common.utils.export.Exportor;
 import com.luna.common.utils.export.TableModel;
@@ -81,8 +82,7 @@ public class BpmTaskDefNoticeController {
         dest.setBpmMailTemplate(bpmMailTemplateManager.findOne(bpmMailTemplateId));
         bpmTaskDefNoticeManager.save(dest);
 
-        messageHelper.addFlashMessage(redirectAttributes, "core.success.save",
-                "保存成功");
+        redirectAttributes.addFlashAttribute(Constants.MESSAGE,"保存成功");
 
         return "redirect:/bpm/bpm-task-def-notice-list.do?bpmProcessId="
                 + bpmProcessId;
@@ -94,9 +94,8 @@ public class BpmTaskDefNoticeController {
             RedirectAttributes redirectAttributes) {
         List<BpmTaskDefNotice> bpmCategories = bpmTaskDefNoticeManager
                 .findByIds(selectedItem);
-        bpmTaskDefNoticeManager.removeAll(bpmCategories);
-        messageHelper.addFlashMessage(redirectAttributes,
-                "core.success.delete", "删除成功");
+        bpmTaskDefNoticeManager.delete(bpmCategories);
+        redirectAttributes.addFlashAttribute(Constants.MESSAGE,"删除成功");
 
         return "redirect:/bpm/bpm-task-def-notice-list.do?bpmProcessId="
                 + bpmProcessId;

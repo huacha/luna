@@ -17,6 +17,7 @@ import com.luna.common.plugin.web.controller.entity.ZTree;
 import com.luna.common.web.bind.annotation.PageableDefaults;
 import com.luna.common.web.controller.BaseController;
 import com.luna.common.web.controller.permission.PermissionList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -526,7 +528,8 @@ public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable
         return super.redirectToUrl(viewName("success"));
     }
 
-    private List<ZTree<ID>> convertToZtreeList(String contextPath, List<M> models, boolean async, boolean onlySelectLeaf) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	private List<ZTree<ID>> convertToZtreeList(String contextPath, List<M> models, boolean async, boolean onlySelectLeaf) {
         List<ZTree<ID>> zTrees = Lists.newArrayList();
 
         if (models == null || models.isEmpty()) {
@@ -540,7 +543,8 @@ public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable
         return zTrees;
     }
 
-    private ZTree convertToZtree(M m, boolean open, boolean onlyCheckLeaf) {
+    @SuppressWarnings("rawtypes")
+	private ZTree convertToZtree(M m, boolean open, boolean onlyCheckLeaf) {
         ZTree<ID> zTree = new ZTree<ID>();
         zTree.setId(m.getId());
         zTree.setpId(m.getParentId());

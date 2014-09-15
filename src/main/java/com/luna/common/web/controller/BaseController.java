@@ -23,6 +23,7 @@ import com.luna.common.utils.ReflectUtils;
  * <p>Date: 13-2-23 下午3:56
  * <p>Version: 1.0
  */
+@SuppressWarnings("rawtypes")
 public abstract class BaseController<M extends AbstractEntity, ID extends Serializable> {
 
     /**

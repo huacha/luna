@@ -5,6 +5,14 @@
  */
 package com.luna.common.plugin.web.controller;
 
+import java.io.Serializable;
+
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.luna.common.entity.BaseEntity;
 import com.luna.common.entity.search.Searchable;
 import com.luna.common.plugin.entity.Movable;
@@ -13,20 +21,13 @@ import com.luna.common.utils.MessageUtils;
 import com.luna.common.web.bind.annotation.PageableDefaults;
 import com.luna.common.web.controller.BaseCRUDController;
 import com.luna.common.web.validate.AjaxResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.io.Serializable;
 
 /**
  * 
  * <p>Date: 13-2-22 下午4:15
  * <p>Version: 1.0
  */
+@SuppressWarnings("rawtypes")
 public abstract class BaseMovableController<M extends BaseEntity & Movable, ID extends Serializable>
         extends BaseCRUDController<M, ID> {
 
