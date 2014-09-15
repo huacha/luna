@@ -15,7 +15,7 @@
 		<!-- 添加的自定义监听器 -->
  		<property name="customDefaultBpmnParseHandlers">
     	 	<list>
-				<bean class="com.luna.bpm.listener.ProxyUserTaskBpmnParseHandler">
+				<bean class="com.luna.bpm.process.listener.ProxyUserTaskBpmnParseHandler">
 					<property name="taskListenerId" value="customTaskListener"/>
 					<property name="useDefaultUserTaskParser" value="true"/>
 				</bean>
@@ -23,19 +23,17 @@
 		</property>
  		<property name="postBpmnParseHandlers">
     	 	<list>
-				<bean class="com.luna.bpm.listener.ProxyUserTaskBpmnParseHandler">
+				<bean class="com.luna.bpm.process.listener.ProxyUserTaskBpmnParseHandler">
 					<property name="taskListenerId" value="postTaskListener"/>
 				</bean>
     	 	</list>
 		</property>
 
 		<property name="bpmnParser">
-			<bean class="com.luna.bpm.parser.CustomBpmnParser" />
+			<bean class="com.luna.bpm.process.CustomBpmnParser" />
 		</property>
 
 		<property name="transactionManager" ref="transactionManager"/>
-		<!-- (databaseType 不用修改,即使连接其他类型数据库)  act引擎会自动替换成相应的type,这里加上是因为act不识别hsqldb类型,故直接映射成H2-->
-		<property name="databaseType" value="${application.database.type}"/>
 
 		<!-- 生成流程图的字体 -->
         <property name="activityFontName" value="宋体"/>
@@ -44,7 +42,7 @@
 		<!-- 组织机构适配 -->
         <property name="customSessionFactories">
 			<list>
-				<bean class="com.luna.bpm.CustomGroupEntityManagerFactory" >
+				<bean class="com.luna.bpm.process.CustomGroupEntityManagerFactory" >
 					<property name="groupEntityManager">
 						<bean class="com.luna.bpm.CustomGroupEntityManager"/>
                     </property>
@@ -73,8 +71,8 @@
     <bean id="managementService" factory-bean="processEngine" factory-method="getManagementService"/>
 
 	<!-- 自动部署 -->
-	<bean id="autoDeployer" class="com.luna.bpm.support.AutoDeployer" depends-on="applicationContextHelper">
-		<property name="enable" value="${bpm.auto.deploy}"/>
+	<bean id="autoDeployer" class="com.luna.bpm.process.AutoDeployer">
+		<property name="enable" value="true"/>
 		<property name="processEngine" ref="processEngine"/>
         <property name="deploymentResources">
             <list>
@@ -84,25 +82,25 @@
 	</bean>
 
 	<!-- 在记录history之前执行的TaskListener -->
-	<bean id="customTaskListener" class="com.luna.bpm.listener.ProxyTaskListener">
+	<bean id="customTaskListener" class="com.luna.bpm.process.listener.ProxyTaskListener">
 		<property name="taskListeners">
 			<list>
-				<bean class="com.luna.bpm.listener.ConfUserTaskListener"/>
-				<bean class="com.luna.bpm.listener.TaskConfTaskListener"/>
-				<bean class="com.luna.bpm.listener.AssigneeAliasTaskListener"/>
-				<bean class="com.luna.bpm.listener.DelegateTaskListener"/>
-				<bean class="com.luna.bpm.listener.CopyTaskListener"/>
+				<bean class="com.luna.bpm.process.listener.ConfUserTaskListener"/>
+				<bean class="com.luna.bpm.process.listener.TaskConfTaskListener"/>
+				<bean class="com.luna.bpm.process.listener.AssigneeAliasTaskListener"/>
+				<bean class="com.luna.bpm.process.listener.DelegateTaskListener"/>
+				<bean class="com.luna.bpm.process.listener.CopyTaskListener"/>
 			</list>
 		</property>
 	</bean>
 
 	<!-- 在记录history之后执行的TaskListener -->
-	<bean id="postTaskListener" class="com.luna.bpm.listener.ProxyTaskListener">
+	<bean id="postTaskListener" class="com.luna.bpm.process.listener.ProxyTaskListener">
 		<property name="taskListeners">
 			<list>
-				<bean class="com.luna.bpm.listener.AutoCompleteFirstTaskListener"/>
-				<bean class="com.luna.bpm.listener.SkipTaskListener"/>
-				<bean class="com.luna.bpm.listener.NoticeTaskListener"/>
+				<bean class="com.luna.bpm.process.listener.AutoCompleteFirstTaskListener"/>
+				<bean class="com.luna.bpm.process.listener.SkipTaskListener"/>
+				<bean class="com.luna.bpm.process.listener.NoticeTaskListener"/>
 			</list>
 		</property>
 	</bean>
