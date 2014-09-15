@@ -1,36 +1,30 @@
 package com.luna.bpm.process.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
-import com.luna.bpm.process.cmd.FindTaskDefinitionsCmd;
-import com.luna.bpm.process.entity.BpmMailTemplate;
-import com.luna.bpm.process.entity.BpmProcess;
-import com.luna.bpm.process.entity.BpmTaskDefNotice;
-import com.luna.bpm.process.repository.BpmMailTemplateManager;
-import com.luna.bpm.process.repository.BpmProcessManager;
-import com.luna.bpm.process.repository.BpmTaskDefNoticeManager;
-import com.mossle.core.hibernate.PropertyFilter;
-import com.mossle.core.mapper.BeanMapper;
-import com.mossle.core.page.Page;
-import com.mossle.core.spring.MessageHelper;
-import com.mossle.ext.export.Exportor;
-import com.mossle.ext.export.TableModel;
-
 import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.impl.task.TaskDefinition;
-import org.activiti.engine.repository.ProcessDefinition;
+import org.hibernate.pretty.MessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.alibaba.fastjson.serializer.PropertyFilter;
+import com.luna.bpm.Page;
+import com.luna.bpm.process.entity.BpmMailTemplate;
+import com.luna.bpm.process.entity.BpmTaskDefNotice;
+import com.luna.bpm.process.repository.BpmMailTemplateManager;
+import com.luna.bpm.process.repository.BpmProcessManager;
+import com.luna.bpm.process.repository.BpmTaskDefNoticeManager;
+import com.luna.common.utils.BeanMapper;
+import com.luna.common.utils.export.Exportor;
+import com.luna.common.utils.export.TableModel;
 
 @Controller
 @RequestMapping("bpm")
@@ -40,7 +34,6 @@ public class BpmTaskDefNoticeController {
     private BpmMailTemplateManager bpmMailTemplateManager;
     private Exportor exportor;
     private BeanMapper beanMapper = new BeanMapper();
-    private ProcessEngine processEngine;
     private MessageHelper messageHelper;
 
     @RequestMapping("bpm-task-def-notice-list")
@@ -78,14 +71,14 @@ public class BpmTaskDefNoticeController {
         Long id = bpmTaskDefNotice.getId();
 
         if (id != null) {
-            dest = bpmTaskDefNoticeManager.get(id);
+            dest = bpmTaskDefNoticeManager.findOne(id);
             beanMapper.copy(bpmTaskDefNotice, dest);
         } else {
             dest = bpmTaskDefNotice;
         }
 
-        dest.setBpmProcess(bpmProcessManager.get(bpmProcessId));
-        dest.setBpmMailTemplate(bpmMailTemplateManager.get(bpmMailTemplateId));
+        dest.setBpmProcess(bpmProcessManager.findOne(bpmProcessId));
+        dest.setBpmMailTemplate(bpmMailTemplateManager.findOne(bpmMailTemplateId));
         bpmTaskDefNoticeManager.save(dest);
 
         messageHelper.addFlashMessage(redirectAttributes, "core.success.save",
@@ -128,9 +121,9 @@ public class BpmTaskDefNoticeController {
 
     @RequestMapping("bpm-task-def-notice-removeNotice")
     public String removeNotice(@RequestParam("id") Long id) {
-        BpmTaskDefNotice bpmTaskDefNotice = bpmTaskDefNoticeManager.get(id);
+        BpmTaskDefNotice bpmTaskDefNotice = bpmTaskDefNoticeManager.findOne(id);
         Long bpmProcessId = bpmTaskDefNotice.getBpmProcess().getId();
-        bpmTaskDefNoticeManager.remove(bpmTaskDefNotice);
+        bpmTaskDefNoticeManager.delete(bpmTaskDefNotice);
 
         return "redirect:/bpm/bpm-task-def-notice-list.do?bpmProcessId="
                 + bpmProcessId;
@@ -152,11 +145,6 @@ public class BpmTaskDefNoticeController {
     public void setBpmMailTemplateManager(
             BpmMailTemplateManager bpmMailTemplateManager) {
         this.bpmMailTemplateManager = bpmMailTemplateManager;
-    }
-
-    @Resource
-    public void setProcessEngine(ProcessEngine processEngine) {
-        this.processEngine = processEngine;
     }
 
     @Resource

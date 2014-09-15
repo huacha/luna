@@ -1,43 +1,35 @@
 package com.luna.bpm.process.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
-import com.luna.bpm.process.cmd.FindTaskDefinitionsCmd;
-import com.luna.bpm.process.entity.BpmMailTemplate;
-import com.luna.bpm.process.entity.BpmProcess;
-import com.luna.bpm.process.repository.BpmMailTemplateManager;
-import com.luna.bpm.process.repository.BpmProcessManager;
-import com.mossle.core.hibernate.PropertyFilter;
-import com.mossle.core.mapper.BeanMapper;
-import com.mossle.core.page.Page;
-import com.mossle.core.spring.MessageHelper;
-import com.mossle.ext.export.Exportor;
-import com.mossle.ext.export.TableModel;
-
 import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.impl.task.TaskDefinition;
-import org.activiti.engine.repository.ProcessDefinition;
+import org.hibernate.pretty.MessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.alibaba.fastjson.serializer.PropertyFilter;
+import com.luna.bpm.Page;
+import com.luna.bpm.process.entity.BpmMailTemplate;
+import com.luna.bpm.process.repository.BpmMailTemplateManager;
+import com.luna.bpm.process.repository.BpmProcessManager;
+import com.luna.common.utils.BeanMapper;
+import com.luna.common.utils.export.Exportor;
+import com.luna.common.utils.export.TableModel;
 
 @Controller
 @RequestMapping("bpm")
 public class BpmMailTemplateController {
     private BpmMailTemplateManager bpmMailTemplateManager;
-    private BpmProcessManager bpmProcessManager;
     private Exportor exportor;
     private BeanMapper beanMapper = new BeanMapper();
-    private ProcessEngine processEngine;
     private MessageHelper messageHelper;
 
     @RequestMapping("bpm-mail-template-list")
@@ -55,7 +47,7 @@ public class BpmMailTemplateController {
     public String input(@RequestParam(value = "id", required = false) Long id,
             Model model) {
         if (id != null) {
-            BpmMailTemplate bpmMailTemplate = bpmMailTemplateManager.get(id);
+            BpmMailTemplate bpmMailTemplate = bpmMailTemplateManager.findOne(id);
             model.addAttribute("model", bpmMailTemplate);
         }
 
@@ -69,7 +61,7 @@ public class BpmMailTemplateController {
         Long id = bpmMailTemplate.getId();
 
         if (id != null) {
-            dest = bpmMailTemplateManager.get(id);
+            dest = bpmMailTemplateManager.findOne(id);
             beanMapper.copy(bpmMailTemplate, dest);
         } else {
             dest = bpmMailTemplate;
@@ -88,7 +80,7 @@ public class BpmMailTemplateController {
             RedirectAttributes redirectAttributes) {
         List<BpmMailTemplate> bpmCategories = bpmMailTemplateManager
                 .findByIds(selectedItem);
-        bpmMailTemplateManager.removeAll(bpmCategories);
+        bpmMailTemplateManager.delete(bpmCategories);
         messageHelper.addFlashMessage(redirectAttributes,
                 "core.success.delete", "删除成功");
 
@@ -103,8 +95,7 @@ public class BpmMailTemplateController {
                 .buildFromMap(parameterMap);
         page = bpmMailTemplateManager.pagedQuery(page, propertyFilters);
 
-        List<BpmMailTemplate> bpmCategories = (List<BpmMailTemplate>) page
-                .getResult();
+        List<BpmMailTemplate> bpmCategories = (List<BpmMailTemplate>) page.getResult();
         TableModel tableModel = new TableModel();
         tableModel.setName("bpm-process");
         tableModel.addHeaders("id", "name");
@@ -117,16 +108,6 @@ public class BpmMailTemplateController {
     public void setBpmMailTemplateManager(
             BpmMailTemplateManager bpmMailTemplateManager) {
         this.bpmMailTemplateManager = bpmMailTemplateManager;
-    }
-
-    @Resource
-    public void setBpmProcessManager(BpmProcessManager bpmProcessManager) {
-        this.bpmProcessManager = bpmProcessManager;
-    }
-
-    @Resource
-    public void setProcessEngine(ProcessEngine processEngine) {
-        this.processEngine = processEngine;
     }
 
     @Resource

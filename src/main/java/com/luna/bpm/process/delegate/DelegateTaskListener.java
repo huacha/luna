@@ -2,14 +2,19 @@ package com.luna.bpm.process.delegate;
 
 import javax.annotation.Resource;
 
+import com.luna.bpm.process.delegate.DelegateInfo;
 import com.luna.bpm.process.listener.DefaultTaskListener;
+import com.luna.bpm.process.service.DelegateService;
 
 import org.activiti.engine.delegate.DelegateTask;
 
 public class DelegateTaskListener extends DefaultTaskListener {
-    private DelegateService delegateService;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private DelegateService delegateService;
 
-    @Override
     public void onAssignment(DelegateTask delegateTask) throws Exception {
         String assignee = delegateTask.getAssignee();
         String processDefinitionId = delegateTask.getProcessDefinitionId();

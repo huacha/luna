@@ -7,7 +7,7 @@ import org.activiti.engine.impl.context.Context;
 
 import com.luna.bpm.process.cmd.DelegateTaskCmd;
 import com.luna.bpm.process.delegate.DelegateInfo;
-import com.luna.bpm.process.delegate.DelegateService;
+import com.luna.bpm.process.service.DelegateService;
 
 public class DelegateTaskListener extends DefaultTaskListener {
     /**

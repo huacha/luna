@@ -5,6 +5,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import com.luna.bpm.process.listener.DefaultTaskListener;
+import com.luna.bpm.process.service.DelegateService;
 
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.delegate.DelegateTask;

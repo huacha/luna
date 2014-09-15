@@ -1,48 +1,32 @@
 package com.luna.bpm.conf.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 
-import com.luna.bpm.conf.entity.BpmConfNode;
-import com.luna.bpm.conf.entity.BpmConfRule;
-import com.luna.bpm.conf.repository.BpmConfNodeManager;
-import com.luna.bpm.conf.repository.BpmConfRuleManager;
-import com.luna.bpm.process.entity.BpmProcess;
-import com.luna.bpm.process.repository.BpmProcessManager;
-import com.mossle.core.hibernate.PropertyFilter;
-import com.mossle.core.mapper.BeanMapper;
-import com.mossle.core.page.Page;
-
-import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.repository.ProcessDefinition;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.luna.bpm.conf.entity.BpmConfNode;
+import com.luna.bpm.conf.entity.BpmConfRule;
+import com.luna.bpm.conf.repository.BpmConfNodeManager;
+import com.luna.bpm.conf.repository.BpmConfRuleManager;
 
 @Controller
 @RequestMapping("bpm")
 public class BpmConfRuleController {
     private BpmConfNodeManager bpmConfNodeManager;
     private BpmConfRuleManager bpmConfRuleManager;
-    private BeanMapper beanMapper = new BeanMapper();
-    private ProcessEngine processEngine;
-    private BpmProcessManager bpmProcessManager;
 
     @RequestMapping("bpm-conf-rule-list")
     public String list(@RequestParam("bpmConfNodeId") Long bpmConfNodeId,
             Model model) {
-        BpmConfNode bpmConfNode = bpmConfNodeManager.get(bpmConfNodeId);
+        BpmConfNode bpmConfNode = bpmConfNodeManager.findOne(bpmConfNodeId);
         Long bpmConfBaseId = bpmConfNode.getBpmConfBase().getId();
-        List<BpmConfRule> bpmConfRules = bpmConfRuleManager.findBy(
-                "bpmConfNode", bpmConfNode);
+        List<BpmConfRule> bpmConfRules = bpmConfRuleManager.findByBpmConfNode(bpmConfNode);
 
         model.addAttribute("bpmConfBaseId", bpmConfBaseId);
         model.addAttribute("bpmConfRules", bpmConfRules);
@@ -59,7 +43,7 @@ public class BpmConfRuleController {
                     + bpmConfNodeId;
         }
 
-        bpmConfRule.setBpmConfNode(bpmConfNodeManager.get(bpmConfNodeId));
+        bpmConfRule.setBpmConfNode(bpmConfNodeManager.findOne(bpmConfNodeId));
         bpmConfRuleManager.save(bpmConfRule);
 
         return "redirect:/bpm/bpm-conf-rule-list.do?bpmConfNodeId="
@@ -68,9 +52,9 @@ public class BpmConfRuleController {
 
     @RequestMapping("bpm-conf-rule-remove")
     public String remove(@RequestParam("id") Long id) {
-        BpmConfRule bpmConfRule = bpmConfRuleManager.get(id);
+        BpmConfRule bpmConfRule = bpmConfRuleManager.findOne(id);
         Long bpmConfNodeId = bpmConfRule.getBpmConfNode().getId();
-        bpmConfRuleManager.remove(bpmConfRule);
+        bpmConfRuleManager.delete(bpmConfRule);
 
         return "redirect:/bpm/bpm-conf-rule-list.do?bpmConfNodeId="
                 + bpmConfNodeId;
@@ -87,13 +71,4 @@ public class BpmConfRuleController {
         this.bpmConfRuleManager = bpmConfRuleManager;
     }
 
-    @Resource
-    public void setBpmProcessManager(BpmProcessManager bpmProcessManager) {
-        this.bpmProcessManager = bpmProcessManager;
-    }
-
-    @Resource
-    public void setProcessEngine(ProcessEngine processEngine) {
-        this.processEngine = processEngine;
-    }
 }

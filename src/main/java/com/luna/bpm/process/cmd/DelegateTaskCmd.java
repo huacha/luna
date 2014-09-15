@@ -5,7 +5,7 @@ import org.activiti.engine.impl.interceptor.Command;
 import org.activiti.engine.impl.interceptor.CommandContext;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
 
-import com.luna.bpm.process.delegate.DelegateService;
+import com.luna.bpm.process.service.DelegateService;
 import com.luna.common.utils.SpringUtils;
 
 /**

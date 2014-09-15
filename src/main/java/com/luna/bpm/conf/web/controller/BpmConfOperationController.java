@@ -3,39 +3,25 @@ package com.luna.bpm.conf.web.controller;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 
-import com.luna.bpm.conf.entity.BpmConfNode;
-import com.luna.bpm.conf.entity.BpmConfOperation;
-import com.luna.bpm.conf.repository.BpmConfNodeManager;
-import com.luna.bpm.conf.repository.BpmConfOperationManager;
-import com.luna.bpm.process.entity.BpmProcess;
-import com.luna.bpm.process.repository.BpmProcessManager;
-import com.mossle.core.hibernate.PropertyFilter;
-import com.mossle.core.mapper.BeanMapper;
-import com.mossle.core.page.Page;
-
-import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.repository.ProcessDefinition;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.luna.bpm.conf.entity.BpmConfNode;
+import com.luna.bpm.conf.entity.BpmConfOperation;
+import com.luna.bpm.conf.repository.BpmConfNodeManager;
+import com.luna.bpm.conf.repository.BpmConfOperationManager;
 
 @Controller
 @RequestMapping("bpm")
 public class BpmConfOperationController {
     private BpmConfNodeManager bpmConfNodeManager;
     private BpmConfOperationManager bpmConfOperationManager;
-    private BeanMapper beanMapper = new BeanMapper();
-    private ProcessEngine processEngine;
-    private BpmProcessManager bpmProcessManager;
 
     @RequestMapping("bpm-conf-operation-list")
     public String list(@RequestParam("bpmConfNodeId") Long bpmConfNodeId,
@@ -47,10 +33,9 @@ public class BpmConfOperationController {
         operations.add("转办");
         operations.add("协办");
 
-        BpmConfNode bpmConfNode = bpmConfNodeManager.get(bpmConfNodeId);
+        BpmConfNode bpmConfNode = bpmConfNodeManager.findOne(bpmConfNodeId);
         Long bpmConfBaseId = bpmConfNode.getBpmConfBase().getId();
-        List<BpmConfOperation> bpmConfOperations = bpmConfOperationManager
-                .findBy("bpmConfNode", bpmConfNode);
+        List<BpmConfOperation> bpmConfOperations = bpmConfOperationManager.findByBpmConfNode(bpmConfNode);
 
         for (Iterator<String> iterator = operations.iterator(); iterator
                 .hasNext();) {
@@ -81,7 +66,7 @@ public class BpmConfOperationController {
                     + bpmConfNodeId;
         }
 
-        bpmConfOperation.setBpmConfNode(bpmConfNodeManager.get(bpmConfNodeId));
+        bpmConfOperation.setBpmConfNode(bpmConfNodeManager.findOne(bpmConfNodeId));
         bpmConfOperationManager.save(bpmConfOperation);
 
         return "redirect:/bpm/bpm-conf-operation-list.do?bpmConfNodeId="
@@ -90,9 +75,9 @@ public class BpmConfOperationController {
 
     @RequestMapping("bpm-conf-operation-remove")
     public String remove(@RequestParam("id") Long id) {
-        BpmConfOperation bpmConfOperation = bpmConfOperationManager.get(id);
+        BpmConfOperation bpmConfOperation = bpmConfOperationManager.findOne(id);
         Long bpmConfNodeId = bpmConfOperation.getBpmConfNode().getId();
-        bpmConfOperationManager.remove(bpmConfOperation);
+        bpmConfOperationManager.delete(bpmConfOperation);
 
         return "redirect:/bpm/bpm-conf-operation-list.do?bpmConfNodeId="
                 + bpmConfNodeId;
@@ -108,15 +93,5 @@ public class BpmConfOperationController {
     public void setBpmConfOperationManager(
             BpmConfOperationManager bpmConfOperationManager) {
         this.bpmConfOperationManager = bpmConfOperationManager;
-    }
-
-    @Resource
-    public void setBpmProcessManager(BpmProcessManager bpmProcessManager) {
-        this.bpmProcessManager = bpmProcessManager;
-    }
-
-    @Resource
-    public void setProcessEngine(ProcessEngine processEngine) {
-        this.processEngine = processEngine;
     }
 }

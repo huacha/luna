@@ -17,4 +17,6 @@ public interface BpmConfUserManager extends BaseRepository<BpmConfUser,Long> {
 	        
 	@Query("from BpmConfUser where bpmConfNode.bpmConfBase.processDefinitionId=?1 and bpmConfNode.code=?2")
 	List<BpmConfUser> find(String processDefinitionId,String nodeCode);
+	
+	List<BpmConfUser> findByBpmConfNode(BpmConfNode bpmConfNode);
 }

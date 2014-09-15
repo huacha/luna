@@ -307,7 +307,7 @@ public class SyncProcessCmd implements Command<Void> {
 		}
 
 		BpmConfForm bpmConfForm = bpmConfFormManager
-				.findByBpmConfNode(bpmConfNode);
+				.findByBpmConfNode(bpmConfNode).get(0);
 
 		if (bpmConfForm == null) {
 			bpmConfForm = new BpmConfForm();

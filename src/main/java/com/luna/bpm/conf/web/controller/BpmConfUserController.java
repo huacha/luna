@@ -1,56 +1,38 @@
 package com.luna.bpm.conf.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 
-import com.luna.bpm.conf.entity.BpmConfCountersign;
-import com.luna.bpm.conf.entity.BpmConfNode;
-import com.luna.bpm.conf.entity.BpmConfUser;
-import com.luna.bpm.conf.repository.BpmConfCountersignManager;
-import com.luna.bpm.conf.repository.BpmConfNodeManager;
-import com.luna.bpm.conf.repository.BpmConfUserManager;
-import com.luna.bpm.process.entity.BpmProcess;
-import com.luna.bpm.process.repository.BpmProcessManager;
-import com.mossle.core.hibernate.PropertyFilter;
-import com.mossle.core.mapper.BeanMapper;
-import com.mossle.core.page.Page;
-
-import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.repository.ProcessDefinition;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.luna.bpm.conf.entity.BpmConfNode;
+import com.luna.bpm.conf.entity.BpmConfUser;
+import com.luna.bpm.conf.repository.BpmConfCountersignManager;
+import com.luna.bpm.conf.repository.BpmConfNodeManager;
+import com.luna.bpm.conf.repository.BpmConfUserManager;
 
 @Controller
 @RequestMapping("bpm")
 public class BpmConfUserController {
     private BpmConfNodeManager bpmConfNodeManager;
     private BpmConfUserManager bpmConfUserManager;
-    private BeanMapper beanMapper = new BeanMapper();
-    private ProcessEngine processEngine;
-    private BpmProcessManager bpmProcessManager;
     private BpmConfCountersignManager bpmConfCountersignManager;
 
     @RequestMapping("bpm-conf-user-list")
     public String list(@RequestParam("bpmConfNodeId") Long bpmConfNodeId,
             Model model) {
-        BpmConfNode bpmConfNode = bpmConfNodeManager.get(bpmConfNodeId);
+        BpmConfNode bpmConfNode = bpmConfNodeManager.findOne(bpmConfNodeId);
         Long bpmConfBaseId = bpmConfNode.getBpmConfBase().getId();
-        List<BpmConfUser> bpmConfUsers = bpmConfUserManager.findBy(
-                "bpmConfNode", bpmConfNode);
+        List<BpmConfUser> bpmConfUsers = bpmConfUserManager.findByBpmConfNode(bpmConfNode);
 
         model.addAttribute("bpmConfBaseId", bpmConfBaseId);
         model.addAttribute("bpmConfUsers", bpmConfUsers);
-        model.addAttribute("bpmConfCountersign", bpmConfCountersignManager
-                .findUniqueBy("bpmConfNode", bpmConfNode));
+        model.addAttribute("bpmConfCountersign", bpmConfCountersignManager.findByBpmConfNode( bpmConfNode));
 
         return "bpm/bpm-conf-user-list";
     }
@@ -60,7 +42,7 @@ public class BpmConfUserController {
             @RequestParam("bpmConfNodeId") Long bpmConfNodeId) {
         bpmConfUser.setPriority(0);
         bpmConfUser.setStatus(1);
-        bpmConfUser.setBpmConfNode(bpmConfNodeManager.get(bpmConfNodeId));
+        bpmConfUser.setBpmConfNode(bpmConfNodeManager.findOne(bpmConfNodeId));
         bpmConfUserManager.save(bpmConfUser);
 
         return "redirect:/bpm/bpm-conf-user-list.do?bpmConfNodeId="
@@ -69,14 +51,14 @@ public class BpmConfUserController {
 
     @RequestMapping("bpm-conf-user-remove")
     public String remove(@RequestParam("id") Long id) {
-        BpmConfUser bpmConfUser = bpmConfUserManager.get(id);
+        BpmConfUser bpmConfUser = bpmConfUserManager.findOne(id);
         Long bpmConfNodeId = bpmConfUser.getBpmConfNode().getId();
 
         if (bpmConfUser.getStatus() == 0) {
             bpmConfUser.setStatus(2);
             bpmConfUserManager.save(bpmConfUser);
         } else if (bpmConfUser.getStatus() == 1) {
-            bpmConfUserManager.remove(bpmConfUser);
+            bpmConfUserManager.delete(bpmConfUser);
         } else if (bpmConfUser.getStatus() == 2) {
             bpmConfUser.setStatus(0);
             bpmConfUserManager.save(bpmConfUser);
@@ -95,16 +77,6 @@ public class BpmConfUserController {
     @Resource
     public void setBpmConfUserManager(BpmConfUserManager bpmConfUserManager) {
         this.bpmConfUserManager = bpmConfUserManager;
-    }
-
-    @Resource
-    public void setBpmProcessManager(BpmProcessManager bpmProcessManager) {
-        this.bpmProcessManager = bpmProcessManager;
-    }
-
-    @Resource
-    public void setProcessEngine(ProcessEngine processEngine) {
-        this.processEngine = processEngine;
     }
 
     @Resource

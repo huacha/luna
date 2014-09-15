@@ -15,11 +15,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.luna.bpm.delegate.DelegateService;
 import com.luna.bpm.process.entity.BpmDelegateHistory;
 import com.luna.bpm.process.entity.BpmDelegateInfo;
 import com.luna.bpm.process.repository.BpmDelegateHistoryManager;
 import com.luna.bpm.process.repository.BpmDelegateInfoManager;
+import com.luna.bpm.process.service.DelegateService;
 
 @Controller
 @RequestMapping("bpm")
