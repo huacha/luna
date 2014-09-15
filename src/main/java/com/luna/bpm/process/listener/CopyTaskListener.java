@@ -1,0 +1,83 @@
+package com.luna.bpm.process.listener;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.activiti.engine.delegate.DelegateTask;
+import org.activiti.engine.impl.context.Context;
+import org.activiti.engine.impl.el.ExpressionManager;
+import org.activiti.engine.impl.persistence.entity.TaskEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.luna.bpm.conf.entity.BpmConfUser;
+import com.luna.bpm.conf.repository.BpmConfUserManager;
+
+public class CopyTaskListener extends DefaultTaskListener {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public static final int TYPE_COPY = 3;
+    private static Logger logger = LoggerFactory
+            .getLogger(CopyTaskListener.class);
+    
+    private BpmConfUserManager bpmConfUserManager;
+
+    @Override
+    public void onCreate(DelegateTask delegateTask) throws Exception {
+        List<BpmConfUser> bpmConfUsers = bpmConfUserManager
+                .find( delegateTask.getProcessDefinitionId(), delegateTask
+                                .getExecution().getCurrentActivityId());
+        logger.debug("{}", bpmConfUsers);
+
+        ExpressionManager expressionManager = Context
+                .getProcessEngineConfiguration().getExpressionManager();
+
+        try {
+            for (BpmConfUser bpmConfUser : bpmConfUsers) {
+                logger.debug("status : {}, type: {}", bpmConfUser.getStatus(),
+                        bpmConfUser.getType());
+                logger.debug("value : {}", bpmConfUser.getValue());
+
+                String value = expressionManager
+                        .createExpression(bpmConfUser.getValue())
+                        .getValue(delegateTask).toString();
+
+                if (bpmConfUser.getStatus() == 1) {
+                    if (bpmConfUser.getType() == TYPE_COPY) {
+                        this.copyTask(delegateTask, value);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            logger.debug(ex.getMessage(), ex);
+        }
+    }
+
+    public void copyTask(DelegateTask delegateTask, String userId) {
+        // 创建新任务
+        TaskEntity task = TaskEntity.create(new Date());
+        task.setProcessDefinitionId(delegateTask.getProcessDefinitionId());
+
+        task.setAssigneeWithoutCascade(userId);
+        // task.setParentTaskIdWithoutCascade(delegateTask.getParentTaskId());
+        task.setNameWithoutCascade(delegateTask.getName());
+        task.setTaskDefinitionKey(delegateTask.getTaskDefinitionKey());
+        task.setExecutionId(delegateTask.getExecutionId());
+        task.setPriority(delegateTask.getPriority());
+        task.setProcessInstanceId(delegateTask.getProcessInstanceId());
+        task.setExecutionId(delegateTask.getExecutionId());
+        task.setDescriptionWithoutCascade(delegateTask.getDescription());
+        task.setCategory("copy");
+
+        Context.getCommandContext().getTaskEntityManager().insert(task);
+    }
+
+    @Resource
+    public void setBpmConfUserManager(BpmConfUserManager bpmConfUserManager) {
+        this.bpmConfUserManager = bpmConfUserManager;
+    }
+}

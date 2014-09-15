@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.luna.bpm.cmd.SyncProcessCmd;
+import com.luna.bpm.process.cmd.SyncProcessCmd;
 
 /**
  * modeler.
