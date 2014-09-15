@@ -1,30 +1,24 @@
 package com.luna.bpm.rule;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-
-import com.mossle.api.org.OrgConnector;
-
-import com.mossle.core.spring.ApplicationContextHelper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.jdbc.core.JdbcTemplate;
+import com.luna.sys.organization.repository.OrganizationRepository;
 
 /**
  * 获得部门最接近的对应的岗位的人的信息.
  * 
  */
 public class PositionAssigneeRule implements AssigneeRule {
-    private static Logger logger = LoggerFactory
-            .getLogger(PositionAssigneeRule.class);
-    private JdbcTemplate jdbcTemplate;
-    private OrgConnector orgConnector;
+    private static Logger logger = LoggerFactory.getLogger(PositionAssigneeRule.class);
+    @Autowired
+    private OrganizationRepository orgRepository;
 
     public List<String> process(String value, String initiator) {
+    	//TODO 需要知道他到底获取的是什么。是机构id还是用户id？？？
         return ApplicationContextHelper.getBean(OrgConnector.class)
                 .getPositionUserIds(initiator, value);
     }

@@ -2,27 +2,22 @@ package com.luna.bpm.rule;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
-import com.mossle.api.org.OrgConnector;
-
-import com.mossle.core.spring.ApplicationContextHelper;
-
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.dao.EmptyResultDataAccessException;
-
-import org.springframework.jdbc.core.JdbcTemplate;
+import com.luna.sys.organization.repository.OrganizationRepository;
 
 /**
  * 获得指定用户的上级领导.
  * 
  */
 public class SuperiorAssigneeRule implements AssigneeRule {
-    private static Logger logger = LoggerFactory
-            .getLogger(SuperiorAssigneeRule.class);
-    private OrgConnector orgConnector;
+    private static Logger logger = LoggerFactory.getLogger(SuperiorAssigneeRule.class);
+    @Autowired
+    private OrganizationRepository orgRepository;
 
     public List<String> process(String value, String initiator) {
         return Collections.singletonList(this.process(initiator));
@@ -32,10 +27,11 @@ public class SuperiorAssigneeRule implements AssigneeRule {
      * 获得员工的直接上级.
      */
     public String process(String initiator) {
-        if (orgConnector == null) {
-            orgConnector = ApplicationContextHelper.getBean(OrgConnector.class);
-        }
-
+    	
+    	//TODO 由于shiro的API中只能取到用户名，而不是用户id,所以用下面的代码代替了用户id传给了流程引擎。需要特别注意！！！
+    	//TODO String userId = (String) SecurityUtils.getSubject().getPrincipal();//以当前用户名代替用户id
+    	
+    	//TODO 需要知道他到底获取的是什么。是机构id还是用户id？？？
         return orgConnector.getSuperiorId(initiator);
     }
 }
