@@ -19,23 +19,23 @@
 		<aspectj.version>1.7.4</aspectj.version>
 		<slf4j.version>1.7.7</slf4j.version>
 		<jstl.version>1.2</jstl.version>
-        <standard.version>1.1.2</standard.version>
-        <commons-lang3.version>3.1</commons-lang3.version>
-        <common-collections4.version>4.0</common-collections4.version>
-        <commons-io.version>2.4</commons-io.version>
-        <guava.version>15.0</guava.version>
-        <common.fileupload.version>1.3.1</common.fileupload.version>
-        <common.compress.version>1.6</common.compress.version>
-        <ant.version>1.9.2</ant.version>
-        <yui.compressor.version>2.4.2</yui.compressor.version>
-        <junit.version>4.11</junit.version>
-        <mockito.version>1.9.5</mockito.version>
-        <powermock.version>1.5.2</powermock.version>
-        <h2.version>1.3.174</h2.version>
-        <mysql.version>5.1.32</mysql.version>
-        <druid.version>0.2.23</druid.version>
-        <logback.version>1.1.2</logback.version>
-        <ehcache.core.version>2.6.6</ehcache.core.version>
+		<standard.version>1.1.2</standard.version>
+		<commons-lang3.version>3.1</commons-lang3.version>
+		<common-collections4.version>4.0</common-collections4.version>
+		<commons-io.version>2.4</commons-io.version>
+		<guava.version>15.0</guava.version>
+		<common.fileupload.version>1.3.1</common.fileupload.version>
+		<common.compress.version>1.6</common.compress.version>
+		<ant.version>1.9.2</ant.version>
+		<yui.compressor.version>2.4.2</yui.compressor.version>
+		<junit.version>4.11</junit.version>
+		<mockito.version>1.9.5</mockito.version>
+		<powermock.version>1.5.2</powermock.version>
+		<h2.version>1.3.174</h2.version>
+		<mysql.version>5.1.32</mysql.version>
+		<druid.version>1.0.8</druid.version>
+		<logback.version>1.1.2</logback.version>
+		<ehcache.core.version>2.6.6</ehcache.core.version>
 	</properties>
 
 	<!-- 依赖包定义 -->
@@ -43,55 +43,68 @@
 		<!-- activiti -->
 		<dependency>
 			<groupId>org.activiti</groupId>
-			<artifactId>activiti-engine</artifactId>
+			<artifactId>activiti-spring</artifactId>
+			<version>${activiti.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.codehaus.jackson</groupId>
+					<artifactId>jackson-core-asl</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.activiti</groupId>
+			<artifactId>activiti-json-converter</artifactId>
+			<version>${activiti.version}</version>
+		</dependency>
+
+		<!-- modeler 相关 
+		<dependency>
+			<groupId>org.activiti</groupId>
+			<artifactId>activiti-modeler</artifactId>
 			<version>${activiti.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.activiti</groupId>
-			<artifactId>activiti-spring</artifactId>
+			<artifactId>activiti-explorer</artifactId>
+			<version>${activiti.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.vaadin</groupId>
+					<artifactId>vaadin</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.vaadin.addons</groupId>
+					<artifactId>dcharts-widget</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>activiti-simple-workflow</artifactId>
+					<groupId>org.activiti</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.activiti</groupId>
+			<artifactId>activiti-diagram-rest</artifactId>
 			<version>${activiti.version}</version>
 		</dependency>
-		<dependency>  
-            <groupId>org.activiti</groupId>  
-            <artifactId>activiti-modeler</artifactId>  
-            <version>${activiti.version}</version>  
-        </dependency>  
-        <dependency>  
-            <groupId>org.activiti</groupId>  
-            <artifactId>activiti-explorer</artifactId>  
-            <version>${activiti.version}</version>  
-            <exclusions>  
-                <exclusion>  
-                    <groupId>com.vaadin</groupId>  
-                    <artifactId>vaadin</artifactId>  
-                </exclusion>  
-                <exclusion>  
-                    <groupId>org.vaadin.addons</groupId>  
-                    <artifactId>dcharts-widget</artifactId>  
-                </exclusion>  
-                <exclusion>  
-                    <artifactId>activiti-simple-workflow</artifactId>  
-                    <groupId>org.activiti</groupId>  
-                </exclusion>  
-            </exclusions>  
-        </dependency>  
-		<!-- 查看流程详细定义 -->  
-        <dependency>  
-            <groupId>org.activiti</groupId>  
-            <artifactId>activiti-diagram-rest</artifactId>  
-            <version>${activiti.version}</version>  
-        </dependency>
-		
+		-->
+
+
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy-all</artifactId>
 			<version>2.2.2</version>
 		</dependency>
 		<dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
 
 		<!-- hibernate 相关jar包 -->
 		<dependency>
@@ -114,50 +127,50 @@
 			<artifactId>hibernate-ehcache</artifactId>
 			<version>${hibernate.version}</version>
 			<exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>ehcache-core</artifactId>
-                    <groupId>net.sf.ehcache</groupId>
-                </exclusion>
-            </exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>ehcache-core</artifactId>
+					<groupId>net.sf.ehcache</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
-            <groupId>org.hibernate.common</groupId>
-            <artifactId>hibernate-commons-annotations</artifactId>
-            <version>${hibernate.commons.annotaions.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.hibernate</groupId>
-                    <artifactId>hibernate</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-		
+			<groupId>org.hibernate.common</groupId>
+			<artifactId>hibernate-commons-annotations</artifactId>
+			<version>${hibernate.commons.annotaions.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.hibernate</groupId>
+					<artifactId>hibernate</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 		<!-- encache 相关jar包 -->
-        <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache-core</artifactId>
-            <version>${ehcache.core.version}</version>
-            <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>slf4j-api</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-core</artifactId>
+			<version>${ehcache.core.version}</version>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -179,15 +192,15 @@
 			<version>2.2.1-b03</version>
 		</dependency>
 		<dependency>
-            <groupId>taglibs</groupId>
-            <artifactId>standard</artifactId>
-            <version>${standard.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>${jstl.version}</version>
-        </dependency>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+			<version>${standard.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>${jstl.version}</version>
+		</dependency>
 
 		<!-- aspectj相关jar包 -->
 		<dependency>
@@ -203,37 +216,37 @@
 
 		<!-- spring相关jar包 -->
 		<dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
 		<dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        
-        <!-- spring webmvc相关jar包 -->
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<!-- spring webmvc相关jar包 -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
@@ -244,7 +257,7 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		
+
 		<!-- spring jpa -->
 		<dependency>
 			<groupId>org.springframework.data</groupId>
@@ -267,76 +280,76 @@
 			<version>2.0.8</version>
 		</dependency>
 
-		<!-- data source 相关jar包-->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-            <version>${druid.version}</version>
-        </dependency>
+		<!-- data source 相关jar包 -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>${druid.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 			<version>1.1.41</version>
 		</dependency>
-		
+
 		<!-- utils 相关jar包 -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>${common-collections4.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.7</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.8.3</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>${common.fileupload.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-compress</artifactId>
-            <version>${common.compress.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant</artifactId>
-            <version>${ant.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>ant-launcher</artifactId>
-                    <groupId>org.apache.ant</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang3.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>${common-collections4.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons-io.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.7</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.8.3</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>${common.fileupload.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-compress</artifactId>
+			<version>${common.compress.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant</artifactId>
+			<version>${ant.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>ant-launcher</artifactId>
+					<groupId>org.apache.ant</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 
 		<dependency>
 			<groupId>org.ocpsoft.prettytime</groupId>
@@ -370,26 +383,26 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
-        <!-- 测试相关jar包 -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>${mockito.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId> com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
-            <scope>test</scope>
-        </dependency>
+
+		<!-- 测试相关jar包 -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>${mockito.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId> com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>${h2.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-webapp</artifactId>
@@ -397,17 +410,17 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>${jetty.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>javax.servlet</artifactId>
-                    <groupId>org.eclipse.jetty.orbit</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>${jetty.version}</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>javax.servlet</artifactId>
+					<groupId>org.eclipse.jetty.orbit</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 
 		<!-- poi:office word/excel/power point…… -->
 		<dependency>
@@ -420,12 +433,12 @@
 			<artifactId>poi-ooxml</artifactId>
 			<version>3.9</version>
 		</dependency>
-		
+
 		<dependency>
-            <groupId>com.yahoo.platform.yui</groupId>
-            <artifactId>yuicompressor</artifactId>
-            <version>${yui.compressor.version}</version>
-        </dependency>
+			<groupId>com.yahoo.platform.yui</groupId>
+			<artifactId>yuicompressor</artifactId>
+			<version>${yui.compressor.version}</version>
+		</dependency>
 
 
 
@@ -657,48 +670,49 @@
 					</systemProperties>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
-                <groupId>com.googlecode</groupId>
-                <artifactId>maven-db-plugin</artifactId>
-                <version>1.4</version>
-                <configuration>
-                    <adminDbConnectionSettings>
-                        <jdbcDriver>${connection.driver_class}</jdbcDriver>
-                        <jdbcUrl>${connection.admin.url}</jdbcUrl>
-                        <userName>${connection.username}</userName>
-                        <password>${connection.password}</password>
-                    </adminDbConnectionSettings>
-                    <appDbConnectionSettings>
-                        <jdbcDriver>${connection.driver_class}</jdbcDriver>
-                        <jdbcUrl>${connection.url}</jdbcUrl>
-                        <userName>${connection.username}</userName>
-                        <password>${connection.password}</password>
-                    </appDbConnectionSettings>
-                    <dbDataScriptsDirectory>
-                        <param>src/main/sql/data</param>
-                    </dbDataScriptsDirectory>
-                    <dbSchemaScriptsDirectory>
-                        <param>src/main/sql/schema</param>
-                    </dbSchemaScriptsDirectory>
-                    <dbUpdateScriptsDirectory>
-                        <param>src/main/sql/update</param>
-                    </dbUpdateScriptsDirectory>
-                    <dbCreateStatements>
-                        create database ${db.name} CHARACTER SET 'utf8';
-                    </dbCreateStatements>
-                    <dbDropStatements>drop database ${db.name}; </dbDropStatements>
-                    <sqlDelimiter>;;</sqlDelimiter>
-                    <scriptEncoding>UTF-8</scriptEncoding>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>mysql</groupId>
-                        <artifactId>mysql-connector-java</artifactId>
-                        <version>${mysql.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
+				<groupId>com.googlecode</groupId>
+				<artifactId>maven-db-plugin</artifactId>
+				<version>1.4</version>
+				<configuration>
+					<adminDbConnectionSettings>
+						<jdbcDriver>${connection.driver_class}</jdbcDriver>
+						<jdbcUrl>${connection.admin.url}</jdbcUrl>
+						<userName>${connection.username}</userName>
+						<password>${connection.password}</password>
+					</adminDbConnectionSettings>
+					<appDbConnectionSettings>
+						<jdbcDriver>${connection.driver_class}</jdbcDriver>
+						<jdbcUrl>${connection.url}</jdbcUrl>
+						<userName>${connection.username}</userName>
+						<password>${connection.password}</password>
+					</appDbConnectionSettings>
+					<dbDataScriptsDirectory>
+						<param>src/main/sql/data</param>
+					</dbDataScriptsDirectory>
+					<dbSchemaScriptsDirectory>
+						<param>src/main/sql/schema</param>
+					</dbSchemaScriptsDirectory>
+					<dbUpdateScriptsDirectory>
+						<param>src/main/sql/update</param>
+					</dbUpdateScriptsDirectory>
+					<dbCreateStatements>
+						create database ${db.name} CHARACTER SET
+						'utf8';
+					</dbCreateStatements>
+					<dbDropStatements>drop database ${db.name}; </dbDropStatements>
+					<sqlDelimiter>;;</sqlDelimiter>
+					<scriptEncoding>UTF-8</scriptEncoding>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>${mysql.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 
 		</plugins>
 	</build>
@@ -726,7 +740,7 @@
 				<toolsjar>${java.home}/../lib/tools.jar</toolsjar>
 			</properties>
 		</profile>
-		
+
 		<!--开发环境 -->
 		<profile>
 			<id>development</id>
@@ -754,7 +768,7 @@
 				<shiro.uid.cookie.path>/</shiro.uid.cookie.path>
 			</properties>
 		</profile>
-		
+
 		<!-- integration test -->
 		<profile>
 			<id>it</id>

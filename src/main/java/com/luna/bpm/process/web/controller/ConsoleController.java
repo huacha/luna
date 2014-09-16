@@ -14,7 +14,6 @@ import org.activiti.engine.impl.interceptor.Command;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.apache.commons.io.IOUtils;
-import org.restlet.engine.io.IoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -330,8 +329,7 @@ public class ConsoleController {
         InputStream is = processEngine.getRepositoryService()
                 .getResourceAsStream(processDefinition.getDeploymentId(),
                         processDefinition.getResourceName());
-        String xml = IoUtils.toString(is);
-
+        String xml = IOUtils.toString(is);
         model.addAttribute("xml", xml);
 
         return "bpm/console-beforeUpdateProcess";

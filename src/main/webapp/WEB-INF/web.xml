@@ -139,7 +139,7 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
     
-    <!-- Restlet adapter, used to expose modeler functionality through REST  -->
+    <!-- Restlet adapter, used to expose modeler functionality through REST 
     <servlet>  
         <servlet-name>RestletServlet</servlet-name>  
         <servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>  
@@ -152,7 +152,7 @@
         <servlet-name>RestletServlet</servlet-name>  
         <url-pattern>/modeler/service/*</url-pattern>  
     </servlet-mapping>
-     
+      -->
     <!-- 错误页面映射 -->
     <error-page>
         <error-code>404</error-code>
