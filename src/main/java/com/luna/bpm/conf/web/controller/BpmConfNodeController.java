@@ -13,34 +13,29 @@ import com.luna.bpm.conf.entity.BpmConfBase;
 import com.luna.bpm.conf.entity.BpmConfNode;
 import com.luna.bpm.conf.repository.BpmConfBaseManager;
 import com.luna.bpm.conf.repository.BpmConfNodeManager;
+import com.luna.bpm.conf.service.BpmConfNodeService;
+import com.luna.common.web.controller.BaseCRUDController;
 
 @Controller
-@RequestMapping("bpm")
-public class BpmConfNodeController {
-    private BpmConfNodeManager bpmConfNodeManager;
-    private BpmConfBaseManager bpmConfBaseManager;
-
-    @RequestMapping("bpm-conf-node-list")
-    public String list(@RequestParam("bpmConfBaseId") Long bpmConfBaseId,
-            Model model) {
-        BpmConfBase bpmConfBase = bpmConfBaseManager.findOne(bpmConfBaseId);
-        List<BpmConfNode> bpmConfNodes = bpmConfNodeManager.findByBpmConfBase(bpmConfBase);
-
-        model.addAttribute("bpmConfNodes", bpmConfNodes);
-
-        return "bpm/bpm-conf-node-list";
+@RequestMapping(value="/bpm/conf/node")
+public class BpmConfNodeController   extends BaseCRUDController<BpmConfNode, Long> {
+    private BpmConfNodeService getBpmConfNodeService() {
+        return (BpmConfNodeService) baseService;
     }
 
-    // ~ ======================================================================
-
-    @Resource
-    public void setBpmConfNodeManager(BpmConfNodeManager bpmConfNodeManager) {
-        this.bpmConfNodeManager = bpmConfNodeManager;
+	
+	public BpmConfNodeController() {
+		setResourceIdentity("bpm:conf:node");
     }
 
-    @Resource
-    public void setBpmConfBaseManager(BpmConfBaseManager bpmConfBaseManager) {
-        this.bpmConfBaseManager = bpmConfBaseManager;
-    }
-
+//    @RequestMapping("bpm-conf-node-list")
+//    public String list(@RequestParam("bpmConfBaseId") Long bpmConfBaseId,
+//            Model model) {
+//        BpmConfBase bpmConfBase = bpmConfBaseManager.findOne(bpmConfBaseId);
+//        List<BpmConfNode> bpmConfNodes = bpmConfNodeManager.findByBpmConfBase(bpmConfBase);
+//
+//        model.addAttribute("bpmConfNodes", bpmConfNodes);
+//
+//        return "bpm/bpm-conf-node-list";
+//    }
 }
