@@ -24,10 +24,15 @@ import com.luna.common.entity.BaseEntity;
 public class BpmCategory extends BaseEntity<Long> {
     private static final long serialVersionUID = 0L;
 
+    @Column(name = "NAME", length = 200)
     private String name;
+
+    @Column(name = "PRIORITY")
     private Integer priority;
 
     /** . */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmCategory")
+    @OrderBy("priority")
     private Set<BpmProcess> bpmProcesses = new HashSet<BpmProcess>(0);
 
     public BpmCategory() {
@@ -41,7 +46,6 @@ public class BpmCategory extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "NAME", length = 200)
     public String getName() {
         return this.name;
     }
@@ -55,7 +59,6 @@ public class BpmCategory extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "PRIORITY")
     public Integer getPriority() {
         return this.priority;
     }
@@ -69,8 +72,6 @@ public class BpmCategory extends BaseEntity<Long> {
     }
 
     /** @return . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmCategory")
-    @OrderBy("priority")
     public Set<BpmProcess> getBpmProcesses() {
         return this.bpmProcesses;
     }

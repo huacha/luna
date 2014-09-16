@@ -23,16 +23,22 @@ import com.luna.common.entity.BaseEntity;
 public class BpmMailTemplate extends BaseEntity<Long> {
     private static final long serialVersionUID = 0L;
 
+    @Column(name = "NAME", length = 50)
     private String name;
+    
+    @Column(name = "SUBJECT", length = 100)
     private String subject;
 
+    @Column(name = "CONTENT", length = 200)
     private String content;
 
     /** . */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmMailTemplate")
     private Set<BpmTaskDefNotice> bpmTaskDefNotices = new HashSet<BpmTaskDefNotice>(
             0);
 
     /** . */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmMailTemplate")
     private Set<BpmConfNotice> bpmConfNotices = new HashSet<BpmConfNotice>(0);
 
     public BpmMailTemplate() {
@@ -49,7 +55,6 @@ public class BpmMailTemplate extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "NAME", length = 50)
     public String getName() {
         return this.name;
     }
@@ -63,7 +68,6 @@ public class BpmMailTemplate extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "SUBJECT", length = 100)
     public String getSubject() {
         return this.subject;
     }
@@ -77,7 +81,6 @@ public class BpmMailTemplate extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "CONTENT", length = 200)
     public String getContent() {
         return this.content;
     }
@@ -91,7 +94,6 @@ public class BpmMailTemplate extends BaseEntity<Long> {
     }
 
     /** @return . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmMailTemplate")
     public Set<BpmTaskDefNotice> getBpmTaskDefNotices() {
         return this.bpmTaskDefNotices;
     }
@@ -105,7 +107,6 @@ public class BpmMailTemplate extends BaseEntity<Long> {
     }
 
     /** @return . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmMailTemplate")
     public Set<BpmConfNotice> getBpmConfNotices() {
         return this.bpmConfNotices;
     }

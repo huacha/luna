@@ -21,16 +21,24 @@ import com.luna.common.entity.BaseEntity;
 public class BpmDelegateInfo extends BaseEntity<Long> {
     private static final long serialVersionUID = 0L;
 
+    @Column(name = "ASSIGNEE", length = 200)
     private String assignee;
 
+    @Column(name = "ATTORNEY", length = 200)
     private String attorney;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "START_TIME", length = 26)
     private Date startTime;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "END_TIME", length = 26)
     private Date endTime;
 
+    @Column(name = "PROCESS_DEFINITION_ID", length = 100)
     private String processDefinitionId;
 
+    @Column(name = "STATUS")
     private Integer status;
 
     public BpmDelegateInfo() {
@@ -47,7 +55,6 @@ public class BpmDelegateInfo extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "ASSIGNEE", length = 200)
     public String getAssignee() {
         return this.assignee;
     }
@@ -61,7 +68,6 @@ public class BpmDelegateInfo extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "ATTORNEY", length = 200)
     public String getAttorney() {
         return this.attorney;
     }
@@ -75,8 +81,6 @@ public class BpmDelegateInfo extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "START_TIME", length = 26)
     public Date getStartTime() {
         return this.startTime;
     }
@@ -90,8 +94,6 @@ public class BpmDelegateInfo extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "END_TIME", length = 26)
     public Date getEndTime() {
         return this.endTime;
     }
@@ -105,7 +107,6 @@ public class BpmDelegateInfo extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "PROCESS_DEFINITION_ID", length = 100)
     public String getProcessDefinitionId() {
         return this.processDefinitionId;
     }
@@ -119,7 +120,6 @@ public class BpmDelegateInfo extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "STATUS")
     public Integer getStatus() {
         return this.status;
     }

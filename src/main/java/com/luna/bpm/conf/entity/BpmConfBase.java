@@ -23,12 +23,19 @@ import com.luna.common.entity.BaseEntity;
 public class BpmConfBase extends BaseEntity<Long> {
     private static final long serialVersionUID = 0L;
 
+    @Column(name = "PROCESS_DEFINITION_ID", length = 200)
     private String processDefinitionId;
+
+    @Column(name = "PROCESS_DEFINITION_KEY", length = 200)
     private String processDefinitionKey;
+
+    @Column(name = "PROCESS_DEFINITION_VERSION")
     private Integer processDefinitionVersion;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfBase")
     private Set<BpmConfNode> bpmConfNodes = new HashSet<BpmConfNode>(0);
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfBase")
     private Set<BpmProcess> bpmProcesses = new HashSet<BpmProcess>(0);
 
     public BpmConfBase() {
@@ -45,7 +52,6 @@ public class BpmConfBase extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "PROCESS_DEFINITION_ID", length = 200)
     public String getProcessDefinitionId() {
         return this.processDefinitionId;
     }
@@ -59,7 +65,6 @@ public class BpmConfBase extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "PROCESS_DEFINITION_KEY", length = 200)
     public String getProcessDefinitionKey() {
         return this.processDefinitionKey;
     }
@@ -73,7 +78,6 @@ public class BpmConfBase extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "PROCESS_DEFINITION_VERSION")
     public Integer getProcessDefinitionVersion() {
         return this.processDefinitionVersion;
     }
@@ -87,7 +91,6 @@ public class BpmConfBase extends BaseEntity<Long> {
     }
 
     /** @return . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfBase")
     public Set<BpmConfNode> getBpmConfNodes() {
         return this.bpmConfNodes;
     }
@@ -101,7 +104,6 @@ public class BpmConfBase extends BaseEntity<Long> {
     }
 
     /** @return . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfBase")
     public Set<BpmProcess> getBpmProcesses() {
         return this.bpmProcesses;
     }

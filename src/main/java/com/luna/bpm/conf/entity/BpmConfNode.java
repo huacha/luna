@@ -23,39 +23,69 @@ import com.luna.common.entity.BaseEntity;
 @Table(name = "BPM_CONF_NODE")
 public class BpmConfNode extends BaseEntity<Long> {
     private static final long serialVersionUID = 0L;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CONF_BASE_ID")
     private BpmConfBase bpmConfBase;
+
+    @Column(name = "CODE", length = 200)
     private String code;
+
+    @Column(name = "NAME", length = 200)
     private String name;
+
+    @Column(name = "TYPE", length = 200)
     private String type;
+
+    @Column(name = "CONF_USER")
     private Integer confUser;
+
+    @Column(name = "CONF_LISTENER")
     private Integer confListener;
+
+    @Column(name = "CONF_RULE")
     private Integer confRule;
+
+    @Column(name = "CONF_FORM")
     private Integer confForm;
+
+    @Column(name = "CONF_OPERATION")
     private Integer confOperation;
+
+    @Column(name = "CONF_NOTICE")
     private Integer confNotice;
+
+    @Column(name = "PRIORITY")
     private Integer priority;
 
     /** . */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
     private Set<BpmConfListener> bpmConfListeners = new HashSet<BpmConfListener>(
             0);
 
     /** . */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
     private Set<BpmConfNotice> bpmConfNotices = new HashSet<BpmConfNotice>(0);
 
     /** . */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
     private Set<BpmConfUser> bpmConfUsers = new HashSet<BpmConfUser>(0);
 
     /** . */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
     private Set<BpmConfCountersign> bpmConfCountersigns = new HashSet<BpmConfCountersign>(
             0);
 
     /** . */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
     private Set<BpmConfForm> bpmConfForms = new HashSet<BpmConfForm>(0);
 
     /** . */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
     private Set<BpmConfRule> bpmConfRules = new HashSet<BpmConfRule>(0);
 
     /** . */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
     private Set<BpmConfOperation> bpmConfOperations = new HashSet<BpmConfOperation>(
             0);
 
@@ -92,8 +122,6 @@ public class BpmConfNode extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CONF_BASE_ID")
     public BpmConfBase getBpmConfBase() {
         return this.bpmConfBase;
     }
@@ -107,7 +135,6 @@ public class BpmConfNode extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "CODE", length = 200)
     public String getCode() {
         return this.code;
     }
@@ -121,7 +148,6 @@ public class BpmConfNode extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "NAME", length = 200)
     public String getName() {
         return this.name;
     }
@@ -135,7 +161,6 @@ public class BpmConfNode extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "TYPE", length = 200)
     public String getType() {
         return this.type;
     }
@@ -149,7 +174,6 @@ public class BpmConfNode extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "CONF_USER")
     public Integer getConfUser() {
         return this.confUser;
     }
@@ -163,7 +187,6 @@ public class BpmConfNode extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "CONF_LISTENER")
     public Integer getConfListener() {
         return this.confListener;
     }
@@ -177,7 +200,6 @@ public class BpmConfNode extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "CONF_RULE")
     public Integer getConfRule() {
         return this.confRule;
     }
@@ -191,7 +213,6 @@ public class BpmConfNode extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "CONF_FORM")
     public Integer getConfForm() {
         return this.confForm;
     }
@@ -205,7 +226,6 @@ public class BpmConfNode extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "CONF_OPERATION")
     public Integer getConfOperation() {
         return this.confOperation;
     }
@@ -219,7 +239,6 @@ public class BpmConfNode extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "CONF_NOTICE")
     public Integer getConfNotice() {
         return this.confNotice;
     }
@@ -233,7 +252,6 @@ public class BpmConfNode extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "PRIORITY")
     public Integer getPriority() {
         return this.priority;
     }
@@ -247,7 +265,6 @@ public class BpmConfNode extends BaseEntity<Long> {
     }
 
     /** @return . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
     public Set<BpmConfListener> getBpmConfListeners() {
         return this.bpmConfListeners;
     }
@@ -261,7 +278,6 @@ public class BpmConfNode extends BaseEntity<Long> {
     }
 
     /** @return . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
     public Set<BpmConfNotice> getBpmConfNotices() {
         return this.bpmConfNotices;
     }
@@ -275,7 +291,6 @@ public class BpmConfNode extends BaseEntity<Long> {
     }
 
     /** @return . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
     public Set<BpmConfUser> getBpmConfUsers() {
         return this.bpmConfUsers;
     }
@@ -289,7 +304,6 @@ public class BpmConfNode extends BaseEntity<Long> {
     }
 
     /** @return . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
     public Set<BpmConfCountersign> getBpmConfCountersigns() {
         return this.bpmConfCountersigns;
     }
@@ -304,7 +318,6 @@ public class BpmConfNode extends BaseEntity<Long> {
     }
 
     /** @return . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
     public Set<BpmConfForm> getBpmConfForms() {
         return this.bpmConfForms;
     }
@@ -318,7 +331,6 @@ public class BpmConfNode extends BaseEntity<Long> {
     }
 
     /** @return . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
     public Set<BpmConfRule> getBpmConfRules() {
         return this.bpmConfRules;
     }
@@ -332,7 +344,6 @@ public class BpmConfNode extends BaseEntity<Long> {
     }
 
     /** @return . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
     public Set<BpmConfOperation> getBpmConfOperations() {
         return this.bpmConfOperations;
     }

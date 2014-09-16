@@ -20,10 +20,20 @@ import com.luna.common.entity.BaseEntity;
 public class BpmConfCountersign extends BaseEntity<Long> {
     private static final long serialVersionUID = 0L;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "NODE_ID")
     private BpmConfNode bpmConfNode;
+    
+    @Column(name = "SEQUENTIAL")
     private Integer sequential;
+
+    @Column(name = "PARTICIPANT", length = 200)
     private String participant;
+
+    @Column(name = "TYPE")
     private Integer type;
+
+    @Column(name = "RATE")
     private Integer rate;
 
     public BpmConfCountersign() {
@@ -39,8 +49,6 @@ public class BpmConfCountersign extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "NODE_ID")
     public BpmConfNode getBpmConfNode() {
         return this.bpmConfNode;
     }
@@ -54,7 +62,6 @@ public class BpmConfCountersign extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "SEQUENTIAL")
     public Integer getSequential() {
         return this.sequential;
     }
@@ -68,7 +75,6 @@ public class BpmConfCountersign extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "PARTICIPANT", length = 200)
     public String getParticipant() {
         return this.participant;
     }
@@ -82,7 +88,6 @@ public class BpmConfCountersign extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "TYPE")
     public Integer getType() {
         return this.type;
     }
@@ -96,7 +101,6 @@ public class BpmConfCountersign extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "RATE")
     public Integer getRate() {
         return this.rate;
     }

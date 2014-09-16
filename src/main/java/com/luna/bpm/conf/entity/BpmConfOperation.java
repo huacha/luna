@@ -20,8 +20,14 @@ import com.luna.common.entity.BaseEntity;
 public class BpmConfOperation extends BaseEntity<Long> {
     private static final long serialVersionUID = 0L;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "NODE_ID")
     private BpmConfNode bpmConfNode;
+
+    @Column(name = "VALUE", length = 200)
     private String value;
+
+    @Column(name = "PRIORITY")
     private Integer priority;
 
     public BpmConfOperation() {
@@ -35,8 +41,6 @@ public class BpmConfOperation extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "NODE_ID")
     public BpmConfNode getBpmConfNode() {
         return this.bpmConfNode;
     }
@@ -50,7 +54,6 @@ public class BpmConfOperation extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "VALUE", length = 200)
     public String getValue() {
         return this.value;
     }
@@ -64,7 +67,6 @@ public class BpmConfOperation extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "PRIORITY")
     public Integer getPriority() {
         return this.priority;
     }

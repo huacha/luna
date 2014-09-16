@@ -21,10 +21,20 @@ import com.luna.common.entity.BaseEntity;
 public class BpmDelegateHistory extends BaseEntity<Long> {
     private static final long serialVersionUID = 0L;
 
+    @Column(name = "ASSIGNEE", length = 200)
     private String assignee;
+    
+    @Column(name = "ATTORNEY", length = 200)
     private String attorney;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "DELEGATE_TIME", length = 26)
     private Date delegateTime;
+    
+    @Column(name = "TASK_ID", length = 100)
     private String taskId;
+
+    @Column(name = "STATUS")
     private Integer status;
 
     public BpmDelegateHistory() {
@@ -40,7 +50,6 @@ public class BpmDelegateHistory extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "ASSIGNEE", length = 200)
     public String getAssignee() {
         return this.assignee;
     }
@@ -54,7 +63,6 @@ public class BpmDelegateHistory extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "ATTORNEY", length = 200)
     public String getAttorney() {
         return this.attorney;
     }
@@ -68,8 +76,6 @@ public class BpmDelegateHistory extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "DELEGATE_TIME", length = 26)
     public Date getDelegateTime() {
         return this.delegateTime;
     }
@@ -83,7 +89,6 @@ public class BpmDelegateHistory extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "TASK_ID", length = 100)
     public String getTaskId() {
         return this.taskId;
     }
@@ -97,7 +102,6 @@ public class BpmDelegateHistory extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "STATUS")
     public Integer getStatus() {
         return this.status;
     }

@@ -20,11 +20,23 @@ import com.luna.common.entity.BaseEntity;
 public class BpmConfForm extends BaseEntity<Long> {
     private static final long serialVersionUID = 0L;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "NODE_ID")
     private BpmConfNode bpmConfNode;
+
+    @Column(name = "VALUE", length = 200)
     private String value;
+
+    @Column(name = "TYPE")
     private Integer type;
+
+    @Column(name = "ORIGIN_VALUE", length = 200)
     private String originValue;
+
+    @Column(name = "ORIGIN_TYPE")
     private Integer originType;
+
+    @Column(name = "STATUS")
     private Integer status;
 
     public BpmConfForm() {
@@ -41,8 +53,6 @@ public class BpmConfForm extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "NODE_ID")
     public BpmConfNode getBpmConfNode() {
         return this.bpmConfNode;
     }
@@ -56,7 +66,6 @@ public class BpmConfForm extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "VALUE", length = 200)
     public String getValue() {
         return this.value;
     }
@@ -70,7 +79,6 @@ public class BpmConfForm extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "TYPE")
     public Integer getType() {
         return this.type;
     }
@@ -84,7 +92,6 @@ public class BpmConfForm extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "ORIGIN_VALUE", length = 200)
     public String getOriginValue() {
         return this.originValue;
     }
@@ -98,7 +105,6 @@ public class BpmConfForm extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "ORIGIN_TYPE")
     public Integer getOriginType() {
         return this.originType;
     }
@@ -112,7 +118,6 @@ public class BpmConfForm extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "STATUS")
     public Integer getStatus() {
         return this.status;
     }

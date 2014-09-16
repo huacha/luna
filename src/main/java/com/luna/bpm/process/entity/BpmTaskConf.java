@@ -17,8 +17,13 @@ import com.luna.common.entity.BaseEntity;
 public class BpmTaskConf extends BaseEntity<Long> {
     private static final long serialVersionUID = 0L;
 
+    @Column(name = "BUSINESS_KEY", length = 200)
     private String businessKey;
+    
+    @Column(name = "TASK_DEFINITION_KEY", length = 200)
     private String taskDefinitionKey;
+    
+    @Column(name = "ASSIGNEE", length = 200)
     private String assignee;
 
     public BpmTaskConf() {
@@ -32,7 +37,6 @@ public class BpmTaskConf extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "BUSINESS_KEY", length = 200)
     public String getBusinessKey() {
         return this.businessKey;
     }
@@ -46,7 +50,6 @@ public class BpmTaskConf extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "TASK_DEFINITION_KEY", length = 200)
     public String getTaskDefinitionKey() {
         return this.taskDefinitionKey;
     }
@@ -60,7 +63,6 @@ public class BpmTaskConf extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "ASSIGNEE", length = 200)
     public String getAssignee() {
         return this.assignee;
     }

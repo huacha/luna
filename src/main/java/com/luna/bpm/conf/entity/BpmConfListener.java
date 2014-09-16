@@ -19,10 +19,21 @@ import com.luna.common.entity.BaseEntity;
 @Table(name = "BPM_CONF_LISTENER")
 public class BpmConfListener extends BaseEntity<Long> {
     private static final long serialVersionUID = 0L;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "NODE_ID")
     private BpmConfNode bpmConfNode;
+
+    @Column(name = "VALUE", length = 200)
     private String value;
+
+    @Column(name = "TYPE")
     private Integer type;
+
+    @Column(name = "STATUS")
     private Integer status;
+
+    @Column(name = "PRIORITY")
     private Integer priority;
 
     public BpmConfListener() {
@@ -38,8 +49,6 @@ public class BpmConfListener extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "NODE_ID")
     public BpmConfNode getBpmConfNode() {
         return this.bpmConfNode;
     }
@@ -53,7 +62,6 @@ public class BpmConfListener extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "VALUE", length = 200)
     public String getValue() {
         return this.value;
     }
@@ -67,7 +75,6 @@ public class BpmConfListener extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "TYPE")
     public Integer getType() {
         return this.type;
     }
@@ -81,7 +88,6 @@ public class BpmConfListener extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "STATUS")
     public Integer getStatus() {
         return this.status;
     }
@@ -95,7 +101,6 @@ public class BpmConfListener extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "PRIORITY")
     public Integer getPriority() {
         return this.priority;
     }

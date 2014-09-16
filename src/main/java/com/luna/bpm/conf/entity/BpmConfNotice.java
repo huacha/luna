@@ -21,10 +21,21 @@ import com.luna.common.entity.BaseEntity;
 public class BpmConfNotice extends BaseEntity<Long> {
     private static final long serialVersionUID = 0L;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TEMPLATE_ID")
     private BpmMailTemplate bpmMailTemplate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "NODE_ID")
     private BpmConfNode bpmConfNode;
+
+    @Column(name = "TYPE")
     private Integer type;
+
+    @Column(name = "RECEIVER", length = 200)
     private String receiver;
+
+    @Column(name = "DUE_DATE", length = 50)
     private String dueDate;
 
     public BpmConfNotice() {
@@ -41,8 +52,6 @@ public class BpmConfNotice extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TEMPLATE_ID")
     public BpmMailTemplate getBpmMailTemplate() {
         return this.bpmMailTemplate;
     }
@@ -56,8 +65,6 @@ public class BpmConfNotice extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "NODE_ID")
     public BpmConfNode getBpmConfNode() {
         return this.bpmConfNode;
     }
@@ -71,7 +78,6 @@ public class BpmConfNotice extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "TYPE")
     public Integer getType() {
         return this.type;
     }
@@ -85,7 +91,6 @@ public class BpmConfNotice extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "RECEIVER", length = 200)
     public String getReceiver() {
         return this.receiver;
     }
@@ -99,7 +104,6 @@ public class BpmConfNotice extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "DUE_DATE", length = 50)
     public String getDueDate() {
         return this.dueDate;
     }

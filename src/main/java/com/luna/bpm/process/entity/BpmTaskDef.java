@@ -19,10 +19,18 @@ import com.luna.common.entity.BaseEntity;
 @Table(name = "BPM_TASK_DEF")
 public class BpmTaskDef extends BaseEntity<Long> {
     private static final long serialVersionUID = 0L;
-    
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PROCESS_ID")
     private BpmProcess bpmProcess;
+
+    @Column(name = "TASK_DEFINITION_KEY", length = 200)
     private String taskDefinitionKey;
+
+    @Column(name = "ASSIGNEE", length = 200)
     private String assignee;
+
+    @Column(name = "CANDIDATE", length = 200)
     private String candidate;
 
     public BpmTaskDef() {
@@ -37,8 +45,6 @@ public class BpmTaskDef extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PROCESS_ID")
     public BpmProcess getBpmProcess() {
         return this.bpmProcess;
     }
@@ -52,7 +58,6 @@ public class BpmTaskDef extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "TASK_DEFINITION_KEY", length = 200)
     public String getTaskDefinitionKey() {
         return this.taskDefinitionKey;
     }
@@ -66,7 +71,6 @@ public class BpmTaskDef extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "ASSIGNEE", length = 200)
     public String getAssignee() {
         return this.assignee;
     }
@@ -80,7 +84,6 @@ public class BpmTaskDef extends BaseEntity<Long> {
     }
 
     /** @return null. */
-    @Column(name = "CANDIDATE", length = 200)
     public String getCandidate() {
         return this.candidate;
     }
