@@ -17,7 +17,7 @@ import com.luna.bpm.process.ActivitiProcessConnector;
  * @author LuZhao
  * 
  */
-@Controller
+@Controller(value="bpmJobController")
 @RequestMapping("bpm")
 public class JobController {
 	@Autowired

@@ -49,10 +49,10 @@
                </bean>
            </list>
 		</property>
-
+<!--
 		<property name="businessCalendarManager" ref="businessCalendarManager"/>
 
-		<!-- //更换id生成策略
+		 //更换id生成策略
 		<property name="idGenerator">
 			<bean class="org.activiti.engine.impl.persistence.StrongUuidGenerator" />
 		</property>
