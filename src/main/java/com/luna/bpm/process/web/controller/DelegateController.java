@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.repository.ProcessDefinition;
-import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
@@ -42,8 +41,8 @@ public class DelegateController {
 	 * @return
 	 */
 	@RequestMapping("delegate-listMyDelegateInfos")
-	public String listMyDelegateInfos(Model model) {
-		String userId = (String) SecurityUtils.getSubject().getPrincipal();// 以当前用户名代替用户id
+	public String listMyDelegateInfos(@CurrentUser User user,Model model) {
+		String userId = user.getId().toString();
 		List<BpmDelegateInfo> bpmDelegateInfos = bpmDelegateInfoManager
 				.findByAssignee(userId);
 		model.addAttribute("bpmDelegateInfos", bpmDelegateInfos);
