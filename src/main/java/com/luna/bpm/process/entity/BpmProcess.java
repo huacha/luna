@@ -26,20 +26,34 @@ import com.luna.common.entity.BaseEntity;
 public class BpmProcess extends BaseEntity<Long> {
     private static final long serialVersionUID = 0L;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CONF_BASE_ID")
     private BpmConfBase bpmConfBase;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CATEGORY_ID")
     private BpmCategory bpmCategory;
+    
+    @Column(name = "NAME", length = 200)
     private String name;
+    
+    @Column(name = "PRIORITY")
     private Integer priority;
+    
+    @Column(name = "DESCN", length = 200)
     private String descn;
+    
+    @Column(name = "USE_TASK_CONF")
     private Integer useTaskConf;
+    
+    @Column(name = "CODE", length = 64)
     private String code;
-
-    /** . */
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmProcess")
     private Set<BpmTaskDef> bpmTaskDefs = new HashSet<BpmTaskDef>(0);
-
-    /** . */
-    private Set<BpmTaskDefNotice> bpmTaskDefNotices = new HashSet<BpmTaskDefNotice>(
-            0);
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmProcess")
+    private Set<BpmTaskDefNotice> bpmTaskDefNotices = new HashSet<BpmTaskDefNotice>(0);
 
     public BpmProcess() {
     }
@@ -59,130 +73,65 @@ public class BpmProcess extends BaseEntity<Long> {
         this.bpmTaskDefNotices = bpmTaskDefNotices;
     }
 
-    /** @return null. */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CONF_BASE_ID")
     public BpmConfBase getBpmConfBase() {
         return this.bpmConfBase;
     }
-
-    /**
-     * @param bpmConfBase
-     *            null.
-     */
     public void setBpmConfBase(BpmConfBase bpmConfBase) {
         this.bpmConfBase = bpmConfBase;
     }
-
-    /** @return null. */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CATEGORY_ID")
+    
     public BpmCategory getBpmCategory() {
         return this.bpmCategory;
     }
-
-    /**
-     * @param bpmCategory
-     *            null.
-     */
     public void setBpmCategory(BpmCategory bpmCategory) {
         this.bpmCategory = bpmCategory;
     }
 
-    /** @return null. */
-    @Column(name = "NAME", length = 200)
     public String getName() {
         return this.name;
     }
-
-    /**
-     * @param name
-     *            null.
-     */
     public void setName(String name) {
         this.name = name;
     }
-
-    /** @return null. */
-    @Column(name = "PRIORITY")
+    
     public Integer getPriority() {
         return this.priority;
     }
-
-    /**
-     * @param priority
-     *            null.
-     */
     public void setPriority(Integer priority) {
         this.priority = priority;
     }
-
-    /** @return null. */
-    @Column(name = "DESCN", length = 200)
+    
     public String getDescn() {
         return this.descn;
     }
-
-    /**
-     * @param descn
-     *            null.
-     */
     public void setDescn(String descn) {
         this.descn = descn;
     }
-
-    /** @return null. */
-    @Column(name = "USE_TASK_CONF")
+    
     public Integer getUseTaskConf() {
         return this.useTaskConf;
     }
-
-    /**
-     * @param useTaskConf
-     *            null.
-     */
     public void setUseTaskConf(Integer useTaskConf) {
         this.useTaskConf = useTaskConf;
     }
 
-    /** @return null. */
-    @Column(name = "CODE", length = 64)
     public String getCode() {
         return this.code;
     }
-
-    /**
-     * @param code
-     *            null.
-     */
     public void setCode(String code) {
         this.code = code;
     }
-
-    /** @return . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmProcess")
+    
     public Set<BpmTaskDef> getBpmTaskDefs() {
         return this.bpmTaskDefs;
     }
-
-    /**
-     * @param bpmTaskDefs
-     *            .
-     */
     public void setBpmTaskDefs(Set<BpmTaskDef> bpmTaskDefs) {
         this.bpmTaskDefs = bpmTaskDefs;
     }
-
-    /** @return . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmProcess")
+    
     public Set<BpmTaskDefNotice> getBpmTaskDefNotices() {
         return this.bpmTaskDefNotices;
     }
-
-    /**
-     * @param bpmTaskDefNotices
-     *            .
-     */
     public void setBpmTaskDefNotices(Set<BpmTaskDefNotice> bpmTaskDefNotices) {
         this.bpmTaskDefNotices = bpmTaskDefNotices;
     }

@@ -20,16 +20,24 @@ import com.luna.common.entity.BaseEntity;
 public class BpmTaskDefNotice extends BaseEntity<Long> {
     private static final long serialVersionUID = 0L;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TEMPLATE_ID")
     private BpmMailTemplate bpmMailTemplate;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PROCESS_ID")
     private BpmProcess bpmProcess;
 
+    @Column(name = "TASK_DEFINITION_KEY", length = 200)
     private String taskDefinitionKey;
 
+    @Column(name = "TYPE")
     private Integer type;
     
+    @Column(name = "RECEIVER", length = 200)
     private String receiver;
     
+    @Column(name = "DUE_DATE", length = 50)
     private String dueDate;
 
     public BpmTaskDefNotice() {
@@ -45,89 +53,47 @@ public class BpmTaskDefNotice extends BaseEntity<Long> {
         this.receiver = receiver;
         this.dueDate = dueDate;
     }
-
-    /** @return null. */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TEMPLATE_ID")
+    
     public BpmMailTemplate getBpmMailTemplate() {
         return this.bpmMailTemplate;
     }
-
-    /**
-     * @param bpmMailTemplate
-     *            null.
-     */
     public void setBpmMailTemplate(BpmMailTemplate bpmMailTemplate) {
         this.bpmMailTemplate = bpmMailTemplate;
     }
-
-    /** @return null. */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PROCESS_ID")
+    
     public BpmProcess getBpmProcess() {
         return this.bpmProcess;
     }
-
-    /**
-     * @param bpmProcess
-     *            null.
-     */
     public void setBpmProcess(BpmProcess bpmProcess) {
         this.bpmProcess = bpmProcess;
     }
 
-    /** @return null. */
-    @Column(name = "TASK_DEFINITION_KEY", length = 200)
+    
     public String getTaskDefinitionKey() {
         return this.taskDefinitionKey;
     }
-
-    /**
-     * @param taskDefinitionKey
-     *            null.
-     */
     public void setTaskDefinitionKey(String taskDefinitionKey) {
         this.taskDefinitionKey = taskDefinitionKey;
     }
 
-    /** @return null. */
-    @Column(name = "TYPE")
+    
     public Integer getType() {
         return this.type;
     }
-
-    /**
-     * @param type
-     *            null.
-     */
     public void setType(Integer type) {
         this.type = type;
     }
-
-    /** @return null. */
-    @Column(name = "RECEIVER", length = 200)
+    
     public String getReceiver() {
         return this.receiver;
     }
-
-    /**
-     * @param receiver
-     *            null.
-     */
     public void setReceiver(String receiver) {
         this.receiver = receiver;
     }
-
-    /** @return null. */
-    @Column(name = "DUE_DATE", length = 50)
+    
     public String getDueDate() {
         return this.dueDate;
     }
-
-    /**
-     * @param dueDate
-     *            null.
-     */
     public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
     }

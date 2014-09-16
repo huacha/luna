@@ -13,7 +13,8 @@
          <param-name>contextConfigLocation</param-name>
          <param-value>
              classpath:spring-common.xml,
-             classpath:spring-config.xml
+             classpath:spring-config.xml,
+             classpath:spring-activiti.xml
          </param-value>
      </context-param>
      <listener>
