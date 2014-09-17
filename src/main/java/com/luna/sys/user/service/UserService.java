@@ -40,7 +40,6 @@ import java.util.Set;
 @Service
 public class UserService extends BaseService<User, Long> {
 
-    @Autowired
     private UserRepository getUserRepository() {
         return (UserRepository) baseRepository;
     }

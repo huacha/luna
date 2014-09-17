@@ -7,17 +7,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * json转换.
  */
 public class JsonMapper {
-    /** logger. */
-    private static Logger logger = LoggerFactory.getLogger(JsonMapper.class);
-
-    /** jackson. */
     private ObjectMapper mapper;
 
     /** constructor. */

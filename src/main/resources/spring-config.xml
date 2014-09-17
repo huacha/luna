@@ -18,10 +18,13 @@
     <context:component-scan base-package="com.luna,org.apache.shiro">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
+    
     <!-- 开启AOP监听 只对当前配置文件有效 -->
     <aop:aspectj-autoproxy expose-proxy="true"/>
 
-
+	<!-- Activates scanning of @Transactional -->
+	<tx:annotation-driven />
+	
     <!-- 数据源 -->
     <!--see https://github.com/alibaba/druid/wiki/%E9%85%8D%E7%BD%AE_DruidDataSource%E5%8F%82%E8%80%83%E9%85%8D%E7%BD%AE-->
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
@@ -73,7 +76,7 @@
 
         <property name="persistenceUnitName" value="${jpa.persistenceUnitName}"/>
         <property name="persistenceProvider">
-            <bean class="org.hibernate.ejb.HibernatePersistence"/>
+            <bean class="org.hibernate.jpa.HibernatePersistenceProvider"/>
         </property>
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">

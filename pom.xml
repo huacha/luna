@@ -14,7 +14,7 @@
 		<spring.version>4.0.6.RELEASE</spring.version>
 		<hibernate.version>4.3.6.Final</hibernate.version>
 		<hibernate.commons.annotaions.version>4.0.5.Final</hibernate.commons.annotaions.version>
-		<jetty.version>8.1.8.v20121106</jetty.version>
+		<jetty.version>8.1.15.v20140411</jetty.version>
 		<jcaptcha.version>2.0-alpha-1</jcaptcha.version>
 		<aspectj.version>1.7.4</aspectj.version>
 		<slf4j.version>1.7.7</slf4j.version>
@@ -93,7 +93,6 @@
 			<version>${activiti.version}</version>
 		</dependency>
 		-->
-
 
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>

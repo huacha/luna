@@ -5,16 +5,16 @@
  */
 package com.luna.sys.user.service;
 
-import com.luna.common.service.BaseService;
-import com.luna.sys.user.entity.UserOnline;
-import com.luna.sys.user.repository.UserOnlineRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import com.luna.common.service.BaseService;
+import com.luna.sys.user.entity.UserOnline;
+import com.luna.sys.user.repository.UserOnlineRepository;
 
 /**
  * 

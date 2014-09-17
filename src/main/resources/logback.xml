@@ -47,12 +47,10 @@
         </encoder>
     </appender>
 
-    <root level="info"/>
-
-    <!--<logger name="org.apache" level="debug">-->
-        <!--<appender-ref ref="STDOUT"/>-->
-    <!--</logger>-->
-
+    <root level="info">
+		<appender-ref ref="STDOUT" />
+	</root>	
+	
     <!--错误日志-->
     <logger name="es-error" level="info">
         <appender-ref ref="ERROR"/>
@@ -66,10 +64,12 @@
         <appender-ref ref="SYS-USER"/>
     </logger>
 
-    <!-- cache -->
-    <logger name="com.luna.extra.aop" level="info">
+    <logger name="com.luna" level="info">
             <appender-ref ref="STDOUT"/>
     </logger>
+    
+    <logger name="org.hibernate" level="warn"/>
+    <logger name="org.springframework" level="warn"/>
 
 </configuration>
 
