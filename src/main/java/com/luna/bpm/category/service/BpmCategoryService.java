@@ -22,4 +22,8 @@ public class BpmCategoryService extends BaseService<BpmCategory, Long> {
     private BpmCategoryManager getBpmCategoryRepository() {
         return (BpmCategoryManager) baseRepository;
     }
+
+	public BpmCategory findByName(String fieldValue) {
+		return getBpmCategoryRepository().findByName(fieldValue);
+	}
 }
