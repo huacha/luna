@@ -510,6 +510,7 @@
 				<version>2.3</version>
 				<configuration>
 					<warName>${project.artifactId}</warName>
+					<warSourceDirectory>webapp</warSourceDirectory>
 				</configuration>
 			</plugin>
 
@@ -648,6 +649,7 @@
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>${jetty.version}</version>
 				<configuration>
+					<webAppSourceDirectory>webapp</webAppSourceDirectory>
 					<reload>manual</reload>
 					<!--<scanIntervalSeconds>2</scanIntervalSeconds> -->
 					<stopPort>9999</stopPort>
@@ -688,17 +690,16 @@
 						<password>${connection.password}</password>
 					</appDbConnectionSettings>
 					<dbDataScriptsDirectory>
-						<param>src/main/sql/data</param>
+						<param>/sql/data</param>
 					</dbDataScriptsDirectory>
 					<dbSchemaScriptsDirectory>
-						<param>src/main/sql/schema</param>
+						<param>/sql/schema</param>
 					</dbSchemaScriptsDirectory>
 					<dbUpdateScriptsDirectory>
-						<param>src/main/sql/update</param>
+						<param>/sql/update</param>
 					</dbUpdateScriptsDirectory>
 					<dbCreateStatements>
-						create database ${db.name} CHARACTER SET
-						'utf8';
+						create database ${db.name} CHARACTER SET 'utf8';
 					</dbCreateStatements>
 					<dbDropStatements>drop database ${db.name}; </dbDropStatements>
 					<sqlDelimiter>;;</sqlDelimiter>
