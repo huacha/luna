@@ -58,7 +58,7 @@ public class AuthController extends BaseCRUDController<Auth, Long> {
     @Override
     public String list(Searchable searchable, Model model) {
 
-        String typeName = String.valueOf(searchable.getValue("type_eq"));
+        String typeName = searchable.getValue("type_eq");
         model.addAttribute("type", AuthType.valueOf(typeName));
 
         return super.list(searchable, model);

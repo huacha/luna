@@ -14,7 +14,7 @@
 		<spring.version>4.0.6.RELEASE</spring.version>
 		<hibernate.version>4.3.6.Final</hibernate.version>
 		<hibernate.commons.annotaions.version>4.0.5.Final</hibernate.commons.annotaions.version>
-		<jetty.version>8.1.15.v20140411</jetty.version>
+		<jetty.version>8.1.16.v20140903</jetty.version>
 		<jcaptcha.version>2.0-alpha-1</jcaptcha.version>
 		<aspectj.version>1.7.4</aspectj.version>
 		<slf4j.version>1.7.7</slf4j.version>
@@ -61,38 +61,6 @@
 			<artifactId>activiti-json-converter</artifactId>
 			<version>${activiti.version}</version>
 		</dependency>
-
-		<!-- modeler 相关 
-		<dependency>
-			<groupId>org.activiti</groupId>
-			<artifactId>activiti-modeler</artifactId>
-			<version>${activiti.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.activiti</groupId>
-			<artifactId>activiti-explorer</artifactId>
-			<version>${activiti.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>com.vaadin</groupId>
-					<artifactId>vaadin</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.vaadin.addons</groupId>
-					<artifactId>dcharts-widget</artifactId>
-				</exclusion>
-				<exclusion>
-					<artifactId>activiti-simple-workflow</artifactId>
-					<groupId>org.activiti</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.activiti</groupId>
-			<artifactId>activiti-diagram-rest</artifactId>
-			<version>${activiti.version}</version>
-		</dependency>
-		-->
 
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>

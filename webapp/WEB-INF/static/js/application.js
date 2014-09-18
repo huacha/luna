@@ -31,7 +31,7 @@ $.app = {
                         function () {
                             longPolling(url, callback);
                         },
-                        10
+                        fiveMinute
                     );
                 },
                 error: function (xmlHR, textStatus, errorThrown) {
@@ -43,7 +43,7 @@ $.app = {
                         function () {
                             longPolling(url, callback);
                         },
-                        30 * 1000
+                        fiveMinute
                     );
                 }
             });

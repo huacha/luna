@@ -37,12 +37,11 @@ public class ModelerController {
 	 * @param model
 	 * @return
 	 */
-	//TODO 如果继承baseController的话，与页面对应的方法映射需要重新整理
-    @RequestMapping("modeler-list")
+    @RequestMapping()
     public String list(org.springframework.ui.Model model) {
         List<Model> models = processEngine.getRepositoryService().createModelQuery().list();
         model.addAttribute("models", models);
-        return "modeler/modeler-list";
+        return "/bpm/modeler/list";
     }
 
     /**
@@ -52,7 +51,7 @@ public class ModelerController {
      * @return
      * @throws Exception
      */
-    @RequestMapping("modeler-open")
+    @RequestMapping("create")
     public String open(@RequestParam(value = "id", required = false) String id) throws Exception {
         RepositoryService repositoryService = processEngine.getRepositoryService();
         Model model = repositoryService.getModel(id);
@@ -67,10 +66,10 @@ public class ModelerController {
     /**
      * 删除一个模型
      */
-    @RequestMapping("modeler-remove")
+    @RequestMapping("remove")
     public String remove(@RequestParam("id") String id) {
         processEngine.getRepositoryService().deleteModel(id);
-        return "redirect:/modeler/modeler-list";
+        return "redirect:/bpm/modeler/list";
     }
 
     /**
@@ -80,7 +79,7 @@ public class ModelerController {
      * @return
      * @throws Exception
      */
-    @RequestMapping("modeler-deploy")
+    @RequestMapping("deploy")
     public String deploy(@RequestParam("id") String id) throws Exception {
         RepositoryService repositoryService = processEngine
                 .getRepositoryService();
@@ -109,7 +108,7 @@ public class ModelerController {
             processEngine.getManagementService().executeCommand(
                     new SyncProcessCmd(processDefinition.getId()));
         }
-        return "redirect:/modeler/modeler-list";
+        return "redirect:/bpm/modeler/list";
     }
 
     /**
