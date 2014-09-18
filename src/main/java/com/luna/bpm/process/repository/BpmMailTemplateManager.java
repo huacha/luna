@@ -7,4 +7,6 @@ import com.luna.common.repository.BaseRepository;
 
 
 public interface BpmMailTemplateManager extends BaseRepository<BpmMailTemplate,Long> {
+
+	BpmMailTemplate findByName(String fieldValue);
 }

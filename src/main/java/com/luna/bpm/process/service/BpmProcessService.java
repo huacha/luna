@@ -22,4 +22,8 @@ public class BpmProcessService extends BaseService<BpmProcess, Long> {
     private BpmProcessManager getBpmProcessRepository() {
         return (BpmProcessManager) baseRepository;
     }
+
+	public BpmProcess findByName(String fieldValue) {
+		return getBpmProcessRepository().findByName(fieldValue);
+	}
 }

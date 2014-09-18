@@ -31,9 +31,9 @@
             <a class="reverse-all" href="javascript:;">反选</a>
         </th>
         <th style="width: 100px" sort="id">编号</th>
-        <th style="width: 180px" sort="name">名称</th>
-        <th style="width: 50px" sort="priority">排序</th>
-        <th ></th>
+        <th style="width: 150px" sort="name">名称</th>
+        <th style="width: 200px" sort="subject">主题</th>
+        <th >内容</th>
     </tr>
     </thead>
     <tbody>
@@ -41,11 +41,11 @@
         <tr>
             <td class="check"><input type="checkbox" name="ids" value="${m.id}"></td>
             <td>
-                <a class="btn btn-link btn-edit" href="${ctx}/bpm/category/${m.id}">${m.id}</a>
+                <a class="btn btn-link btn-edit" href="${ctx}/bpm/mailtemplate/${m.id}">${m.id}</a>
             </td>
             <td>${m.name}</td>
-            <td>${m.priority}</td>
-            <td></td>
+            <td>${m.subject}</td>
+            <td>${m.content}</td>
         </tr>
     </c:forEach>
     </tbody>

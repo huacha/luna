@@ -25,26 +25,33 @@
 <table id="table" class="sort-table table table-bordered table-hover" data-async="true">
     <thead>
     <tr>
-        <th style="width: 80px">
+        <th style="width: 50px">
             <a class="check-all" href="javascript:;">全选</a>
             |
             <a class="reverse-all" href="javascript:;">反选</a>
         </th>
-        <th style="width: 100px" sort="id">编号</th>
-        <th style="width: 180px" sort="name">名称</th>
-        <th style="width: 50px" sort="priority">排序</th>
+        <th style="width: 80px" sort="id">编号</th>
+        <th style="width: 150px" sort="name">名称</th>
+        <th style="width: 100px" sort="bpmCategory.id">分类</th>
+        <th style="width: 200px" sort="descn">描述</th>
+        <th style="width: 50px"  sort="priority">排序</th>
+        <th style="width: 120px" sort="useTaskConf">是否指定任务负责人</th>
         <th ></th>
     </tr>
     </thead>
     <tbody>
+
     <c:forEach items="${page.content}" var="m">
         <tr>
             <td class="check"><input type="checkbox" name="ids" value="${m.id}"></td>
             <td>
-                <a class="btn btn-link btn-edit" href="${ctx}/bpm/category/${m.id}">${m.id}</a>
+                <a class="btn btn-link btn-edit" href="${ctx}/bpm/process/process/${m.id}">${m.id}</a>
             </td>
             <td>${m.name}</td>
+            <td>${m.bpmCategory.name}</td>
+            <td>${m.descn}</td>
             <td>${m.priority}</td>
+            <td>${m.useTaskConf == 1}</td>
             <td></td>
         </tr>
     </c:forEach>

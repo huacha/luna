@@ -7,6 +7,7 @@ package com.luna.bpm.process.service;
 
 import org.springframework.stereotype.Service;
 
+import com.luna.bpm.category.entity.BpmCategory;
 import com.luna.bpm.process.entity.BpmMailTemplate;
 import com.luna.bpm.process.repository.BpmMailTemplateManager;
 import com.luna.common.service.BaseService;
@@ -22,4 +23,9 @@ public class BpmMailTemplateService extends BaseService<BpmMailTemplate, Long> {
     private BpmMailTemplateManager getBpmMailTemplateRepository() {
         return (BpmMailTemplateManager) baseRepository;
     }
+
+
+	public BpmMailTemplate findByName(String fieldValue) {
+		return getBpmMailTemplateRepository().findByName(fieldValue);
+	}
 }

@@ -30,7 +30,7 @@ public class BpmProcess extends BaseEntity<Long> {
     @JoinColumn(name = "CONF_BASE_ID")
     private BpmConfBase bpmConfBase;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CATEGORY_ID")
     private BpmCategory bpmCategory;
     
