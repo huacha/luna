@@ -136,7 +136,7 @@ public class MessageController extends BaseController<Message, Long> {
         if (receiver == null) {
             result.rejectValue("receiverId", "receiver.not.exists");
         }
-        if (receiver.equals(user)) {
+        else if (receiver.equals(user)) {
             result.rejectValue("receiverId", "receiver.not.self");
         }
 
@@ -223,8 +223,7 @@ public class MessageController extends BaseController<Message, Long> {
         if (receiver == null) {
             result.rejectValue("receiverId", "receiver.not.exists");
         }
-
-        if (receiver.equals(user)) {
+        else if (receiver.equals(user)) {
             result.rejectValue("receiverId", "receiver.not.self");
         }
 

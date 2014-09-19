@@ -55,12 +55,10 @@
             }
             var id = checkbox.val();
             
-            window.alert("checked id="+ id);
-            /*
             window.location.href=
-                    "${ctx}/bpm/process/conf/process-"+ id + "/list" +
+                    "${ctx}/bpm/conf/node/process-"+ id + "" +
                             "?BackURL=" + $.table.tableURL($(".table"));
-            */
+            
         });
 
     });

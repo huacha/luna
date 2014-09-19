@@ -1,10 +1,21 @@
 package com.luna.bpm.conf.web.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.luna.bpm.conf.entity.BpmConfNode;
 import com.luna.bpm.conf.entity.BpmConfUser;
+import com.luna.bpm.conf.service.BpmConfNodeService;
 import com.luna.bpm.conf.service.BpmConfUserService;
+import com.luna.bpm.process.entity.BpmProcess;
+import com.luna.bpm.process.service.BpmProcessService;
+import com.luna.common.entity.search.SearchOperator;
+import com.luna.common.entity.search.Searchable;
+import com.luna.common.web.bind.annotation.PageableDefaults;
 import com.luna.common.web.controller.BaseCRUDController;
 
 @Controller
@@ -13,11 +24,38 @@ public class BpmConfUserController   extends BaseCRUDController<BpmConfUser, Lon
     private BpmConfUserService getBpmConfUserService() {
         return (BpmConfUserService) baseService;
     }
+    
+    @Autowired
+    private BpmConfNodeService bpmConfNodeService;
 
+    @Autowired
+    private BpmProcessService bpmProcessService;
 	
 	public BpmConfUserController() {
 		setResourceIdentity("bpm:conf:user");
     }
+	
+
+	@RequestMapping(value = "/process-{processId}/node-{nodeId}", method = RequestMethod.GET)
+	@PageableDefaults(sort = "priority=asc")
+	public String list(Searchable searchable,
+			@PathVariable("processId") Long bpmProcessId, 
+			@PathVariable("nodeId") Long bpmConfNodeId, Model model) {
+		
+		BpmConfNode bpmConfNode = bpmConfNodeService.findOne(bpmConfNodeId);
+
+		BpmProcess bpmProcess = bpmProcessService.findOne(bpmProcessId);
+		if(bpmProcess != null){
+			model.addAttribute("bpmProcess", bpmProcess);
+		}
+		
+		if (bpmConfNode != null) {
+			model.addAttribute("bpmConfNode", bpmConfNode);
+			searchable.addSearchFilter("bpmConfNode.id", SearchOperator.eq,
+					bpmConfNode.getId());
+		}
+		return super.list(searchable, model);
+	}
 
 //    @RequestMapping("bpm-conf-user-list")
 //    public String list(@RequestParam("bpmConfNodeId") Long bpmConfNodeId,

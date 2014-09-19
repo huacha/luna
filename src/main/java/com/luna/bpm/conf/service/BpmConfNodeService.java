@@ -22,4 +22,5 @@ public class BpmConfNodeService extends BaseService<BpmConfNode, Long> {
     private BpmConfNodeManager getBpmConfNodeRepository() {
         return (BpmConfNodeManager) baseRepository;
     }
+    
 }

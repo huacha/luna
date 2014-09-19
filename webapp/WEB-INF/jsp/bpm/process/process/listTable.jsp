@@ -25,7 +25,7 @@
 <table id="table" class="sort-table table table-bordered table-hover" data-async="true">
     <thead>
     <tr>
-        <th style="width: 50px">
+        <th style="width: 70px">
             <a class="check-all" href="javascript:;">全选</a>
             |
             <a class="reverse-all" href="javascript:;">反选</a>
@@ -35,8 +35,8 @@
         <th style="width: 100px" sort="bpmCategory.id">分类</th>
         <th style="width: 200px" sort="descn">描述</th>
         <th style="width: 50px"  sort="priority">排序</th>
-        <th style="width: 120px" sort="useTaskConf">是否指定任务负责人</th>
-        <th ></th>
+        <th style="width: 130px" sort="useTaskConf">是否指定任务负责人</th>
+        <th >操作</th>
     </tr>
     </thead>
     <tbody>
@@ -52,7 +52,7 @@
             <td>${m.descn}</td>
             <td>${m.priority}</td>
             <td>${m.useTaskConf == 1}</td>
-            <td></td>
+            <td><a class="btn btn-link btn-edit" href="${ctx}/bpm/conf/node/process-${m.id}?processName=${m.name}&processDesc=${m.descn}">配置</a></td>
         </tr>
     </c:forEach>
     </tbody>

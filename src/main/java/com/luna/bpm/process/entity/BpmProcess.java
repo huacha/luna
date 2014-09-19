@@ -26,7 +26,7 @@ import com.luna.common.entity.BaseEntity;
 public class BpmProcess extends BaseEntity<Long> {
     private static final long serialVersionUID = 0L;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CONF_BASE_ID")
     private BpmConfBase bpmConfBase;
     
@@ -49,10 +49,10 @@ public class BpmProcess extends BaseEntity<Long> {
     @Column(name = "CODE", length = 64)
     private String code;
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmProcess")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "bpmProcess")
     private Set<BpmTaskDef> bpmTaskDefs = new HashSet<BpmTaskDef>(0);
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmProcess")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "bpmProcess")
     private Set<BpmTaskDefNotice> bpmTaskDefNotices = new HashSet<BpmTaskDefNotice>(0);
 
     public BpmProcess() {

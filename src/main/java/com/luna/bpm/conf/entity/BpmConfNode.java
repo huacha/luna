@@ -24,7 +24,7 @@ import com.luna.common.entity.BaseEntity;
 public class BpmConfNode extends BaseEntity<Long> {
     private static final long serialVersionUID = 0L;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CONF_BASE_ID")
     private BpmConfBase bpmConfBase;
 
@@ -59,33 +59,33 @@ public class BpmConfNode extends BaseEntity<Long> {
     private Integer priority;
 
     /** . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "bpmConfNode")
     private Set<BpmConfListener> bpmConfListeners = new HashSet<BpmConfListener>(
             0);
 
     /** . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "bpmConfNode")
     private Set<BpmConfNotice> bpmConfNotices = new HashSet<BpmConfNotice>(0);
 
     /** . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "bpmConfNode")
     private Set<BpmConfUser> bpmConfUsers = new HashSet<BpmConfUser>(0);
 
     /** . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "bpmConfNode")
     private Set<BpmConfCountersign> bpmConfCountersigns = new HashSet<BpmConfCountersign>(
             0);
 
     /** . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "bpmConfNode")
     private Set<BpmConfForm> bpmConfForms = new HashSet<BpmConfForm>(0);
 
     /** . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "bpmConfNode")
     private Set<BpmConfRule> bpmConfRules = new HashSet<BpmConfRule>(0);
 
     /** . */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bpmConfNode")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "bpmConfNode")
     private Set<BpmConfOperation> bpmConfOperations = new HashSet<BpmConfOperation>(
             0);
 
