@@ -74,10 +74,17 @@
             </div>
             
             <div class="control-group">
-                <form:label path="code" cssClass="control-label">绑定流程</form:label>
+                <form:label path="bpmConfBase.processDefinitionId" cssClass="control-label">绑定流程</form:label>
+                <div class="controls input-append">
+                    <form:input id="processDefinitionId" path="bpmConfBase.processDefinitionId" cssClass="validate[required]" readonly="true"/>
+                    <span class="add-on"><i class="icon-chevron-down"></i></span>
+                    <form:hidden id="confBaseId" path="bpmConfBase.id"/>
+                </div>
+                <!--  
                 <div class="controls">
                     <form:input path="code" cssClass="validate[required]" placeholder="请选择绑定流程"/>
                 </div>
+                -->
             </div>
             
             <div class="control-group">
@@ -163,7 +170,7 @@
         
         $("[name='bpmCategory.name']").siblings(".add-on").andSelf().click(function() {
             $.app.modalDialog(
-                    "参照",
+                    "类别列表",
                     "${ctx}/bpm/category/select/single;domId=categoryId;domName=categoryName",
                     {
                         width:600,
@@ -175,5 +182,21 @@
                     }
              );
         });
+        
+        $("[name='bpmConfBase.processDefinitionId']").siblings(".add-on").andSelf().click(function() {
+            $.app.modalDialog(
+                    "流程列表",
+                    "${ctx}/bpm/conf/base/select/single;domId=confBaseId;domName=processDefinitionId",
+                    {
+                        width:600,
+                        height:450,
+                        callback : function() {
+                            $("[name='bpmConfBase.processDefinitionKey']").validationEngine('validate');
+                            return true;
+                        }
+                    }
+             );
+        });
+        
     });
 </script>
