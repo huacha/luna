@@ -15,6 +15,7 @@ import org.activiti.engine.impl.interceptor.Command;
 import org.activiti.engine.impl.interceptor.CommandContext;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.luna.bpm.conf.entity.BpmConfBase;
 import com.luna.bpm.conf.entity.BpmConfCountersign;
@@ -34,9 +35,14 @@ import com.luna.bpm.process.cmd.graph.Node;
 /**
  * 把xml解析的内存模型保存到数据库里.
  */
+@Component
 public class SyncProcessCmd implements Command<Void> {
 	/** 流程定义id. */
 	private String processDefinitionId;
+
+	public void setProcessDefinitionId(String processDefinitionId) {
+		this.processDefinitionId = processDefinitionId;
+	}
 
 	@Autowired
 	private BpmConfBaseManager bpmConfBaseManager;
@@ -51,20 +57,13 @@ public class SyncProcessCmd implements Command<Void> {
 	@Autowired
 	private BpmConfCountersignManager bpmConfCountersignManager;
 
-	/**
-	 * 构造方法.
-	 */
-	public SyncProcessCmd(String processDefinitionId) {
-		this.processDefinitionId = processDefinitionId;
-	}
 
 	public Void execute(CommandContext commandContext) {
 		ProcessDefinitionEntity processDefinitionEntity = new GetDeploymentProcessDefinitionCmd(
 				processDefinitionId).execute(commandContext);
 		String processDefinitionKey = processDefinitionEntity.getKey();
 		int processDefinitionVersion = processDefinitionEntity.getVersion();
-		BpmConfBase bpmConfBase = bpmConfBaseManager.findUnique(
-				processDefinitionKey, processDefinitionVersion);
+		BpmConfBase bpmConfBase = bpmConfBaseManager.findUnique(processDefinitionKey, processDefinitionVersion);
 
 		if (bpmConfBase == null) {
 			bpmConfBase = new BpmConfBase();
@@ -77,10 +76,8 @@ public class SyncProcessCmd implements Command<Void> {
 			bpmConfBaseManager.save(bpmConfBase);
 		}
 
-		BpmnModel bpmnModel = new GetBpmnModelCmd(processDefinitionId)
-				.execute(commandContext);
-		Graph graph = new FindGraphCmd(processDefinitionId)
-				.execute(commandContext);
+		BpmnModel bpmnModel = new GetBpmnModelCmd(processDefinitionId).execute(commandContext);
+		Graph graph = new FindGraphCmd(processDefinitionId).execute(commandContext);
 		this.processGlobal(bpmnModel, 1, bpmConfBase);
 
 		int priority = 2;

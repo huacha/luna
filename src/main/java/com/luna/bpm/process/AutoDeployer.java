@@ -1,13 +1,10 @@
 package com.luna.bpm.process;
 
 import java.io.IOException;
-
 import java.util.List;
 import java.util.zip.ZipInputStream;
 
 import javax.annotation.PostConstruct;
-
-import com.luna.bpm.process.cmd.SyncProcessCmd;
 
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.ProcessEngine;
@@ -15,20 +12,26 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.ProcessDefinition;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ContextResource;
 import org.springframework.core.io.Resource;
+
+import com.luna.bpm.process.cmd.SyncProcessCmd;
 
 /**
  * 自动部署，并把每个xml都发布成一个Deployment.
  */
 public class AutoDeployer {
     private Logger logger = LoggerFactory.getLogger(AutoDeployer.class);
-    private ProcessEngine processEngine;
+    
+    @Autowired
+    ProcessEngine processEngine;
+    @Autowired
+    SyncProcessCmd syncProcessCmd;
+    
     private Resource[] deploymentResources = new Resource[0];
     private boolean enable = true;
 
@@ -108,12 +111,8 @@ public class AutoDeployer {
     }
 
     public void syncProcessDefinition(String processDefinitionId) {
-        processEngine.getManagementService().executeCommand(
-                new SyncProcessCmd(processDefinitionId));
-    }
-
-    public void setProcessEngine(ProcessEngine processEngine) {
-        this.processEngine = processEngine;
+    	syncProcessCmd.setProcessDefinitionId(processDefinitionId);
+        processEngine.getManagementService().executeCommand(syncProcessCmd);
     }
 
     public void setDeploymentResources(Resource[] deploymentResources) {

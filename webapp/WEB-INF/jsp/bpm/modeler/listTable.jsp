@@ -25,20 +25,18 @@
 <table id="table" class="sort-table table table-bordered table-hover" data-async="true">
     <thead>
     <tr>
-        <th style="width: 180px">
+        <th style="width: 70px">
             <a class="check-all" href="javascript:;">全选</a>
             |
             <a class="reverse-all" href="javascript:;">反选</a>
         </th>
-        <th style="width: 100px" sort="id">id</th>
-        <th style="width: 150px" sort="name">name</th>
-        <th>key</th>
-        <th>version</th>
-        <th>category</th>
-        <th>createTime</th>
-        <th>lastUpdateTime</th>
-        <th>deploymentId</th>
-        <th>metaInfo</th>
+        <th style="width: 80px">编号</th>
+        <th style="width: 150px" sort="name">名称</th>
+        <th>创建时间</th>
+        <th>修改时间</th>
+        <th>部署号</th>
+        <th>描述</th>
+        <th>操作</th>
     </tr>
     </thead>
     <tbody>
@@ -49,13 +47,14 @@
                 <a class="btn btn-link btn-edit" href="${ctx}/modeler/create?id=${m.id}">${m.id}</a>
             </td>
             <td>${m.name}</td>
-            <td>${m.key}</td>
-            <td>${m.version}</td>
-            <td>${m.category}</td>
             <td>${m.createTime}</td>
             <td>${m.lastUpdateTime}</td>
             <td>${m.deploymentId}</td>
             <td>${m.metaInfo}</td>
+            <td>
+            <a class='btn-custom'  href="${ctx}/modeler/remove?id=${m.id}">删除</a>
+            <a class='btn-custom'  href="${ctx}/modeler/deploy?id=${m.id}">发布</a>
+			</td>
             
         </tr>
     </c:forEach>

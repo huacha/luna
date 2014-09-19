@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.editor.constants.EditorJsonConstants;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
@@ -19,10 +20,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luna.bpm.process.cmd.SyncProcessCmd;
+import com.luna.common.Constants;
 import com.luna.common.utils.JsonUtil;
 
 @Controller
@@ -31,6 +34,10 @@ public class ModelerController {
 	private static Logger logger = LoggerFactory.getLogger(ModelerController.class);
 	@Autowired
     private ProcessEngine processEngine;
+	@Autowired
+	private SyncProcessCmd syncProcessCmd;
+	
+	private final static String redirectUrl = "redirect:/modeler";
 
 	/**
 	 * 查看已有流程模型列表
@@ -69,7 +76,7 @@ public class ModelerController {
     @RequestMapping("remove")
     public String remove(@RequestParam("id") String id) {
         processEngine.getRepositoryService().deleteModel(id);
-        return "redirect:/bpm/modeler/list";
+        return redirectUrl;
     }
 
     /**
@@ -80,17 +87,22 @@ public class ModelerController {
      * @throws Exception
      */
     @RequestMapping("deploy")
-    public String deploy(@RequestParam("id") String id) throws Exception {
-        RepositoryService repositoryService = processEngine
-                .getRepositoryService();
+    public String deploy(@RequestParam("id") String id, RedirectAttributes redirectAttributes) throws Exception {
+        RepositoryService repositoryService = processEngine.getRepositoryService();
         Model modelData = repositoryService.getModel(id);
-        JsonNode modelNode = (JsonNode) new ObjectMapper()
-                .readTree(repositoryService.getModelEditorSource(modelData
-                        .getId()));
-        byte[] bpmnBytes = null;
+        byte[] content = repositoryService.getModelEditorSource(modelData.getId());
+        if(content == null){
+        	redirectAttributes.addFlashAttribute(Constants.ERROR, "没有流程图，不能发布！");
+        	return redirectUrl;
+        }
+        JsonNode modelNode = (JsonNode) new ObjectMapper().readTree(content);
+        if (modelNode.get(EditorJsonConstants.EDITOR_CHILD_SHAPES) == null) {
+        	redirectAttributes.addFlashAttribute(Constants.ERROR, "没有流程图图形，不能发布！");
+        	return redirectUrl;
+		}
 
         BpmnModel model = new BpmnJsonConverter().convertToBpmnModel(modelNode);
-        bpmnBytes = new BpmnXMLConverter().convertToXML(model);
+        byte[] bpmnBytes = new BpmnXMLConverter().convertToXML(model);
 
         String processName = modelData.getName() + ".bpmn20.xml";
         Deployment deployment = repositoryService.createDeployment()
@@ -105,10 +117,10 @@ public class ModelerController {
                 .deploymentId(deployment.getId()).list();
 
         for (ProcessDefinition processDefinition : processDefinitions) {
-            processEngine.getManagementService().executeCommand(
-                    new SyncProcessCmd(processDefinition.getId()));
+        	syncProcessCmd.setProcessDefinitionId(processDefinition.getId());
+            processEngine.getManagementService().executeCommand(syncProcessCmd);
         }
-        return "redirect:/bpm/modeler/list";
+        return redirectUrl;
     }
 
     /**

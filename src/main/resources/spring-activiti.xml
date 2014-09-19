@@ -73,7 +73,6 @@
 	<!-- 自动部署 -->
 	<bean id="autoDeployer" class="com.luna.bpm.process.AutoDeployer">
 		<property name="enable" value="true"/>
-		<property name="processEngine" ref="processEngine"/>
         <property name="deploymentResources">
             <list>
                 <value>classpath*:/diagrams/*</value>

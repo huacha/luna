@@ -42,7 +42,9 @@ public class ConsoleController {
     private ProcessEngine processEngine;
     @Autowired
     private ActivitiProcessConnector activitiProcessConnector;
-
+    @Autowired
+    SyncProcessCmd syncProcessCmd;
+    
     /**
      * 部署列表.
      */
@@ -106,8 +108,8 @@ public class ConsoleController {
                 .deploymentId(deployment.getId()).list();
 
         for (ProcessDefinition processDefinition : processDefinitions) {
-            processEngine.getManagementService().executeCommand(
-                    new SyncProcessCmd(processDefinition.getId()));
+        	syncProcessCmd.setProcessDefinitionId(processDefinition.getId());
+            processEngine.getManagementService().executeCommand(syncProcessCmd);
         }
 
         return "redirect:/bpm/console-listProcessDefinitions.do";
