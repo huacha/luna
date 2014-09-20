@@ -71,7 +71,7 @@
                 </div>
             </div>
 
-            <div class="control-group">
+            <div cmass="control-group">
                 <form:label path="show" cssClass="control-label">是否显示</form:label>
                 <div class="controls inline-radio">
                     <form:radiobuttons path="show" items="${booleanList}" itemLabel="info" itemValue="value" cssClass="validate[required]"/>
@@ -122,6 +122,7 @@
                 noTitle : true,
                 buttons:{}
             },
+            
             updateUrl : "${ctx}/showcase/parentchild/parent/child/{id}/update",
             deleteUrl : "${ctx}/showcase/parentchild/parent/child/{id}/delete",
             alwaysNew : "${param.copy}"

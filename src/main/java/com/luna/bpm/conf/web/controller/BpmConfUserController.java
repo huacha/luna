@@ -1,11 +1,16 @@
 package com.luna.bpm.conf.web.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.luna.bpm.conf.entity.BpmConfNode;
 import com.luna.bpm.conf.entity.BpmConfUser;
@@ -13,6 +18,7 @@ import com.luna.bpm.conf.service.BpmConfNodeService;
 import com.luna.bpm.conf.service.BpmConfUserService;
 import com.luna.bpm.process.entity.BpmProcess;
 import com.luna.bpm.process.service.BpmProcessService;
+import com.luna.common.Constants;
 import com.luna.common.entity.search.SearchOperator;
 import com.luna.common.entity.search.Searchable;
 import com.luna.common.web.bind.annotation.PageableDefaults;
@@ -56,7 +62,30 @@ public class BpmConfUserController   extends BaseCRUDController<BpmConfUser, Lon
 		}
 		return super.list(searchable, model);
 	}
+	
 
+    @RequestMapping(value = "/node-{nodeId}/create", method = RequestMethod.GET)
+    public String showCreateForm(Model model,
+			@PathVariable("nodeId") Long bpmConfNodeId) {
+
+        if (permissionList != null) {
+            this.permissionList.assertHasCreatePermission();
+        }
+
+        setCommonData(model);
+        
+        BpmConfNode bpmConfNode = bpmConfNodeService.findOne(bpmConfNodeId);
+		if (bpmConfNode != null) {
+			model.addAttribute("bpmConfNode", bpmConfNode);
+		}
+        
+        model.addAttribute(Constants.OP_NAME, "新增");
+        if (!model.containsAttribute("m")) {
+            model.addAttribute("m", newModel());
+        }
+        return viewName("editForm");
+	}
+    
 //    @RequestMapping("bpm-conf-user-list")
 //    public String list(@RequestParam("bpmConfNodeId") Long bpmConfNodeId,
 //            Model model) {

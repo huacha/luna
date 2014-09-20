@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@include file="/WEB-INF/jsp/common/taglibs.jspf"%>
 <es:contentHeader />
-<div class="panel">
+<div data-table="table"  class="panel">
 
     <es:showMessage/>
     
@@ -17,35 +17,35 @@
 		
     <h4 class="hr tool"> 流程节点</h4>
     <div>
-		<div class="control-group span6">
+		<div class="control-group span2">
 			流程名称: ${bpmProcess.name} 
 		</div>
 
-		<div class="control-group span6">
+		<div class="control-group span2">
 			描述：${bpmProcess.descn} 
 		</div>
 		
-		<div class="control-group span6">
+		<div class="control-group span2">
 			节点：${bpmConfNode.name} 
 		</div>
 		
-		<div class="control-group span6">
+		<div class="control-group span2">
 			节点类型：${bpmConfNode.type} 
 		</div>
 		
 	</div>
 	
 		<br />
+		
 		<div class="panel">
 			<h4 class="hr tool">
 				参与者&nbsp;&nbsp;&nbsp;&nbsp;
+				
 				<div class="btn-group">
-	                <shiro:hasPermission name="bpm:conf:user:create">
-	                <a class="btn btn-create">
+	                <a class="btn btn-create-child no-disabled">
 	                    <i class="icon-file-alt"></i>
 	                    新增
 	                </a>
-	                </shiro:hasPermission>
 	                <shiro:hasPermission name="bpm:conf:user:update">
 	                <a id="update" class="btn btn-update">
 	                    <i class="icon-edit"></i>
@@ -60,6 +60,7 @@
 	                </shiro:hasPermission>
 	            </div>
 			</h4>
+			
 			<div class="span9">
 			
 				<table id="childTable" class="sort-table table table-bordered table-hover">
@@ -112,3 +113,17 @@
 
 </div>
 <es:contentFooter />
+
+<script type="text/javascript">
+    $(function () {
+        
+        $.parentchild.initParentForm({
+            createUrl : "${ctx}/bpm/conf/user/node-${bpmProcess.id}/create",
+            updateUrl : "${ctx}/bpm/conf/user/node-${bpmProcess.id}/{id}/update",
+            deleteUrl : "${ctx}/bpm/conf/user/node-${bpmProcess.id}/{id}/delete",
+            batchDeleteUrl : "${ctx}/bpm/conf/user/node-${bpmProcess.id}//batch/delete"
+
+        });
+        
+    });
+</script>
