@@ -7,6 +7,7 @@ package com.luna.bpm.conf.service;
 
 import org.springframework.stereotype.Service;
 
+import com.luna.bpm.conf.entity.BpmConfNode;
 import com.luna.bpm.conf.entity.BpmConfUser;
 import com.luna.bpm.conf.repository.BpmConfUserManager;
 import com.luna.common.service.BaseService;
@@ -21,5 +22,9 @@ public class BpmConfUserService extends BaseService<BpmConfUser, Long> {
 
     private BpmConfUserManager getBpmConfUserRepository() {
         return (BpmConfUserManager) baseRepository;
+    }
+    
+    public BpmConfUser findUnique(String value, int type, BpmConfNode bpmConfNode){
+    	return this.getBpmConfUserRepository().findUnique(value, type, bpmConfNode);
     }
 }

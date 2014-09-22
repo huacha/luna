@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.luna.bpm.conf.entity.BpmConfUser;
 import com.luna.bpm.conf.entity.BpmConfNode;
 import com.luna.bpm.conf.entity.BpmConfUser;
 import com.luna.bpm.conf.service.BpmConfUserService;
@@ -26,6 +27,7 @@ import com.luna.common.entity.search.SearchOperator;
 import com.luna.common.entity.search.Searchable;
 import com.luna.common.web.bind.annotation.PageableDefaults;
 import com.luna.common.web.controller.BaseCRUDController;
+import com.luna.common.web.validate.ValidateResponse;
 import com.luna.maintain.extkeyvalue.entity.ExtKeyValue;
 import com.luna.maintain.extkeyvalue.service.ExtKeyValueService;
 import com.luna.showcase.sample.entity.Sex;
@@ -72,6 +74,38 @@ public class BpmConfUserController extends
 
 		return super.list(searchable, model);
 	}
+	
+
+    /**
+     * 验证返回格式
+     * 单个：[fieldId, 1|0, msg]
+     * 多个：[[fieldId, 1|0, msg],[fieldId, 1|0, msg]]
+     *
+     * @param fieldId
+     * @param fieldValue
+     * @return
+     */
+    @RequestMapping(value = "/validate", method = RequestMethod.GET)
+    @ResponseBody
+    public Object validate(
+            @RequestParam("fieldId") String fieldId, @RequestParam("fieldValue") String fieldValue,
+            @RequestParam(value = "id", required = false) Long id,
+            @RequestParam(value = "value", required = false) String value,
+            @RequestParam(value = "type", required = false) Integer type,
+            @RequestParam(value = "status", required = false) Integer status,
+            @RequestParam(value = "bpmConfNodeId", required = true) BpmConfNode bpmConfNode) {
+        ValidateResponse response = ValidateResponse.newInstance();
+   
+        BpmConfUser bpmConfUser = getBpmConfUserService().findUnique(value, type, bpmConfNode);
+        if (bpmConfUser == null || (bpmConfUser.getId().equals(id))) {
+            //如果msg 不为空 将弹出提示框
+            response.validateSuccess(fieldId, "");
+        } else {
+            response.validateFail(fieldId, "该名称已使用");
+        }
+        
+        return response.result();
+    }
 
 	@RequestMapping(value = "/node-{bpmConfNodeId}/create", method = RequestMethod.GET)
 	public String showCreateForm(Model model,

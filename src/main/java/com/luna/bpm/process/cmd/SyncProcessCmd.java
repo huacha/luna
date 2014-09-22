@@ -193,7 +193,7 @@ public class SyncProcessCmd implements Command<Void> {
 		}
 
 		BpmConfUser bpmConfUser = bpmConfUserManager.findUnique(value, type,
-				priority, bpmConfNode);
+				bpmConfNode);
 
 		if (bpmConfUser == null) {
 			bpmConfUser = new BpmConfUser();

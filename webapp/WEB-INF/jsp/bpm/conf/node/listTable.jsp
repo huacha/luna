@@ -59,10 +59,10 @@
 	      </td>
           <td>
 		    <c:if test="${item.confListener == 0}">
-			  <a href="bpm-conf-listener-list.do?bpmConfNodeId=${item.id}" class="btn"><i class="icon-edit"></i></a>
+			  <a href="${ctx}/bpm/conf/listener/process-${bpmProcess.id}/node-${item.id}" class="btn"><i class="icon-edit"></i></a>
 			</c:if>
 		    <c:if test="${item.confListener == 1}">
-			  <a href="bpm-conf-listener-list.do?bpmConfNodeId=${item.id}" class="btn btn-primary"><i class="icon-edit"></i></a>
+			  <a href="${ctx}/bpm/conf/listener/process-${bpmProcess.id}/node-${item.id}" class="btn btn-primary"><i class="icon-edit"></i></a>
 			</c:if>
 			&nbsp;
 	      </td>

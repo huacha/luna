@@ -37,20 +37,20 @@
 		
 		<div class="panel">
 			<h4 class="hr tool">
-				参与者&nbsp;&nbsp;&nbsp;&nbsp;
+				监听器列表&nbsp;&nbsp;&nbsp;&nbsp;
 				
 				<div class="btn-group">
 	                <a class="btn btn-create-child no-disabled">
 	                    <i class="icon-file-alt"></i>
 	                    新增
 	                </a>
-	                <shiro:hasPermission name="bpm:conf:user:update">
+	                <shiro:hasPermission name="bpm:conf:listener:update">
 	                <a id="update" class="btn btn-update-child">
 	                    <i class="icon-edit"></i>
 	                    修改
 	                </a>
 	                </shiro:hasPermission>
-	                <shiro:hasPermission name="bpm:conf:user:delete">
+	                <shiro:hasPermission name="bpm:conf:listener:delete">
 	                <a class="btn btn-delete-child">
 	                    <i class="icon-trash"></i>
 	                    删除
@@ -68,7 +68,7 @@
 								href="javascript:;">全选</a> | <a class="reverse-all"
 								href="javascript:;">反选</a></th>
 							<th style="width: 80px" sort="id">编号</th>
-							<th style="width: 250px" sort="name">名称</th>
+							<th style="width: 250px" sort="name">监听器</th>
 							<th style="width: 80px" sort="type">类型</th>
 							<th style="width: 80px" sort="priority">数据来源</th>
 							<th >&nbsp;</th>
@@ -82,7 +82,7 @@
 								<td>${m.id}</td>
 								<td>${m.value}</td>
 								<td>
-								<c:forEach items="${bpmconfusertype}" var="item">
+								<c:forEach items="${bpmconflistenertype}" var="item">
 								  <c:if test="${item.name eq m.type}">
 								    ${item.value}
 								  </c:if>  
@@ -121,11 +121,11 @@
                 buttons:{}
             },
 
-            createUrl :      "${ctx}/bpm/conf/user/node-${bpmConfNode.id}/create?BackURL=" +$.table.tableURL($(".table")),
-            //createUrl :      "${ctx}/bpm/conf/user/node-${bpmConfNode.id}/create",
-            updateUrl :      "${ctx}/bpm/conf/user/node-${bpmConfNode.id}/{id}/update?BackURL=" +$.table.tableURL($(".table")),
-            deleteUrl :      "${ctx}/bpm/conf/user/node-${bpmConfNode.id}/{id}/delete",
-            batchDeleteUrl : "${ctx}/bpm/conf/user/node-${bpmConfNode.id}/batch/delete"
+            createUrl :      "${ctx}/bpm/conf/listener/node-${bpmConfNode.id}/create?BackURL=" +$.table.tableURL($(".table")),
+            //createUrl :      "${ctx}/bpm/conf/listener/node-${bpmConfNode.id}/create",
+            updateUrl :      "${ctx}/bpm/conf/listener/node-${bpmConfNode.id}/{id}/update?BackURL=" +$.table.tableURL($(".table")),
+            deleteUrl :      "${ctx}/bpm/conf/listener/node-${bpmConfNode.id}/{id}/delete",
+            batchDeleteUrl : "${ctx}/bpm/conf/listener/node-${bpmConfNode.id}/batch/delete"
 
         });
         

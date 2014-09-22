@@ -38,14 +38,14 @@
 
     <form:form id="childEditForm" method="post" commandName="m" cssClass="form-horizontal">
             <es:showGlobalError commandName="m"/>
-            <form:hidden path="id"/>
+            <form:hidden id="id" path="id"/>
             <form:hidden id="bpmConfNodeId" path="bpmConfNode.id"/>
 
             <div class="control-group">
                 <form:label path="type" cssClass="control-label">类型</form:label>
                 <div class="controls">
-                    <form:select path="type"  cssClass="validate[required]" placeholder="请选择类型" >
-                    	<form:options items="${bpmconfusertype}" itemValue="name" itemLabel="value"/>  
+                    <form:select id="type" path="type"  cssClass="validate[required]" placeholder="请选择类型" >
+                    	<form:options items="${bpmconflistenertype}" itemValue="name" itemLabel="value"/>  
                     </form:select>
                 </div>
             </div>
@@ -53,20 +53,20 @@
             <div class="control-group">
                 <form:label path="status" cssClass="control-label">数据来源</form:label>
                 <div class="controls">
-                	<form:select path="status"  cssClass="validate[required]" readonly="readonly">
+                	<form:select id="status" path="status"  cssClass="validate[required]" readonly="readonly">
                     	<form:options items="${bpmconfdatasource}" itemValue="name" itemLabel="value"/>  
                     </form:select>
                 </div>
             </div>
+            <form:hidden path="priority"/>
             
             <div class="control-group">
-                <form:label path="value" cssClass="control-label">名称</form:label>
+                <form:label path="value" cssClass="control-label">监听器</form:label>
                 <div class="controls">
-                    <form:input path="value" cssClass="validate[required, ajax[ajaxNameCall]]" placeholder="请输入名称"/>
+                    <form:input id="value" path="value" cssClass="validate[required, ajax[ajaxNameCall]]" placeholder="请输入名称"/>
                 </div>
             </div>
             
-            <form:hidden path="priority"/>
             <!-- 
             <div class="control-group">
                 <form:label path="priority" cssClass="control-label">排序</form:label>
@@ -88,7 +88,7 @@
 
             <div class="control-group">
                 <div class="controls">
-                    <button type="submit" class="btn btn-primary">
+                    <button id="submintid" type="submit" class="btn btn-primary">
                         <i class="${icon}"></i>
                             ${op}
                     </button>
@@ -103,10 +103,9 @@
 </div>
 <script type="text/javascript">
     $(function () {
-
         //自定义ajax验证  ajax[ajaxNameCall] 放到验证规则的最后（放到中间只有当submit时才验证）
         $.validationEngineLanguage.allRules.ajaxNameCall= {
-            "url": "${ctx}/bpm/conf/user/validate",
+            "url": "${ctx}/bpm/conf/listener/validate",
             //动态提取的数据。验证时一起发送
             extraDataDynamic : ['#id', '#value', '#type', '#status', '#bpmConfNodeId'],
             //验证失败时的消息
@@ -117,7 +116,14 @@
         };
         
         var validationEngine = $("#childEditForm").validationEngine(); 
-
+        /*
+        var validationEngine = $("#childEditForm").validationEngine("attach",{ 
+        	validationEventTrigger : "",
+        	tableId : "extKeyValueTable", 
+        	trId : "${param.trId}"
+        }); 
+        */
+        
         $.app.initDatetimePicker();
 
         $.noparentchild.initChildForm({
@@ -133,10 +139,12 @@
                 buttons:{}
             },
             
-            updateUrl : "${ctx}/bpm/conf/user/node-${bpmConfNode.id}/{id}/update?BackURL=" + $.table.tableURL($(".table")),
-            deleteUrl : "${ctx}/bpm/conf/user/node-${bpmConfNode.id}/{id}/delete",
+            updateUrl : "${ctx}/bpm/conf/listener/node-${bpmConfNode.id}/{id}/update?BackURL=" + $.table.tableURL($(".table")),
+            deleteUrl : "${ctx}/bpm/conf/listener/node-${bpmConfNode.id}/{id}/delete",
             alwaysNew : "${param.copy}"
         });
+        
+
     });
 
 </script>
