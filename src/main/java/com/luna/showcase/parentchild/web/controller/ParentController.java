@@ -46,7 +46,7 @@ public class ParentController extends BaseCRUDController<Parent, Long> {
 
     protected ParentController() {
         setListAlsoSetCommonData(true);
-        setResourceIdentity("showcase:parentchild");
+        setResourceIdentity("maintain:extkeyvalue");
     }
 
 

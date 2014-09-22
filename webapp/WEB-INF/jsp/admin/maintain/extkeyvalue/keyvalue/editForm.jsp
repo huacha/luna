@@ -36,44 +36,32 @@
         </li>
     </ul>
 
-    <form:form id="childEditForm" method="post" commandName="m" cssClass="form-horizontal">
-            <es:showGlobalError commandName="m"/>
+
+    <form:form id="childEditForm" method="post" commandName="extKeyValue" cssClass="form-horizontal">
+            <es:showGlobalError commandName="extKeyValue"/>
             <form:hidden path="id"/>
-            <form:hidden id="bpmConfNodeId" path="bpmConfNode.id"/>
 
             <div class="control-group">
-                <form:label path="value" cssClass="control-label">名称</form:label>
+                <form:label path="name" cssClass="control-label">key</form:label>
                 <div class="controls">
-                    <form:input path="value" cssClass="validate[required]" placeholder="请输入名称"/>
+                    <form:input path="name" cssClass="validate[required, funcCall[$.parentchild.validateChildForm]]" placeholder="请输入key"/>
                 </div>
             </div>
 
             <div class="control-group">
-                <form:label path="type" cssClass="control-label">类型</form:label>
+                <form:label path="value" cssClass="control-label">value</form:label>
                 <div class="controls">
-                    <form:select path="type"  cssClass="validate[required]" placeholder="请选择类型" >
-                    	<form:options items="${bpmconfusertype}" itemValue="name" itemLabel="value"/>  
-                    </form:select>
+                    <form:input path="value" cssClass="validate[required]" placeholder="请输入value"/>
                 </div>
             </div>
-            
+
             <div class="control-group">
-                <form:label path="status" cssClass="control-label">数据来源</form:label>
-                <div class="controls">
-                	<form:select path="status"  cssClass="validate[required]" readonly="readonly">
-                    	<form:options items="${bpmconfdatasource}" itemValue="name" itemLabel="value"/>  
-                    </form:select>
+                <form:label path="show" cssClass="control-label">是否显示</form:label>
+                <div class="controls inline-radio">
+                    <form:radiobuttons path="show" items="${booleanList}" itemLabel="info" itemValue="value" cssClass="validate[required]"/>
                 </div>
             </div>
-            <form:hidden path="priority"/>
-            <!-- 
-            <div class="control-group">
-                <form:label path="priority" cssClass="control-label">排序</form:label>
-                <div class="controls">
-                    <form:input path="priority" cssClass="validate[required]" placeholder="请输入优先级"/>
-                </div>
-            </div>
-            -->
+
 
             <c:if test="${op eq '新增'}">
                 <c:set var="icon" value="icon-file-alt"/>
@@ -102,27 +90,31 @@
 </div>
 <script type="text/javascript">
     $(function () {
-        var validationEngine = $("#childEditForm").validationEngine();
+    	
+    	//自定义参数调用
+        var validationEngine = $("#childEditForm").validationEngine("attach",{ 
+        	tableId : "extKeyValueTable", 
+        	trId : "${param.trId}"
+        }); 
 
         $.app.initDatetimePicker();
 
-        $.noparentchild.initChildForm({
+        $.parentchild.initChildForm({
             form : $("#childEditForm"),
-            tableId : "childTable",
+            tableId : "extKeyValueTable",
             excludeInputSelector : "[name='_show'],[name='_type']",
             trId : "${param.trId}",
             validationEngine : validationEngine,
             modalSettings:{
                 width:600,
-                height:450,
-                noTitle : false,
+                height:420,
+                noTitle : true,
                 buttons:{}
             },
-            
-            updateUrl : "${ctx}/bpm/conf/user/node-${bpmConfNode.id}/{id}/update?BackURL=" + $.table.tableURL($(".table")),
-            deleteUrl : "${ctx}/bpm/conf/user/node-${bpmConfNode.id}/{id}/delete",
+            updateUrl : "${ctx}/admin/maintain/extkeyvalue/category/keyvalue/{id}/update",
+            deleteUrl : "${ctx}/admin/maintain/extkeyvalue/category/keyvalue/{id}/delete",
             alwaysNew : "${param.copy}"
         });
     });
-
+    
 </script>

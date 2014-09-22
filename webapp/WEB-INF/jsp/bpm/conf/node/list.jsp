@@ -15,17 +15,16 @@
         </div>
     </div>
     
-    
-    <h4 class="hr">流程</h4>
-    <div>
-		<div class="control-group span4">
-			流程名称: ${bpmProcess.name} 
-		</div>
-
-		<div class="control-group span4">
-			描述：${bpmProcess.descn} 
-		</div>
-		<div class="clearfix"></div>
+    <h4 class="hr tool"> 流程节点</h4>
+    <div class="span7">
+		<table id="nodeTable" class="table table-bordered table-hover" >
+			<tr>
+				<td style="width: 100px; text-align:right" >流程名称:</td>
+				<td style="width: 250px">${bpmProcess.name} </td>
+				<td style="width: 100px; text-align:right" align="right">描述：</td>
+				<td style="width: 250px">${bpmProcess.descn} </td>
+			</tr>
+		</table>
 	</div>
     
     <%@include file="listTable.jsp"%>

@@ -1,5 +1,7 @@
 package com.luna.bpm.conf.web.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,125 +12,154 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.luna.bpm.conf.entity.BpmConfNode;
 import com.luna.bpm.conf.entity.BpmConfUser;
-import com.luna.bpm.conf.service.BpmConfNodeService;
 import com.luna.bpm.conf.service.BpmConfUserService;
 import com.luna.bpm.process.entity.BpmProcess;
-import com.luna.bpm.process.service.BpmProcessService;
 import com.luna.common.Constants;
+import com.luna.common.entity.enums.BooleanEnum;
 import com.luna.common.entity.search.SearchOperator;
 import com.luna.common.entity.search.Searchable;
 import com.luna.common.web.bind.annotation.PageableDefaults;
 import com.luna.common.web.controller.BaseCRUDController;
+import com.luna.maintain.extkeyvalue.entity.ExtKeyValue;
+import com.luna.maintain.extkeyvalue.service.ExtKeyValueService;
+import com.luna.showcase.sample.entity.Sex;
 
 @Controller
-@RequestMapping(value="/bpm/conf/user")
-public class BpmConfUserController   extends BaseCRUDController<BpmConfUser, Long> {
-    private BpmConfUserService getBpmConfUserService() {
-        return (BpmConfUserService) baseService;
-    }
-    
-    @Autowired
-    private BpmConfNodeService bpmConfNodeService;
+@RequestMapping(value = "/bpm/conf/user")
+public class BpmConfUserController extends
+		BaseCRUDController<BpmConfUser, Long> {
+	private BpmConfUserService getBpmConfUserService() {
+		return (BpmConfUserService) baseService;
+	}
 
-    @Autowired
-    private BpmProcessService bpmProcessService;
-	
 	public BpmConfUserController() {
 		setResourceIdentity("bpm:conf:user");
-    }
+	}
 	
+	@Autowired
+	ExtKeyValueService extKeyValueService;
+	
+	private static final String bpmConfUserType = "BPM_USER_TYPE";
+	private static final String bpmConfDATASOURCE = "BPM_DATA_SOURCE";
+	
+    @Override
+    protected void setCommonData(Model model) {
+        model.addAttribute("bpmconfusertype", extKeyValueService.findByExtKeyValueCategoryName(bpmConfUserType));
+        model.addAttribute("bpmconfdatasource", extKeyValueService.findByExtKeyValueCategoryName(bpmConfDATASOURCE));
+    }
 
 	@RequestMapping(value = "/process-{processId}/node-{nodeId}", method = RequestMethod.GET)
 	@PageableDefaults(sort = "priority=asc")
 	public String list(Searchable searchable,
-			@PathVariable("processId") Long bpmProcessId, 
-			@PathVariable("nodeId") Long bpmConfNodeId, Model model) {
+			@PathVariable("processId") BpmProcess bpmProcess,
+			@PathVariable("nodeId") BpmConfNode bpmConfNode, Model model) {
+		setCommonData(model);
 		
-		BpmConfNode bpmConfNode = bpmConfNodeService.findOne(bpmConfNodeId);
-
-		BpmProcess bpmProcess = bpmProcessService.findOne(bpmProcessId);
-		if(bpmProcess != null){
+		if (bpmProcess != null) {
 			model.addAttribute("bpmProcess", bpmProcess);
 		}
-		
 		if (bpmConfNode != null) {
 			model.addAttribute("bpmConfNode", bpmConfNode);
 			searchable.addSearchFilter("bpmConfNode.id", SearchOperator.eq,
 					bpmConfNode.getId());
 		}
+
 		return super.list(searchable, model);
 	}
-	
 
-    @RequestMapping(value = "/node-{nodeId}/create", method = RequestMethod.GET)
-    public String showCreateForm(Model model,
-			@PathVariable("nodeId") Long bpmConfNodeId) {
+	@RequestMapping(value = "/node-{bpmConfNodeId}/create", method = RequestMethod.GET)
+	public String showCreateForm(Model model,
+			@PathVariable("bpmConfNodeId") BpmConfNode bpmConfNode) {
 
-        if (permissionList != null) {
-            this.permissionList.assertHasCreatePermission();
-        }
-
-        setCommonData(model);
-        
-        BpmConfNode bpmConfNode = bpmConfNodeService.findOne(bpmConfNodeId);
-		if (bpmConfNode != null) {
-			model.addAttribute("bpmConfNode", bpmConfNode);
+		if (permissionList != null) {
+			this.permissionList.assertHasCreatePermission();
 		}
-        
-        model.addAttribute(Constants.OP_NAME, "新增");
-        if (!model.containsAttribute("m")) {
-            model.addAttribute("m", newModel());
-        }
-        return viewName("editForm");
+
+		setCommonData(model);
+		String result = super.showCreateForm(model);
+
+		if (bpmConfNode != null) {
+			BpmConfUser m = (BpmConfUser) model.asMap().get("m");
+			m.setBpmConfNode(bpmConfNode);
+			m.setStatus(1);
+			m.setPriority(1);
+		}
+		model.addAttribute(Constants.OP_NAME, "新增");
+
+		return result;
 	}
-    
-//    @RequestMapping("bpm-conf-user-list")
-//    public String list(@RequestParam("bpmConfNodeId") Long bpmConfNodeId,
-//            Model model) {
-//        BpmConfNode bpmConfNode = bpmConfNodeManager.findOne(bpmConfNodeId);
-//        Long bpmConfBaseId = bpmConfNode.getBpmConfBase().getId();
-//        List<BpmConfUser> bpmConfUsers = bpmConfUserManager.findByBpmConfNode(bpmConfNode);
-//
-//        model.addAttribute("bpmConfBaseId", bpmConfBaseId);
-//        model.addAttribute("bpmConfUsers", bpmConfUsers);
-//        model.addAttribute("bpmConfCountersign", bpmConfCountersignManager.findByBpmConfNode( bpmConfNode));
-//
-//        return "bpm/bpm-conf-user-list";
-//    }
 
-//    @RequestMapping("bpm-conf-user-save")
-//    public String save(@ModelAttribute BpmConfUser bpmConfUser,
-//            @RequestParam("bpmConfNodeId") Long bpmConfNodeId) {
-//        bpmConfUser.setPriority(0);
-//        bpmConfUser.setStatus(1);
-//        bpmConfUser.setBpmConfNode(bpmConfNodeManager.findOne(bpmConfNodeId));
-//        bpmConfUserManager.save(bpmConfUser);
-//
-//        return "redirect:/bpm/bpm-conf-user-list.do?bpmConfNodeId="
-//                + bpmConfNodeId;
-//    }
-//
-//    @RequestMapping("bpm-conf-user-remove")
-//    public String remove(@RequestParam("id") Long id) {
-//        BpmConfUser bpmConfUser = bpmConfUserManager.findOne(id);
-//        Long bpmConfNodeId = bpmConfUser.getBpmConfNode().getId();
-//
-//        if (bpmConfUser.getStatus() == 0) {
-//            bpmConfUser.setStatus(2);
-//            bpmConfUserManager.save(bpmConfUser);
-//        } else if (bpmConfUser.getStatus() == 1) {
-//            bpmConfUserManager.delete(bpmConfUser);
-//        } else if (bpmConfUser.getStatus() == 2) {
-//            bpmConfUser.setStatus(0);
-//            bpmConfUserManager.save(bpmConfUser);
-//        }
-//
-//        return "redirect:/bpm/bpm-conf-user-list.do?bpmConfNodeId="
-//                + bpmConfNodeId;
-//    }
+	@RequestMapping(value = "/node-{bpmConfNodeId}/create", method = RequestMethod.POST)
+	public String create(Model model,
+			@Valid @ModelAttribute("m") BpmConfUser bpmConfUser,
+			BindingResult result,
+			@RequestParam(value = "BackURL", required = false) String backURL,
+			RedirectAttributes redirectAttributes) {
 
+		if (permissionList != null) {
+			this.permissionList.assertHasCreatePermission();
+		}
+
+		if (hasError(bpmConfUser, result)) {
+			return showCreateForm(model);
+		}
+		baseService.save(bpmConfUser);
+		redirectAttributes.addFlashAttribute(Constants.MESSAGE, "新增成功");
+		return redirectToUrl(backURL);
+	}
+
+	@RequestMapping(value = "/node-{nodeId}/{id}/update", method = RequestMethod.GET)
+	public String showBpmConfUserUpdateForm(Model model,
+			@PathVariable("nodeId") Long bpmConfNodeId,
+			@PathVariable("id") BpmConfUser bpmConfUser,
+			@RequestParam(value = "copy", defaultValue = "false") boolean isCopy) {
+
+		this.permissionList.assertHasEditPermission();
+
+		setCommonData(model);
+		model.addAttribute(Constants.OP_NAME, isCopy ? "复制" : "修改");
+
+		return super.showUpdateForm(bpmConfUser, model);
+	}
+
+	@RequestMapping(value = { "/node-{nodeId}/{id}/update" }, method = RequestMethod.POST)
+	public String update(Model model,
+			@Valid @ModelAttribute("m") BpmConfUser bpmConfUser,
+			BindingResult result,
+			@RequestParam(value = "BackURL", required = false) String backURL,
+			RedirectAttributes redirectAttributes) {
+
+		return super.update(model, bpmConfUser, result, backURL,
+				redirectAttributes);
+	}
+
+	
+    @RequestMapping(value = "/node-{nodeId}/{id}/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public BpmConfUser deleteBpmConfUser(@PathVariable("id") BpmConfUser bpmConfUser) {
+
+        this.permissionList.assertHasEditPermission();
+
+        getBpmConfUserService().delete(bpmConfUser);
+        return bpmConfUser;
+    }
+
+
+    @RequestMapping(value = "/node-{nodeId}/batch/delete")
+    @ResponseBody
+    public Object deleteBpmConfUserInBatch(@RequestParam(value = "ids", required = false) Long[] ids) {
+
+        this.permissionList.assertHasEditPermission();
+
+        getBpmConfUserService().delete(ids);
+        //return ids;
+
+        return redirectToUrl(null);
+    }
 }

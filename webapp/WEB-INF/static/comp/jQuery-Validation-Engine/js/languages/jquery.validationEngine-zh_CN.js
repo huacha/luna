@@ -168,6 +168,10 @@
                     "alertText2": "可接受的格式： ",
                     "alertText3": "mm/dd/yyyy hh:mm:ss AM|PM 或 ", 
                     "alertText4": "yyyy-mm-dd hh:mm:ss AM|PM"
+	            },
+                //自定义函数
+                "validateChildForm": {
+	                "tableId": "aaaaaaaaaaa"
 	            }
             };
             

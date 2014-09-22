@@ -1523,6 +1523,41 @@ $.parentchild = {
         });
     }
     ,
+
+    //验证子窗口表单数据
+    /**
+     * options
+     *     {
+                tableId : "表格Id"【默认"childTable"】,
+                trId : "修改的哪行数据的tr id， 如果没有表示是新增的"
+            }
+     * @param options
+     * @return {boolean}
+     */
+    validateChildForm :function(field, rules, i, options) {
+    	var inputvalue=field.val();
+    	
+    	var flag = 0;
+    
+        var $childTable =  $("#" + options.tableId);
+        var $childTbody = $childTable.children("tbody");
+        
+        var $bodyrows = $("tr", $childTbody);
+        $bodyrows.each(function() {
+        	if(options.trId != $(this).attr("id")){
+	        	var name = $("td:eq(2)", $(this)).text();
+	        	if(name == inputvalue){
+	        		flag=1;
+	        		return false;
+	        	}
+        	}
+        });
+        
+        if(flag == 1){
+        	return "该名称已被使用";
+        }
+    }
+    ,
     //保存打开的模态窗口到打开者的表格中
     /**
      * options
@@ -1705,11 +1740,11 @@ $.parentchild = {
         var $childTable = $("#" + options.tableId);
         $.table.initCheckbox($childTable);
         //绑定在切换页面时的事件 防止误前进/后退 造成数据丢失
-        $(window).on('beforeunload',function(){
-            if($childTable.find(":input").length) {
-                return "确定离开当前编辑页面吗？";
-            }
-        });
+//        $(window).on('beforeunload',function(){
+//            if($childTable.find(":input").length) {
+//                return "确定离开当前编辑页面吗？";
+//            }
+//        });
         $(".btn-create-child").click(function() {
             $.app.modalDialog("新增", options.createUrl, options.modalSettings);
         });
@@ -1773,11 +1808,257 @@ $.parentchild = {
             });
         });
     }
-
 }
 
 
+$.noparentchild = {
+    /**
+     * 初始化父子操作中的子表单
+     * options
+     *     {
+                form : 表单【默认$("childForm")】,
+                tableId : "表格Id"【默认"childTable"】,
+                excludeInputSelector : "[name='_show']"【排除的selector 默认无】,
+                trId : "修改的哪行数据的tr id， 如果没有表示是新增的",
+                validationEngine : null 验证引擎,
+                modalSettings:{//模态窗口设置
+                    width:800,
+                    height:500,
+                    buttons:{}
+                },
+                updateUrl : "${ctx}/showcase/parentchild/parent/child/{id}/update" 修改时url模板 {id} 表示修改时的id,
+                deleteUrl : "${ctx}/showcase/parentchild/parent/child/{id}/delete  删除时url模板 {id} 表示删除时的id,
+            }
+     * @param options
+     * @return {boolean}
+     */
+    initChildForm : function(options) {
+        var defaults = {
+            form : $("#childForm"),
+            tableId : "childTable",
+            excludeInputSelector : "",
+            trId : "",
+            validationEngine : null
+        };
 
+        if(!options) {
+            options = {};
+        }
+        options = $.extend({}, defaults, options);
+
+        //如果有trId则用trId中的数据更新当前表单
+        if(options.trId) {
+            var $tr = $("#" + options.trId);
+            if($tr.length && $tr.find(":input").length) {
+                //因为是按顺序保存的 所以按照顺序获取  第一个是checkbox 跳过
+                var index = 1;
+                $(":input", options.form).not(options.excludeInputSelector).each(function() {
+                    var $input = $(this);
+                    var $trInput = $tr.find(":input").eq(index++);
+                    if(!$trInput.length) {
+                        return;
+                    }
+                    var $trInputClone = $trInput.clone(true).show();
+                    //saveModalFormToTable 为了防止重名问题，添加了tr id前缀，修改时去掉
+                    $trInputClone.prop("name", $trInputClone.prop("name").replace(options.trId, ""));
+                    $trInputClone.prop("id", $trInputClone.prop("id").replace(options.trId, ""));
+
+                    //克隆后 select的选择丢失了 TODO 提交给jquery bug?
+                    if($trInput.is("select")) {
+                        $trInput.find("option").each(function(i) {
+                            $trInputClone.find("option").eq(i).prop("selected", $(this).prop("selected"));
+                        });
+                    }
+                    if($trInput.is(":radio,:checkbox")) {
+                        $trInputClone.prop("checked", $trInput.prop("checked"));
+                    }
+
+                    $trInputClone.replaceAll($input);
+                });
+            }
+        }
+        
+        options.form.submit(function() {
+            if(options.validationEngine && !options.validationEngine.validationEngine("validate")) {
+                return false;
+            }
+            options.form.submit();
+        });
+    }
+    ,
+
+    //验证子窗口表单数据
+    /**
+     * options
+     *     {
+                tableId : "表格Id"【默认"childTable"】,
+                trId : "修改的哪行数据的tr id， 如果没有表示是新增的"
+            }
+     * @param options
+     * @return {boolean}
+     */
+    validateChildForm :function(field, rules, i, options) {
+    	var inputvalue=field.val();
+    	
+    	var flag = 0;
+    
+        var $childTable =  $("#" + options.tableId);
+        var $childTbody = $childTable.children("tbody");
+        
+        var $bodyrows = $("tr", $childTbody);
+        $bodyrows.each(function() {
+        	if(options.trId != $(this).attr("id")){
+	        	var name = $("td:eq(2)", $(this)).text();
+	        	if(name == inputvalue){
+	        		flag=1;
+	        		return false;
+	        	}
+        	}
+        });
+        
+        if(flag == 1){
+        	return "该名称已被使用";
+        }
+    }
+    ,
+    /**
+     * 更新子
+     * @param $a 当前按钮
+     * @param updateUrl  更新地址
+     */
+    updateChild : function($tr, updateUrl, modalSettings) {
+    	
+        if(updateUrl.indexOf("?") > 0) {
+            updateUrl = updateUrl + "&";
+        } else {
+            updateUrl = updateUrl + "?";
+        }
+        updateUrl = updateUrl + "trId={trId}";
+
+        //表示已经在数据库中了
+        if($tr.is("[id^='old']")) {
+            updateUrl = updateUrl.replace("{id}", $tr.prop("id").replace("old_", ""));
+        } else {
+            //表示刚刚新增的还没有保存到数据库
+            updateUrl = updateUrl.replace("{id}", 0);
+        }
+        updateUrl = updateUrl.replace("{trId}", $tr.prop("id"));
+        $.app.modalDialog("修改", updateUrl, modalSettings);
+    }
+    ,
+    /**
+     * 以当前行复制一份
+     * @param $a 当前按钮
+     * @param updateUrl  更新地址
+     */
+    copyChild : function($tr, updateUrl, modalSettings) {
+        if(updateUrl.indexOf("?") > 0) {
+            updateUrl = updateUrl + "&";
+        } else {
+            updateUrl = updateUrl + "?";
+        }
+        updateUrl = updateUrl + "trId={trId}";
+        updateUrl = updateUrl + "&copy=true";
+
+        //表示已经在数据库中了
+        if($tr.is("[id^='old']")) {
+            updateUrl = updateUrl.replace("{id}", $tr.prop("id").replace("old_", ""));
+        } else {
+            //表示刚刚新增的还没有保存到数据库
+            updateUrl = updateUrl.replace("{id}", 0);
+        }
+        updateUrl = updateUrl.replace("{trId}", $tr.prop("id"));
+        $.app.modalDialog("复制", updateUrl, modalSettings);
+    }
+    ,
+    /**
+     * 删除子
+     * @param $a 当前按钮
+     * @param deleteUrl 删除地址
+     */
+    deleteChild : function($a, deleteUrl) {
+        $.app.confirm({
+            message : "确认删除吗？",
+            ok : function() {
+                var $tr = $a.closest("tr");
+                //如果数据库中存在
+                if($tr.prop("id").indexOf("old_") == 0) {
+                    deleteUrl = deleteUrl.replace("{id}", $tr.prop("id").replace("old_", ""));
+                    $.post(deleteUrl, function() {
+                        $tr.remove();
+                    });
+                } else {
+                    $tr.remove();
+                }
+
+            }
+        });
+    }
+    ,
+
+    /**
+     * 初始化父子表单中的父表格，父表单仅显示，只保留字表单维护
+     * {
+     *     tableId : tableId 子表格id,
+     *     prefixParamName : "" 子表单 参数前缀,
+     *     modalSettings:{} 打开的模态窗口设置
+     *     createUrl : "${ctx}/showcase/parentchild/parent/child/create",
+     *     updateUrl : "${ctx}/showcase/parentchild/parent/child/{id}/update" 修改时url模板 {id} 表示修改时的id,
+     *     deleteUrl : "${ctx}/showcase/parentchild/parent/child/{id}/delete  删除时url模板 {id} 表示删除时的id,
+     * }
+     */
+    initParentTable : function(options) {
+        var $childTable = $("#" + options.tableId);
+        $.table.initCheckbox($childTable);
+        $(".btn-create-child").click(function() {
+            $.app.modalDialog("新增", options.createUrl, options.modalSettings);
+        });
+        $(".btn-update-child").click(function() {
+            var $trs = $childTable.find("tbody tr").has(".check :checkbox:checked:first");
+            if(!$trs.length) {
+                $.app.alert({message : "请先选择要修改的数据！"});
+                return;
+            }
+            $.noparentchild.updateChild($trs, options.updateUrl, options.modalSettings);
+        });
+
+        $(".btn-copy-child").click(function() {
+            var $trs = $childTable.find("tbody tr").has(".check :checkbox:checked:first");
+            if(!$trs.length) {
+                $.app.alert({message : "请先选择要复制的数据！"});
+                return;
+            }
+            $.noparentchild.copyChild($trs, options.updateUrl, options.modalSettings);
+        });
+
+        $(".btn-delete-child").click(function() {
+            var $trs = $childTable.find("tbody tr").has(".check :checkbox:checked");
+            if(!$trs.length) {
+                $.app.alert({message : "请先选择要删除的数据！"});
+                return;
+            }
+            $.app.confirm({
+                message: "确定删除选择的数据吗？",
+                ok : function() {
+                    var ids = new Array();
+                    $trs.each(function() {
+                        var id = $(this).prop("id");
+                        if(id.indexOf("old_") == 0) {
+                            id = id.replace("old_", "");
+                            ids.push({name : "ids", value : id});
+                        }
+                    });
+
+                    $.post(options.batchDeleteUrl, ids, function() {
+                        $trs.remove();
+                        $.table.changeBtnState($childTable);
+                    });
+
+                }
+            });
+        });
+    }
+}
 
 $.table = {
 

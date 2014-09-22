@@ -52,7 +52,7 @@
             <td>${m.descn}</td>
             <td>${m.priority}</td>
             <td>${m.useTaskConf == 1}</td>
-            <td><a class="btn btn-link btn-edit" href="${ctx}/bpm/conf/node/process-${m.id}?processName=${m.name}&processDesc=${m.descn}">配置</a></td>
+            <td><a class="btn btn-link btn-edit" href="${ctx}/bpm/conf/node/process-${m.id}">配置</a></td>
         </tr>
     </c:forEach>
     </tbody>
