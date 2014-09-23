@@ -41,7 +41,7 @@
         <tr>
             <td class="check"><input type="checkbox" name="ids" value="${m.id}"></td>
             <td>
-                <a class="btn btn-link btn-edit" href="${ctx}/xform/template/${m.id}">${m.id}</a>
+                <a class="btn btn-link btn-edit" href="${ctx}/xform/template/${m.id}/update">${m.id}</a>
             </td>
             <td>${m.name}</td>
             <td>${m.code}</td>
