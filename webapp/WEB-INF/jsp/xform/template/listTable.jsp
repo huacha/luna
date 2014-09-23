@@ -25,38 +25,29 @@
 <table id="table" class="sort-table table table-bordered table-hover" data-async="true">
     <thead>
     <tr>
-        <th style="width: 70px">
+        <th style="width: 80px">
             <a class="check-all" href="javascript:;">全选</a>
             |
             <a class="reverse-all" href="javascript:;">反选</a>
         </th>
-        <th style="width: 80px">编号</th>
+        <th style="width: 100px" sort="id">编号</th>
         <th style="width: 150px" sort="name">名称</th>
-        <th>创建时间</th>
-        <th>修改时间</th>
-        <th>部署号</th>
-        <th>描述</th>
-        <th>操作</th>
+        <th>标识</th>
+        <th>类型</th>
     </tr>
     </thead>
     <tbody>
-    <c:forEach items="${models}" var="m">
+    <c:forEach items="${page.content}" var="m">
         <tr>
             <td class="check"><input type="checkbox" name="ids" value="${m.id}"></td>
             <td>
-                <a class="btn btn-link btn-edit" href="${ctx}/modeler/create?id=${m.id}">${m.id}</a>
+                <a class="btn btn-link btn-edit" href="${ctx}/xform/template/${m.id}">${m.id}</a>
             </td>
             <td>${m.name}</td>
-            <td><spring:eval expression="m.createTime"/></td>
-            <td><spring:eval expression="m.lastUpdateTime"/></td>
-            <td>${m.deploymentId}</td>
-            <td>${m.metaInfo}</td>
-            <td>
-            <a class='btn-custom'  href="${ctx}/modeler/remove?id=${m.id}">删除</a>
-            <a class='btn-custom'  href="${ctx}/modeler/deploy?id=${m.id}">发布</a>
-			</td>
-            
+            <td>${m.code}</td>
+            <td>${m.type == '1' ? '外部' : '内部'}</td>
         </tr>
     </c:forEach>
     </tbody>
 </table>
+<es:page page="${page}"/>

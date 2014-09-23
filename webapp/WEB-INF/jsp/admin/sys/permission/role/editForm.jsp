@@ -283,7 +283,7 @@
                     enable:true,
                     chkStyle:"checkbox",
                     onlyCheckLeaf : false,
-                    onlySelectLeaf : true
+                    onlySelectLeaf : false
                 }
             }
         });

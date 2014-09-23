@@ -187,7 +187,7 @@ xf.Xform.prototype.mouseMove = function(e) {
 	if (!this.request) {
 		return;
 	}
-
+	e.preventDefault();
 	if (this.mode == 'EDIT') {
 		var position = xf.getPosition(e);
 		this.proxy.move(position.x + 5, position.y + 5);

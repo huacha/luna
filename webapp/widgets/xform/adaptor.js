@@ -55,10 +55,10 @@ function doImport() {
 function doChangeMode(button) {
 	if (xform.mode == 'EDIT') {
 		xform.mode = 'MERGE';
-		button.innerHTML = 'change to edit mode';
+		button.innerHTML = '切换到编辑模式';
 	} else {
 		xform.mode = 'EDIT';
-		button.innerHTML = 'change to merge mode';
+		button.innerHTML = '切换到合并模式';
 	}
 }
 
