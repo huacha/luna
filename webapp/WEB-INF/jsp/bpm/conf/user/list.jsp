@@ -40,10 +40,12 @@
 				参与者&nbsp;&nbsp;&nbsp;&nbsp;
 				
 				<div class="btn-group">
+	                <shiro:hasPermission name="bpm:conf:user:update">
 	                <a class="btn btn-create-child no-disabled">
 	                    <i class="icon-file-alt"></i>
 	                    新增
 	                </a>
+	                </shiro:hasPermission>
 	                <shiro:hasPermission name="bpm:conf:user:update">
 	                <a id="update" class="btn btn-update-child">
 	                    <i class="icon-edit"></i>
@@ -68,9 +70,9 @@
 								href="javascript:;">全选</a> | <a class="reverse-all"
 								href="javascript:;">反选</a></th>
 							<th style="width: 80px" sort="id">编号</th>
-							<th style="width: 250px" sort="name">名称</th>
+							<th style="width: 250px" sort="value">名称</th>
 							<th style="width: 80px" sort="type">类型</th>
-							<th style="width: 80px" sort="priority">数据来源</th>
+							<th style="width: 80px" sort="status">数据来源</th>
 							<th >&nbsp;</th>
 						</tr>
 					</thead>

@@ -10,6 +10,9 @@ import com.luna.common.repository.BaseRepository;
 
 
 public interface BpmConfRuleManager extends BaseRepository<BpmConfRule,Long> {
+	@Query("from BpmConfRule where value=?1 and bpmConfNode=?2")
+	BpmConfRule findUnique(String value, BpmConfNode bpmConfNode);
+	
 	@Query("from BpmConfRule where bpmConfNode.bpmConfBase.processDefinitionId=? and bpmConfNode.code=?")
 	List<BpmConfRule> find(String processDefinitionId,String taskDefinitionKey);
 	

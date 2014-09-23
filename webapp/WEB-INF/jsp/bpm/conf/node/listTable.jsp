@@ -68,37 +68,37 @@
 	      </td>
           <td>
 		    <c:if test="${item.confRule == 0}">
-			  <a href="bpm-conf-rule-list.do?bpmConfNodeId=${item.id}" class="btn"><i class="icon-edit"></i></a>
+			  <a href="${ctx}/bpm/conf/rule/process-${bpmProcess.id}/node-${item.id}"  class="btn"><i class="icon-edit"></i></a>
 			</c:if>
 		    <c:if test="${item.confRule == 1}">
-			  <a href="bpm-conf-rule-list.do?bpmConfNodeId=${item.id}" class="btn btn-primary"><i class="icon-edit"></i></a>
+			  <a href="${ctx}/bpm/conf/rule/process-${bpmProcess.id}/node-${item.id}"  class="btn btn-primary"><i class="icon-edit"></i></a>
 			</c:if>
 			&nbsp;
 	      </td>
           <td>
 		    <c:if test="${item.confForm == 0}">
-			  <a href="bpm-conf-form-list.do?bpmConfNodeId=${item.id}" class="btn"><i class="icon-edit"></i></a>
+			  <a href="${ctx}/bpm/conf/form/process-${bpmProcess.id}/node-${item.id}"  class="btn"><i class="icon-edit"></i></a>
 			</c:if>
 		    <c:if test="${item.confForm == 1}">
-			  <a href="bpm-conf-form-list.do?bpmConfNodeId=${item.id}" class="btn btn-primary"><i class="icon-edit"></i></a>
+			  <a href="${ctx}/bpm/conf/form/process-${bpmProcess.id}/node-${item.id}"  class="btn btn-primary"><i class="icon-edit"></i></a>
 			</c:if>
 			&nbsp;
 	      </td>
           <td>
 		    <c:if test="${item.confOperation == 0}">
-			  <a href="bpm-conf-operation-list.do?bpmConfNodeId=${item.id}" class="btn"><i class="icon-edit"></i></a>
+			  <a href="${ctx}/bpm/conf/operation/process-${bpmProcess.id}/node-${item.id}"  class="btn"><i class="icon-edit"></i></a>
 			</c:if>
 		    <c:if test="${item.confOperation == 1}">
-			  <a href="bpm-conf-operation-list.do?bpmConfNodeId=${item.id}" class="btn btn-primary"><i class="icon-edit"></i></a>
+			  <a href="${ctx}/bpm/conf/operation/process-${bpmProcess.id}/node-${item.id}"  class="btn btn-primary"><i class="icon-edit"></i></a>
 			</c:if>
 			&nbsp;
 	      </td>
           <td>
 		    <c:if test="${item.confNotice == 0}">
-			  <a href="bpm-conf-notice-list.do?bpmConfNodeId=${item.id}" class="btn"><i class="icon-edit"></i></a>
+			  <a href="${ctx}/bpm/conf/notice/process-${bpmProcess.id}/node-${item.id}"  class="btn"><i class="icon-edit"></i></a>
 			</c:if>
 		    <c:if test="${item.confNotice == 1}">
-			  <a href="bpm-conf-notice-list.do?bpmConfNodeId=${item.id}" class="btn btn-primary"><i class="icon-edit"></i></a>
+			  <a href="${ctx}/bpm/conf/notice/process-${bpmProcess.id}/node-${item.id}"  class="btn btn-primary"><i class="icon-edit"></i></a>
 			</c:if>
 			&nbsp;
 	      </td>

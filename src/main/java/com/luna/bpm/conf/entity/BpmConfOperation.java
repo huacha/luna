@@ -20,7 +20,7 @@ import com.luna.common.entity.BaseEntity;
 public class BpmConfOperation extends BaseEntity<Long> {
     private static final long serialVersionUID = 0L;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "NODE_ID")
     private BpmConfNode bpmConfNode;
 

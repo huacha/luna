@@ -1,7 +1,5 @@
 package com.luna.bpm.conf.web.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,21 +14,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.luna.bpm.conf.entity.BpmConfUser;
 import com.luna.bpm.conf.entity.BpmConfNode;
 import com.luna.bpm.conf.entity.BpmConfUser;
 import com.luna.bpm.conf.service.BpmConfUserService;
 import com.luna.bpm.process.entity.BpmProcess;
 import com.luna.common.Constants;
-import com.luna.common.entity.enums.BooleanEnum;
 import com.luna.common.entity.search.SearchOperator;
 import com.luna.common.entity.search.Searchable;
 import com.luna.common.web.bind.annotation.PageableDefaults;
 import com.luna.common.web.controller.BaseCRUDController;
 import com.luna.common.web.validate.ValidateResponse;
-import com.luna.maintain.extkeyvalue.entity.ExtKeyValue;
 import com.luna.maintain.extkeyvalue.service.ExtKeyValueService;
-import com.luna.showcase.sample.entity.Sex;
 
 @Controller
 @RequestMapping(value = "/bpm/conf/user")
@@ -185,15 +179,17 @@ public class BpmConfUserController extends
     }
 
 
-    @RequestMapping(value = "/node-{nodeId}/batch/delete")
-    @ResponseBody
-    public Object deleteBpmConfUserInBatch(@RequestParam(value = "ids", required = false) Long[] ids) {
+    @RequestMapping(value = "/node-{nodeId}/batch/delete", method = {RequestMethod.GET, RequestMethod.POST})
+    public Object deleteBpmConfUserInBatch(@RequestParam(value = "ids", required = false) Long[] ids,
+            @RequestParam(value = Constants.BACK_URL, required = false) String backURL,
+            RedirectAttributes redirectAttributes) {
 
         this.permissionList.assertHasEditPermission();
 
         getBpmConfUserService().delete(ids);
         //return ids;
 
-        return redirectToUrl(null);
+        redirectAttributes.addFlashAttribute(Constants.MESSAGE, "删除成功");
+        return redirectToUrl(backURL);
     }
 }

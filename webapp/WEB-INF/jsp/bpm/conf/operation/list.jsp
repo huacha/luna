@@ -37,22 +37,22 @@
 		
 		<div class="panel">
 			<h4 class="hr tool">
-				监听器列表&nbsp;&nbsp;&nbsp;&nbsp;
+				节点操作列表&nbsp;&nbsp;&nbsp;&nbsp;
 				
 				<div class="btn-group">
-	                <shiro:hasPermission name="bpm:conf:listener:update">
+	                <shiro:hasPermission name="bpm:conf:operation:update">
 	                <a class="btn btn-create-child no-disabled">
 	                    <i class="icon-file-alt"></i>
 	                    新增
 	                </a>
 	                </shiro:hasPermission>
-	                <shiro:hasPermission name="bpm:conf:listener:update">
+	                <shiro:hasPermission name="bpm:conf:operation:update">
 	                <a id="update" class="btn btn-update-child">
 	                    <i class="icon-edit"></i>
 	                    修改
 	                </a>
 	                </shiro:hasPermission>
-	                <shiro:hasPermission name="bpm:conf:listener:delete">
+	                <shiro:hasPermission name="bpm:conf:operation:delete">
 	                <a class="btn btn-delete-child">
 	                    <i class="icon-trash"></i>
 	                    删除
@@ -70,9 +70,8 @@
 								href="javascript:;">全选</a> | <a class="reverse-all"
 								href="javascript:;">反选</a></th>
 							<th style="width: 80px" sort="id">编号</th>
-							<th style="width: 250px" sort="value">监听器</th>
-							<th style="width: 80px" sort="type">类型</th>
-							<th style="width: 80px" sort="status">数据来源</th>
+							<th style="width: 250px" sort="value">操作</th>
+							<th style="width: 80px" sort="priority">排序</th>
 							<th >&nbsp;</th>
 						</tr>
 					</thead>
@@ -82,21 +81,14 @@
 								<td class="check"><input type="checkbox" name="ids"
 									value="${m.id}"></td>
 								<td>${m.id}</td>
-								<td>${m.value}</td>
 								<td>
-								<c:forEach items="${bpmconflistenertype}" var="item">
-								  <c:if test="${item.name eq m.type}">
+								<c:forEach items="${bpmconfoperatetype}" var="item">
+								  <c:if test="${item.name eq m.value}">
 								    ${item.value}
 								  </c:if>  
 							    </c:forEach>
 							    </td>
-								<td>
-								<c:forEach items="${bpmconfdatasource}" var="item">
-								  <c:if test="${item.name eq m.status}">
-								    ${item.value}
-								  </c:if>  
-							    </c:forEach>
-							    </td>
+								<td>${m.priority}</td>
 							    <td></td>
 						</c:forEach>
 					</tbody>
@@ -123,11 +115,11 @@
                 buttons:{}
             },
 
-            createUrl :      "${ctx}/bpm/conf/listener/node-${bpmConfNode.id}/create?BackURL=" +$.table.tableURL($(".table")),
-            //createUrl :      "${ctx}/bpm/conf/listener/node-${bpmConfNode.id}/create",
-            updateUrl :      "${ctx}/bpm/conf/listener/node-${bpmConfNode.id}/{id}/update?BackURL=" +$.table.tableURL($(".table")),
-            deleteUrl :      "${ctx}/bpm/conf/listener/node-${bpmConfNode.id}/{id}/delete",
-            batchDeleteUrl : "${ctx}/bpm/conf/listener/node-${bpmConfNode.id}/batch/delete"
+            createUrl :      "${ctx}/bpm/conf/operation/node-${bpmConfNode.id}/create?BackURL=" +$.table.tableURL($(".table")),
+            //createUrl :      "${ctx}/bpm/conf/operation/node-${bpmConfNode.id}/create",
+            updateUrl :      "${ctx}/bpm/conf/operation/node-${bpmConfNode.id}/{id}/update?BackURL=" +$.table.tableURL($(".table")),
+            deleteUrl :      "${ctx}/bpm/conf/operation/node-${bpmConfNode.id}/{id}/delete",
+            batchDeleteUrl : "${ctx}/bpm/conf/operation/node-${bpmConfNode.id}/batch/delete"
 
         });
         

@@ -2009,7 +2009,25 @@ $.noparentchild = {
      */
     initParentTable : function(options) {
         var $childTable = $("#" + options.tableId);
+        
         $.table.initCheckbox($childTable);
+        
+        $(".btn-delete-child").off("click").on("click", function() {
+        	var checkbox = $.table.getAllSelectedCheckbox($childTable);
+            if(!checkbox.length){
+            	$.app.alert({message : "请先选择要删除的数据！"});
+            	return;
+            }
+
+            $.app.confirm({
+                message: "确定删除选择的数据吗？",
+                ok : function() {
+                    window.location.href =
+                    	options.batchDeleteUrl + "?" + checkbox.serialize() + "&BackURL=" + $.table.encodeTableURL($childTable);
+                }
+            });
+        });
+        
         $(".btn-create-child").click(function() {
             $.app.modalDialog("新增", options.createUrl, options.modalSettings);
         });
@@ -2030,7 +2048,8 @@ $.noparentchild = {
             }
             $.noparentchild.copyChild($trs, options.updateUrl, options.modalSettings);
         });
-
+        
+        /*
         $(".btn-delete-child").click(function() {
             var $trs = $childTable.find("tbody tr").has(".check :checkbox:checked");
             if(!$trs.length) {
@@ -2057,6 +2076,7 @@ $.noparentchild = {
                 }
             });
         });
+        */
     }
 }
 

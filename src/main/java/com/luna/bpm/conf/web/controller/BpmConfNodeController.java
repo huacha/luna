@@ -37,7 +37,7 @@ public class BpmConfNodeController extends
 	}
 
 	@RequestMapping(value = "/process-{processId}", method = RequestMethod.GET)
-	@PageableDefaults(sort = "priority=asc")
+	@PageableDefaults(sort = "id=asc")
 	public String listByProcess(Searchable searchable,
 			@PathVariable("processId") Long bpmProcessId, Model model) {
 		
