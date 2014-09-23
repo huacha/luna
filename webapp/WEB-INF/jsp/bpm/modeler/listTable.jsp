@@ -30,13 +30,13 @@
             |
             <a class="reverse-all" href="javascript:;">反选</a>
         </th>
-        <th style="width: 80px">编号</th>
-        <th style="width: 150px" sort="name">名称</th>
+        <th style="width: 70px">编号</th>
+        <th style="width: 100px" sort="name">名称</th>
         <th>创建时间</th>
         <th>修改时间</th>
         <th>部署号</th>
         <th>描述</th>
-        <th>操作</th>
+        <th style="width: 30px">操作</th>
     </tr>
     </thead>
     <tbody>
@@ -47,13 +47,13 @@
                 <a class="btn btn-link btn-edit" href="${ctx}/modeler/create?id=${m.id}">${m.id}</a>
             </td>
             <td>${m.name}</td>
-            <td><spring:eval expression="m.createTime"/></td>
-            <td><spring:eval expression="m.lastUpdateTime"/></td>
+            <td><fmt:formatDate value="${m.createTime}" pattern="yyyy-MM-dd HH:mm"/></td>
+            <td><fmt:formatDate value="${m.lastUpdateTime}" pattern="yyyy-MM-dd HH:mm"/></td>
             <td>${m.deploymentId}</td>
             <td>${m.metaInfo}</td>
             <td>
-            <a class='btn-custom'  href="${ctx}/modeler/remove?id=${m.id}">删除</a>
-            <a class='btn-custom'  href="${ctx}/modeler/deploy?id=${m.id}">发布</a>
+            	<a class='btn-custom'  href="${ctx}/modeler/remove?id=${m.id}">删除</a>
+            	<a class='btn-custom'  href="${ctx}/modeler/deploy?id=${m.id}">发布</a>
 			</td>
             
         </tr>
