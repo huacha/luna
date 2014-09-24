@@ -137,8 +137,13 @@ public class BpmConfUserController extends
 		if (hasError(bpmConfUser, result)) {
 			return showCreateForm(model);
 		}
-		baseService.save(bpmConfUser);
-		redirectAttributes.addFlashAttribute(Constants.MESSAGE, "新增成功");
+		try {
+			baseService.save(bpmConfUser);
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "新增成功");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+			log.error("",e);
+		}
 		return redirectToUrl(backURL);
 	}
 
@@ -174,7 +179,11 @@ public class BpmConfUserController extends
 
         this.permissionList.assertHasEditPermission();
 
-        getBpmConfUserService().delete(bpmConfUser);
+        try {
+			getBpmConfUserService().delete(bpmConfUser);
+		} catch (Exception e) {
+			log.error("",e);
+		}
         return bpmConfUser;
     }
 
@@ -186,10 +195,13 @@ public class BpmConfUserController extends
 
         this.permissionList.assertHasEditPermission();
 
-        getBpmConfUserService().delete(ids);
-        //return ids;
-
-        redirectAttributes.addFlashAttribute(Constants.MESSAGE, "删除成功");
+        try {
+			getBpmConfUserService().delete(ids);
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "删除成功");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+			log.error("",e);
+		}
         return redirectToUrl(backURL);
     }
 }

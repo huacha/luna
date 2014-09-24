@@ -9,6 +9,7 @@ import com.google.common.collect.Sets;
 import com.luna.common.service.BaseService;
 import com.luna.sys.group.entity.GroupRelation;
 import com.luna.sys.group.repository.GroupRelationRepository;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class GroupRelationService extends BaseService<GroupRelation, Long> {
     }
 
 
-    public void appendRelation(Long groupId, Long[] organizationIds) {
+    public void appendRelation(Long groupId, Long[] organizationIds) throws Exception {
         if (ArrayUtils.isEmpty(organizationIds)) {
             return;
         }
@@ -46,7 +47,7 @@ public class GroupRelationService extends BaseService<GroupRelation, Long> {
         }
     }
 
-    public void appendRelation(Long groupId, Long[] userIds, Long[] startUserIds, Long[] endUserIds) {
+    public void appendRelation(Long groupId, Long[] userIds, Long[] startUserIds, Long[] endUserIds) throws Exception {
         if (ArrayUtils.isEmpty(userIds) && ArrayUtils.isEmpty(startUserIds)) {
             return;
         }

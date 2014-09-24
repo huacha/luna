@@ -20,6 +20,7 @@ import com.luna.sys.user.exception.UserNotExistsException;
 import com.luna.sys.user.exception.UserPasswordNotMatchException;
 import com.luna.sys.user.repository.UserRepository;
 import com.luna.sys.user.utils.UserLogUtils;
+
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -55,7 +56,7 @@ public class UserService extends BaseService<User, Long> {
     }
 
     @Override
-    public User save(User user) {
+    public User save(User user) throws Exception {
         if (user.getCreateDate() == null) {
             user.setCreateDate(new Date());
         }
@@ -67,7 +68,7 @@ public class UserService extends BaseService<User, Long> {
 
 
     @Override
-    public User update(User user) {
+    public User update(User user) throws Exception {
 
         List<UserOrganizationJob> localUserOrganizationJobs = user.getOrganizationJobs();
         for (int i = 0, l = localUserOrganizationJobs.size(); i < l; i++) {
@@ -117,14 +118,14 @@ public class UserService extends BaseService<User, Long> {
     }
 
 
-    public User changePassword(User user, String newPassword) {
+    public User changePassword(User user, String newPassword) throws Exception {
         user.randomSalt();
         user.setPassword(passwordService.encryptPassword(user.getUsername(), newPassword, user.getSalt()));
         update(user);
         return user;
     }
 
-    public User changeStatus(User opUser, User user, UserStatus newStatus, String reason) {
+    public User changeStatus(User opUser, User user, UserStatus newStatus, String reason) throws Exception {
         user.setStatus(newStatus);
         update(user);
         userStatusHistoryService.log(opUser, user, newStatus, reason);
@@ -220,7 +221,7 @@ public class UserService extends BaseService<User, Long> {
         return true;
     }
 
-    public void changePassword(User opUser, Long[] ids, String newPassword) {
+    public void changePassword(User opUser, Long[] ids, String newPassword) throws Exception {
         UserService proxyUserService = (UserService) AopContext.currentProxy();
         for (Long id : ids) {
             User user = findOne(id);
@@ -233,7 +234,7 @@ public class UserService extends BaseService<User, Long> {
         }
     }
 
-    public void changeStatus(User opUser, Long[] ids, UserStatus newStatus, String reason) {
+    public void changeStatus(User opUser, Long[] ids, UserStatus newStatus, String reason) throws Exception {
         UserService proxyUserService = (UserService) AopContext.currentProxy();
         for (Long id : ids) {
             User user = findOne(id);

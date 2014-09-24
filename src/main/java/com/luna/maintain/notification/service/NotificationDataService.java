@@ -5,11 +5,11 @@
  */
 package com.luna.maintain.notification.service;
 
+import org.springframework.stereotype.Service;
+
 import com.luna.common.service.BaseService;
 import com.luna.maintain.notification.entity.NotificationData;
 import com.luna.maintain.notification.repository.NotificationDataRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * 
@@ -29,7 +29,7 @@ public class NotificationDataService extends BaseService<NotificationData, Long>
     }
 
 
-    public void markRead(final Long notificationId) {
+    public void markRead(final Long notificationId) throws Exception {
         NotificationData data = findOne(notificationId);
         if(data == null || data.getRead().equals(Boolean.TRUE)) {
             return;

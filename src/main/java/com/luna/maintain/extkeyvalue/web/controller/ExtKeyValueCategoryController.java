@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.luna.bpm.category.entity.BpmCategory;
 import com.luna.common.Constants;
 import com.luna.common.entity.enums.BooleanEnum;
 import com.luna.common.entity.search.SearchOperator;
@@ -111,8 +110,13 @@ public class ExtKeyValueCategoryController extends BaseCRUDController<ExtKeyValu
         if (hasError(extKeyValueCategory, result)) {
             return showCreateForm(model);
         }
-        getExtKeyValueCategoryService().save(extKeyValueCategory, extKeyValueList);
-        redirectAttributes.addFlashAttribute(Constants.MESSAGE, "创建成功");
+        try {
+			getExtKeyValueCategoryService().save(extKeyValueCategory, extKeyValueList);
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "创建成功");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+			log.error("",e);
+		}
         return redirectToUrl(null);
     }
 
@@ -154,8 +158,13 @@ public class ExtKeyValueCategoryController extends BaseCRUDController<ExtKeyValu
         if (hasError(extKeyValueCategory, result)) {
             return showUpdateForm(extKeyValueCategory, model);
         }
-        getExtKeyValueCategoryService().update(extKeyValueCategory, extKeyValueList);
-        redirectAttributes.addFlashAttribute(Constants.MESSAGE, "修改成功");
+        try {
+			getExtKeyValueCategoryService().update(extKeyValueCategory, extKeyValueList);
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "修改成功");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+			log.error("",e);
+		}
         return redirectToUrl(backURL);
     }
 
@@ -237,7 +246,11 @@ public class ExtKeyValueCategoryController extends BaseCRUDController<ExtKeyValu
 
         this.permissionList.assertHasEditPermission();
 
-        extKeyValueService.delete(extKeyValue);
+        try {
+			extKeyValueService.delete(extKeyValue);
+		} catch (Exception e) {
+			log.error("",e);
+		}
         return extKeyValue;
     }
 
@@ -248,8 +261,11 @@ public class ExtKeyValueCategoryController extends BaseCRUDController<ExtKeyValu
 
         this.permissionList.assertHasEditPermission();
 
-        extKeyValueService.delete(ids);
-        //return ids;
+        try {
+			extKeyValueService.delete(ids);
+		} catch (Exception e) {
+			log.error("",e);
+		}
 
         return redirectToUrl(null);
     }

@@ -6,7 +6,6 @@
 package com.luna.common.service;
 
 import java.io.Serializable;
-import java.sql.Connection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -16,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.google.common.collect.Lists;
 import com.luna.common.entity.AbstractEntity;
@@ -33,37 +33,25 @@ import com.luna.common.repository.BaseRepository;
  */
 @SuppressWarnings("rawtypes")
 public abstract class BaseService<M extends AbstractEntity, ID extends Serializable> {
-	
-	protected EntityManager em;
-	
 	@PersistenceContext
-	public void setEm(EntityManager em) {
-		this.em = em;
-	}
-	
+	protected EntityManager em;
+	@Autowired
     protected BaseRepository<M, ID> baseRepository;
-
-    @Autowired
-    public void setBaseRepository(BaseRepository<M, ID> baseRepository) {
-        this.baseRepository = baseRepository;
-    }
-    
-    public Connection getConnection() {
-    	Connection connection = em.unwrap(java.sql.Connection.class);
-    	return connection;
-	}
+	@Autowired
+	protected JdbcTemplate jdbcTemplate;
 
     /**
      * 保存单个实体
      *
      * @param m 实体
      * @return 返回保存的实体
+     * @throws Exception 
      */
-    public M save(M m) {
+    public M save(M m) throws Exception {
         return baseRepository.save(m);
     }
 
-    public M saveAndFlush(M m) {
+    public M saveAndFlush(M m) throws Exception {
         m = save(m);
         baseRepository.flush();
         return m;
@@ -75,7 +63,7 @@ public abstract class BaseService<M extends AbstractEntity, ID extends Serializa
      * @param m 实体
      * @return 返回更新的实体
      */
-    public M update(M m) {
+    public M update(M m)  throws Exception{
         return baseRepository.save(m);
     }
 
@@ -84,7 +72,7 @@ public abstract class BaseService<M extends AbstractEntity, ID extends Serializa
      *
      * @param id 主键
      */
-    public void delete(ID id) {
+    public void delete(ID id)  throws Exception{
         baseRepository.delete(id);
     }
 
@@ -93,7 +81,7 @@ public abstract class BaseService<M extends AbstractEntity, ID extends Serializa
      *
      * @param m 实体
      */
-    public void delete(M m) {
+    public void delete(M m)  throws Exception{
         baseRepository.delete(m);
     }
 
@@ -102,7 +90,7 @@ public abstract class BaseService<M extends AbstractEntity, ID extends Serializa
      *
      * @param ids 实体
      */
-    public void delete(ID[] ids) {
+    public void delete(ID[] ids)  throws Exception{
         baseRepository.delete(ids);
     }
 

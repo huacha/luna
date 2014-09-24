@@ -61,7 +61,7 @@ public abstract class BaseTreeableService<M extends BaseEntity<ID> & Treeable<ID
     }
 
     @Override
-    public M save(M m) {
+    public M save(M m) throws Exception {
         if (m.getWeight() == null) {
             m.setWeight(nextWeight(m.getParentId()));
         }
@@ -79,7 +79,7 @@ public abstract class BaseTreeableService<M extends BaseEntity<ID> & Treeable<ID
         }
     }
 
-    public void appendChild(M parent, M child) {
+    public void appendChild(M parent, M child) throws Exception {
         child.setParentId(parent.getId());
         child.setParentIds(parent.makeSelfAsNewParentIds());
         child.setWeight(nextWeight(parent.getId()));
@@ -98,8 +98,9 @@ public abstract class BaseTreeableService<M extends BaseEntity<ID> & Treeable<ID
      * @param source   源节点
      * @param target   目标节点
      * @param moveType 位置
+     * @throws Exception 
      */
-    public void move(M source, M target, String moveType) {
+    public void move(M source, M target, String moveType) throws Exception {
         if (source == null || target == null || source.isRoot()) { //根节点不能移动
             return;
         }
@@ -177,8 +178,9 @@ public abstract class BaseTreeableService<M extends BaseEntity<ID> & Treeable<ID
      *
      * @param source
      * @param newParentIds
+     * @throws Exception 
      */
-    private void updateSelftAndChild(M source, ID newParentId, String newParentIds, int newWeight) {
+    private void updateSelftAndChild(M source, ID newParentId, String newParentIds, int newWeight) throws Exception {
         String oldSourceChildrenParentIds = source.makeSelfAsNewParentIds();
         source.setParentId(newParentId);
         source.setParentIds(newParentIds);

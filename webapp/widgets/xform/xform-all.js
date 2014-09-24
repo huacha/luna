@@ -190,7 +190,7 @@ xf.Xform.prototype.mouseMove = function(e) {
 	e.preventDefault();
 	if (this.mode == 'EDIT') {
 		var position = xf.getPosition(e);
-		this.proxy.move(position.x + 5, position.y + 5);
+		this.proxy.move(position.x + 1, position.y + 1);
 	} else if (this.mode == 'MERGE') {
 		var section = this.findSection(e);
 		if (section) {
@@ -977,7 +977,7 @@ xf.field.TextField.prototype.doExport = function() {
 
 xf.field.TextField.prototype.viewForm = function(formNode) {
 	formNode.innerHTML = '';
-	xf.createField('name', this.name, this.updateName, this, formNode);
+	xf.createField('字段名', this.name, this.updateName, this, formNode);
 	xf.createBooleanField('required', this.required, this.updateRequired, this, formNode);
 	xf.createBooleanField('readOnly', this.readOnly, this.updateReadOnly, this, formNode);
 }
@@ -1040,7 +1040,7 @@ xf.field.Password.prototype.doExport = function() {
 
 xf.field.Password.prototype.viewForm = function(formNode) {
 	formNode.innerHTML = '';
-	xf.createField('name', this.name, this.updateName, this, formNode);
+	xf.createField('字段名', this.name, this.updateName, this, formNode);
 	formNode.appendChild(document.createElement('br'));
 	xf.createBooleanField('required', this.required, this.updateRequired, this, formNode);
 	formNode.appendChild(document.createElement('br'));
@@ -1099,7 +1099,7 @@ xf.field.TextArea.prototype.doExport = function() {
 
 xf.field.TextArea.prototype.viewForm = function(formNode) {
 	formNode.innerHTML = '';
-	xf.createField('name', this.name, this.updateName, this, formNode);
+	xf.createField('字段名', this.name, this.updateName, this, formNode);
 	formNode.appendChild(document.createElement('br'));
 	xf.createBooleanField('required', this.required, this.updateRequired, this, formNode);
 	formNode.appendChild(document.createElement('br'));
@@ -1166,7 +1166,7 @@ xf.field.Select.prototype.doExport = function() {
 
 xf.field.Select.prototype.viewForm = function(formNode) {
 	formNode.innerHTML = '';
-	xf.createField('name', this.name, this.updateName, this, formNode);
+	xf.createField('字段名', this.name, this.updateName, this, formNode);
 	formNode.appendChild(document.createElement('br'));
 	xf.createField('items', this.items, this.updateItems, this, formNode);
 	formNode.appendChild(document.createElement('br'));
@@ -1247,7 +1247,7 @@ xf.field.Radio.prototype.doExport = function() {
 
 xf.field.Radio.prototype.viewForm = function(formNode) {
 	formNode.innerHTML = '';
-	xf.createField('name', this.name, this.updateName, this, formNode);
+	xf.createField('字段名', this.name, this.updateName, this, formNode);
 	formNode.appendChild(document.createElement('br'));
 	xf.createField('items', this.items, this.updateItems, this, formNode);
 	formNode.appendChild(document.createElement('br'));
@@ -1320,14 +1320,14 @@ xf.field.Checkbox.prototype.doExport = function() {
 		+ ',"col":' + this.col
 		+ ',"name":"' + this.name
 		+ '","items":"' + this.items
-		+ '","required:' + this.required
+		+ '","required":' + this.required
 		+ ',"readOnly":' + this.readOnly
 		+ '}';
 }
 
 xf.field.Checkbox.prototype.viewForm = function(formNode) {
 	formNode.innerHTML = '';
-	xf.createField('name', this.name, this.updateName, this, formNode);
+	xf.createField('字段名', this.name, this.updateName, this, formNode);
 	formNode.appendChild(document.createElement('br'));
 	xf.createField('items', this.items, this.updateItems, this, formNode);
 	formNode.appendChild(document.createElement('br'));
@@ -1405,7 +1405,7 @@ xf.field.FileUpload.prototype.doExport = function() {
 
 xf.field.FileUpload.prototype.viewForm = function(formNode) {
 	formNode.innerHTML = '';
-	xf.createField('name', this.name, this.updateName, this, formNode);
+	xf.createField('字段名', this.name, this.updateName, this, formNode);
 	formNode.appendChild(document.createElement('br'));
 	xf.createBooleanField('required', this.required, this.updateRequired, this, formNode);
 	formNode.appendChild(document.createElement('br'));
@@ -1468,7 +1468,7 @@ xf.field.DatePicker.prototype.doExport = function() {
 
 xf.field.DatePicker.prototype.viewForm = function(formNode) {
 	formNode.innerHTML = '';
-	xf.createField('name', this.name, this.updateName, this, formNode);
+	xf.createField('字段名', this.name, this.updateName, this, formNode);
 	formNode.appendChild(document.createElement('br'));
 	xf.createBooleanField('required', this.required, this.updateRequired, this, formNode);
 	formNode.appendChild(document.createElement('br'));
@@ -1536,7 +1536,7 @@ xf.field.UserPicker.prototype.doExport = function() {
 
 xf.field.UserPicker.prototype.viewForm = function(formNode) {
 	formNode.innerHTML = '';
-	xf.createField('name', this.name, this.updateName, this, formNode);
+	xf.createField('字段名', this.name, this.updateName, this, formNode);
 	formNode.appendChild(document.createElement('br'));
 	xf.createBooleanField('required', this.required, this.updateRequired, this, formNode);
 	formNode.appendChild(document.createElement('br'));

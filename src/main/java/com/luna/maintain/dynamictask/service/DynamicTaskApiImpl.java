@@ -1,27 +1,26 @@
 package com.luna.maintain.dynamictask.service;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.luna.maintain.dynamictask.entity.TaskDefinition;
-import com.luna.maintain.dynamictask.exception.DynamicTaskException;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
+
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
-import org.springframework.scripting.groovy.GroovyScriptFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MethodInvoker;
 
-import javax.annotation.PostConstruct;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.luna.maintain.dynamictask.entity.TaskDefinition;
+import com.luna.maintain.dynamictask.exception.DynamicTaskException;
 
 /**
  * 
@@ -60,18 +59,30 @@ public class DynamicTaskApiImpl implements DynamicTaskApi {
 
     @Override
     public void addTaskDefinition(TaskDefinition taskDefinition) {
-        taskDefinitionService.save(taskDefinition);
+        try {
+			taskDefinitionService.save(taskDefinition);
+		} catch (Exception e) {
+			logger.error("",e);
+		}
     }
 
     @Override
     public void updateTaskDefinition(TaskDefinition taskDefinition) {
-        taskDefinitionService.update(taskDefinition);
+        try {
+			taskDefinitionService.update(taskDefinition);
+		} catch (Exception e) {
+			logger.error("",e);
+		}
     }
 
     @Override
     public void deleteTaskDefinition(boolean forceTermination, Long... taskDefinitionIds) {
         stopTask(forceTermination, taskDefinitionIds);
-        taskDefinitionService.delete(taskDefinitionIds);
+        try {
+			taskDefinitionService.delete(taskDefinitionIds);
+		} catch (Exception e) {
+			logger.error("",e);
+		}
     }
 
     private synchronized void startTask(boolean forceStart, Long... taskDefinitionIds) {
@@ -89,7 +100,11 @@ public class DynamicTaskApiImpl implements DynamicTaskApi {
                 logger.error("start task error, task id:" + taskDefinitionId, e);
                 td.setDescription(e.getMessage());
             }
-            taskDefinitionService.update(td);
+            try {
+				taskDefinitionService.update(td);
+			} catch (Exception e) {
+				logger.error("",e);
+			}
         }
     }
     @Override
@@ -117,7 +132,11 @@ public class DynamicTaskApiImpl implements DynamicTaskApi {
                 logger.error("stop task error, task id:" + taskDefinitionId, e);
                 td.setDescription(e.getMessage());
             }
-            taskDefinitionService.update(td);
+            try {
+				taskDefinitionService.update(td);
+			} catch (Exception e) {
+				logger.error("",e);
+			}
         }
 
     }

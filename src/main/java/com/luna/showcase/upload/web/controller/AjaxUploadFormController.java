@@ -8,6 +8,7 @@ package com.luna.showcase.upload.web.controller;
 import com.luna.common.Constants;
 import com.luna.showcase.upload.entity.Upload;
 import com.luna.showcase.upload.service.UploadService;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,7 +44,7 @@ public class AjaxUploadFormController {
 
     @RequiresPermissions("showcase:upload:create")
     @RequestMapping(value = "create", method = RequestMethod.POST)
-    public String create(@Valid Upload upload, RedirectAttributes redirectAttributes) {
+    public String create(@Valid Upload upload, RedirectAttributes redirectAttributes) throws Exception {
 
         uploadService.save(upload);
         redirectAttributes.addFlashAttribute(Constants.MESSAGE, "创建文件成功");

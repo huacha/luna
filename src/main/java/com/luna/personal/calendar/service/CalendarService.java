@@ -5,15 +5,15 @@
  */
 package com.luna.personal.calendar.service;
 
+import java.sql.Time;
+import java.util.Date;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
 import com.luna.common.service.BaseService;
 import com.luna.personal.calendar.entity.Calendar;
 import com.luna.personal.calendar.repository.CalendarRepository;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.sql.Time;
-import java.util.Date;
 
 /**
  * 
@@ -27,7 +27,7 @@ public class CalendarService extends BaseService<Calendar, Long> {
         return (CalendarRepository) baseRepository;
     }
 
-    public void copyAndRemove(Calendar calendar) {
+    public void copyAndRemove(Calendar calendar) throws Exception {
         delete(calendar);
 
         Calendar copyCalendar = new Calendar();

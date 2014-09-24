@@ -140,8 +140,13 @@ public class BpmConfNoticeController   extends BaseCRUDController<BpmConfNotice,
 		if (hasError(bpmConfNotice, result)) {
 			return showCreateForm(model);
 		}
-		baseService.save(bpmConfNotice);
-		redirectAttributes.addFlashAttribute(Constants.MESSAGE, "新增成功");
+		try {
+			baseService.save(bpmConfNotice);
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "新增成功");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+			log.error("",e);
+		}
 		return redirectToUrl(backURL);
 	}
 
@@ -177,7 +182,11 @@ public class BpmConfNoticeController   extends BaseCRUDController<BpmConfNotice,
 
         this.permissionList.assertHasEditPermission();
 
-        getBpmConfNoticeService().delete(bpmConfNotice);
+        try {
+			getBpmConfNoticeService().delete(bpmConfNotice);
+		} catch (Exception e) {
+			log.error("",e);
+		}
         return bpmConfNotice;
     }
 
@@ -188,9 +197,11 @@ public class BpmConfNoticeController   extends BaseCRUDController<BpmConfNotice,
 
         this.permissionList.assertHasEditPermission();
 
-        getBpmConfNoticeService().delete(ids);
-        //return ids;
-
+        try {
+			getBpmConfNoticeService().delete(ids);
+		} catch (Exception e) {
+			log.error("",e);
+		}
         return redirectToUrl(null);
     }
 }

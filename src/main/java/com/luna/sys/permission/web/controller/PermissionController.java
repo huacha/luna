@@ -5,19 +5,18 @@
  */
 package com.luna.sys.permission.web.controller;
 
-import com.luna.common.Constants;
-import com.luna.common.entity.enums.AvailableEnum;
-import com.luna.common.web.controller.BaseCRUDController;
-import com.luna.sys.permission.entity.Permission;
-import com.luna.sys.permission.service.PermissionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
+import com.luna.common.Constants;
+import com.luna.common.entity.enums.AvailableEnum;
+import com.luna.common.web.controller.BaseCRUDController;
+import com.luna.sys.permission.entity.Permission;
 
 /**
  * 
@@ -43,7 +42,7 @@ public class PermissionController extends BaseCRUDController<Permission, Long> {
             HttpServletRequest request,
             @PathVariable("newStatus") Boolean newStatus,
             @RequestParam("ids") Long[] ids
-    ) {
+    ) throws Exception {
 
         this.permissionList.assertHasUpdatePermission();
 
@@ -52,8 +51,6 @@ public class PermissionController extends BaseCRUDController<Permission, Long> {
             permission.setShow(newStatus);
             baseService.update(permission);
         }
-
-
         return "redirect:" + request.getAttribute(Constants.BACK_URL);
     }
 

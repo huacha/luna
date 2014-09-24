@@ -5,18 +5,17 @@
  */
 package com.luna.sys.organization.web.controller;
 
-import com.luna.common.Constants;
-import com.luna.common.plugin.web.controller.BaseTreeableController;
-import com.luna.sys.organization.entity.Job;
-import com.luna.sys.organization.service.JobService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
+import com.luna.common.Constants;
+import com.luna.common.plugin.web.controller.BaseTreeableController;
+import com.luna.sys.organization.entity.Job;
 
 /**
  * 
@@ -37,7 +36,7 @@ public class JobController extends BaseTreeableController<Job, Long> {
             @PathVariable("newStatus") Boolean newStatus,
             @RequestParam("ids") Long[] ids,
             RedirectAttributes redirectAttributes
-    ) {
+    ) throws Exception {
 
         this.permissionList.assertHasUpdatePermission();
 

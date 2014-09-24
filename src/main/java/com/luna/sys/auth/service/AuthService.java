@@ -12,6 +12,7 @@ import com.luna.sys.group.entity.Group;
 import com.luna.sys.group.service.GroupService;
 import com.luna.sys.user.entity.User;
 import com.luna.sys.user.service.UserService;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ public class AuthService extends BaseService<Auth, Long> {
         return (AuthRepository) baseRepository;
     }
 
-    public void addUserAuth(Long[] userIds, Auth m) {
+    public void addUserAuth(Long[] userIds, Auth m) throws Exception {
 
         if (ArrayUtils.isEmpty(userIds)) {
             return;
@@ -62,7 +63,7 @@ public class AuthService extends BaseService<Auth, Long> {
         }
     }
 
-    public void addGroupAuth(Long[] groupIds, Auth m) {
+    public void addGroupAuth(Long[] groupIds, Auth m) throws Exception {
         if (ArrayUtils.isEmpty(groupIds)) {
             return;
         }
@@ -86,7 +87,7 @@ public class AuthService extends BaseService<Auth, Long> {
         }
     }
 
-    public void addOrganizationJobAuth(Long[] organizationIds, Long[][] jobIds, Auth m) {
+    public void addOrganizationJobAuth(Long[] organizationIds, Long[][] jobIds, Auth m) throws Exception {
 
         if (ArrayUtils.isEmpty(organizationIds)) {
             return;
@@ -114,7 +115,7 @@ public class AuthService extends BaseService<Auth, Long> {
         }
     }
 
-    private void addOrganizationJobAuth(Long organizationId, Long jobId, Auth m) {
+    private void addOrganizationJobAuth(Long organizationId, Long jobId, Auth m) throws Exception {
         if (organizationId == null) {
             organizationId = 0L;
         }

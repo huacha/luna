@@ -5,18 +5,17 @@
  */
 package com.luna.sys.user.service;
 
+import java.util.Date;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
 import com.luna.common.entity.search.Searchable;
 import com.luna.common.service.BaseService;
 import com.luna.sys.user.entity.User;
 import com.luna.sys.user.entity.UserStatus;
 import com.luna.sys.user.entity.UserStatusHistory;
-import com.luna.sys.user.repository.UserStatusHistoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 /**
  * 
@@ -26,7 +25,7 @@ import java.util.Date;
 @Service
 public class UserStatusHistoryService extends BaseService<UserStatusHistory, Long> {
 
-    public void log(User opUser, User user, UserStatus newStatus, String reason) {
+    public void log(User opUser, User user, UserStatus newStatus, String reason) throws Exception {
         UserStatusHistory history = new UserStatusHistory();
         history.setUser(user);
         history.setOpUser(opUser);

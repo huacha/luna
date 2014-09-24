@@ -7,6 +7,8 @@ package com.luna.common.web.controller;
 
 import java.io.Serializable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
@@ -26,6 +28,8 @@ import com.luna.common.utils.ReflectUtils;
 @SuppressWarnings("rawtypes")
 public abstract class BaseController<M extends AbstractEntity, ID extends Serializable> {
 
+	protected Logger log = LoggerFactory.getLogger(this.getClass());
+	
     /**
      * 实体类型
      */

@@ -8,6 +8,7 @@ package com.luna.showcase.tree.web.controller;
 import com.luna.common.Constants;
 import com.luna.common.plugin.web.controller.BaseTreeableController;
 import com.luna.showcase.tree.entity.Tree;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +36,7 @@ public class TreeController extends BaseTreeableController<Tree, Long> {
             @PathVariable("newStatus") Boolean newStatus,
             @RequestParam("ids") Long[] ids,
             RedirectAttributes redirectAttributes
-    ) {
+    ) throws Exception {
 
 
         this.permissionList.assertHasUpdatePermission();

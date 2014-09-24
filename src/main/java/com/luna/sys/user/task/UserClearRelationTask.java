@@ -12,6 +12,7 @@ import com.luna.sys.organization.service.OrganizationService;
 import com.luna.sys.user.entity.User;
 import com.luna.sys.user.entity.UserOrganizationJob;
 import com.luna.sys.user.service.UserService;
+
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -74,7 +75,7 @@ public class UserClearRelationTask {
 
     }
 
-    public void doClear(Collection<UserOrganizationJob> userOrganizationJobColl) {
+    public void doClear(Collection<UserOrganizationJob> userOrganizationJobColl) throws Exception {
         for (UserOrganizationJob userOrganizationJob : userOrganizationJobColl) {
 
             User user = userOrganizationJob.getUser();

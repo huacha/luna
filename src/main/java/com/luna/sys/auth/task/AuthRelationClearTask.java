@@ -17,6 +17,9 @@ import com.luna.sys.organization.service.JobService;
 import com.luna.sys.organization.service.OrganizationService;
 import com.luna.sys.permission.entity.Role;
 import com.luna.sys.permission.service.RoleService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,6 +43,8 @@ import java.util.Set;
 @Service
 public class AuthRelationClearTask {
 
+	protected Logger log = LoggerFactory.getLogger(this.getClass());
+	
     @Autowired
     private AuthService authService;
 
@@ -81,7 +86,7 @@ public class AuthRelationClearTask {
             }
             //清空会话
             RepositoryHelper.clear();
-        } while (authPage.hasNextPage());
+        } while (authPage.hasNext());
     }
 
     public void doClear(Collection<Auth> authColl, Set<Long> allRoleIds) {
@@ -92,7 +97,11 @@ public class AuthRelationClearTask {
                 case user_group:
                 case organization_group:
                     if (!groupService.exists(auth.getGroupId())) {
-                        authService.delete(auth);
+                        try {
+							authService.delete(auth);
+						} catch (Exception e) {
+							log.error("",e);
+						}
                         continue;
                     }
                     break;
@@ -105,7 +114,11 @@ public class AuthRelationClearTask {
                     }
                     //如果组织机构/工作职务都为0L 那么可以删除
                     if (auth.getOrganizationId() == 0L && auth.getJobId() == 0L) {
-                        authService.delete(auth);
+                        try {
+							authService.delete(auth);
+						} catch (Exception e) {
+							log.error("",e);
+						}
                         continue;
                     }
                     break;
@@ -113,7 +126,11 @@ public class AuthRelationClearTask {
 
             boolean hasRemovedAny = auth.getRoleIds().retainAll(allRoleIds);
             if (hasRemovedAny) {
-                authService.update(auth);
+                try {
+					authService.update(auth);
+				} catch (Exception e) {
+					log.error("",e);
+				}
             }
         }
 

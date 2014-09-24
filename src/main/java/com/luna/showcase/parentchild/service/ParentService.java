@@ -9,6 +9,7 @@ import com.luna.common.service.BaseService;
 import com.luna.showcase.parentchild.entity.Child;
 import com.luna.showcase.parentchild.entity.Parent;
 import com.luna.showcase.parentchild.repository.ParentRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,17 +27,17 @@ public class ParentService extends BaseService<Parent, Long> {
     private ChildService childService;
 
 
-    public void save(Parent parent, List<Child> childList) {
+    public void save(Parent parent, List<Child> childList) throws Exception {
         save(parent);
         saveOrUpdateChild(parent, childList);
     }
 
-    public void update(Parent parent, List<Child> childList) {
+    public void update(Parent parent, List<Child> childList) throws Exception {
         update(parent);
         saveOrUpdateChild(parent, childList);
     }
 
-    private void saveOrUpdateChild(Parent parent, List<Child> childList) {
+    private void saveOrUpdateChild(Parent parent, List<Child> childList) throws Exception {
         for (Child child : childList) {
             if (child == null) {//防止中间有跳过的
                 continue;

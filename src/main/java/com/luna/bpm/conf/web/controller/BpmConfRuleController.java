@@ -123,8 +123,13 @@ public class BpmConfRuleController   extends BaseCRUDController<BpmConfRule, Lon
 		if (hasError(bpmConfRule, result)) {
 			return showCreateForm(model);
 		}
-		baseService.save(bpmConfRule);
-		redirectAttributes.addFlashAttribute(Constants.MESSAGE, "新增成功");
+		try {
+			baseService.save(bpmConfRule);
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "新增成功");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+			log.error("",e);
+		}
 		return redirectToUrl(backURL);
 	}
 
@@ -160,7 +165,11 @@ public class BpmConfRuleController   extends BaseCRUDController<BpmConfRule, Lon
 
         this.permissionList.assertHasEditPermission();
 
-        getBpmConfRuleService().delete(bpmConfRule);
+        try {
+			getBpmConfRuleService().delete(bpmConfRule);
+		} catch (Exception e) {
+			log.error("",e);
+		}
         return bpmConfRule;
     }
 
@@ -171,9 +180,11 @@ public class BpmConfRuleController   extends BaseCRUDController<BpmConfRule, Lon
 
         this.permissionList.assertHasEditPermission();
 
-        getBpmConfRuleService().delete(ids);
-        //return ids;
-
+        try {
+			getBpmConfRuleService().delete(ids);
+		} catch (Exception e) {
+			log.error("",e);
+		}
         return redirectToUrl(null);
     }
 

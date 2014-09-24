@@ -14,6 +14,7 @@ import com.luna.sys.user.service.PasswordService;
 import com.luna.sys.user.service.UserLastOnlineService;
 import com.luna.sys.user.service.UserService;
 import com.luna.sys.user.web.bind.annotation.CurrentUser;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -99,12 +100,14 @@ public class LoginUserController extends BaseController<User, Long> {
 
         user.setEmail(email);
         user.setMobilePhoneNumber(mobilePhoneNumber);
-        userService.update(user);
-
-        redirectAttributes.addFlashAttribute(Constants.MESSAGE, "修改个人资料成功");
-
+        try {
+			userService.update(user);
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "修改个人资料成功");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+			log.error("",e);
+		}
         return redirectToUrl(viewName("updateInfo"));
-
     }
 
 
@@ -140,9 +143,13 @@ public class LoginUserController extends BaseController<User, Long> {
             return changePasswordForm(user, model);
         }
 
-        userService.changePassword(user, newPassword1);
-
-        redirectAttributes.addFlashAttribute(Constants.MESSAGE, "修改密码成功");
+        try {
+			userService.changePassword(user, newPassword1);
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "修改密码成功");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+			log.error("",e);
+		}
         return redirectToUrl(viewName("changePassword"));
     }
 

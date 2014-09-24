@@ -36,7 +36,7 @@ import com.luna.common.web.controller.permission.PermissionList;
 @SuppressWarnings("rawtypes")
 public abstract class BaseCRUDController<M extends AbstractEntity, ID extends Serializable>
         extends BaseController<M, ID> {
-
+	
     protected BaseService<M, ID> baseService;
 
     private boolean listAlsoSetCommonData = false;
@@ -141,8 +141,14 @@ public abstract class BaseCRUDController<M extends AbstractEntity, ID extends Se
         if (hasError(m, result)) {
             return showCreateForm(model);
         }
-        baseService.save(m);
-        redirectAttributes.addFlashAttribute(Constants.MESSAGE, "新增成功");
+        try {
+			baseService.save(m);
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "新增成功");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+			log.error("",e);
+		}
+        
         return redirectToUrl(null);
     }
 
@@ -173,8 +179,13 @@ public abstract class BaseCRUDController<M extends AbstractEntity, ID extends Se
         if (hasError(m, result)) {
             return showUpdateForm(m, model);
         }
-        baseService.update(m);
-        redirectAttributes.addFlashAttribute(Constants.MESSAGE, "修改成功");
+        try {
+			baseService.update(m);
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "修改成功");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+			log.error("",e);
+		}
         return redirectToUrl(backURL);
     }
 
@@ -202,9 +213,13 @@ public abstract class BaseCRUDController<M extends AbstractEntity, ID extends Se
             this.permissionList.assertHasDeletePermission();
         }
 
-        baseService.delete(m);
-
-        redirectAttributes.addFlashAttribute(Constants.MESSAGE, "删除成功");
+        try {
+			baseService.delete(m);
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "删除成功");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+			log.error("",e);
+		}
         return redirectToUrl(backURL);
     }
 
@@ -219,9 +234,13 @@ public abstract class BaseCRUDController<M extends AbstractEntity, ID extends Se
             this.permissionList.assertHasDeletePermission();
         }
 
-        baseService.delete(ids);
-
-        redirectAttributes.addFlashAttribute(Constants.MESSAGE, "删除成功");
+        try {
+			baseService.delete(ids);
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "删除成功");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+			log.error("",e);
+		}
         return redirectToUrl(backURL);
     }
 

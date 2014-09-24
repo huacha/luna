@@ -15,6 +15,7 @@ import com.luna.sys.group.entity.Group;
 import com.luna.sys.group.entity.GroupType;
 import com.luna.sys.group.service.GroupRelationService;
 import com.luna.sys.group.service.GroupService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -104,7 +106,11 @@ public class GroupController extends BaseCRUDController<Group, Long> {
         for (Long id : ids) {
             Group group = getGroupService().findOne(id);
             group.setShow(newStatus);
-            getGroupService().update(group);
+            try {
+				getGroupService().update(group);
+			} catch (Exception e) {
+				log.error("",e);
+			}
         }
         return "redirect:" + request.getAttribute(Constants.BACK_URL);
     }
@@ -125,7 +131,11 @@ public class GroupController extends BaseCRUDController<Group, Long> {
                 continue;
             }
             group.setDefaultGroup(newStatus);
-            getGroupService().update(group);
+            try {
+				getGroupService().update(group);
+			} catch (Exception e) {
+				log.error("",e);
+			}
         }
         return "redirect:" + request.getAttribute(Constants.BACK_URL);
     }
@@ -186,15 +196,15 @@ public class GroupController extends BaseCRUDController<Group, Long> {
 
         this.permissionList.assertHasDeletePermission();
 
-        if (group.getType() == GroupType.user) {
-            groupRelationService.delete(ids);
+        if (group.getType() == GroupType.user || group.getType() == GroupType.organization) {
+            try {
+				groupRelationService.delete(ids);
+				redirectAttributes.addFlashAttribute(Constants.MESSAGE, "删除成功");
+			} catch (Exception e) {
+				redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+				log.error("",e);
+			}
         }
-
-        if (group.getType() == GroupType.organization) {
-            groupRelationService.delete(ids);
-        }
-
-        redirectAttributes.addFlashAttribute(Constants.MESSAGE, "删除成功");
         return redirectToUrl(backURL);
 
     }
@@ -229,16 +239,18 @@ public class GroupController extends BaseCRUDController<Group, Long> {
         this.permissionList.assertHasAnyPermission(
                 new String[]{PermissionList.CREATE_PERMISSION, PermissionList.UPDATE_PERMISSION});
 
-        if (group.getType() == GroupType.organization) {
-            groupRelationService.appendRelation(group.getId(), ids);
-        }
-
-        if (group.getType() == GroupType.user) {
-            groupRelationService.appendRelation(group.getId(), ids, startIds, endIds);
-        }
-
-
-        redirectAttributes.addFlashAttribute(Constants.MESSAGE, "批量添加成功");
+        try {
+			if (group.getType() == GroupType.organization) {
+			    groupRelationService.appendRelation(group.getId(), ids);
+			}
+			if (group.getType() == GroupType.user) {
+			    groupRelationService.appendRelation(group.getId(), ids, startIds, endIds);
+			}
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "批量添加成功");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+			log.error("",e);
+		}
 
         return redirectToUrl(backURL);
     }

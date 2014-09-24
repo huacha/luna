@@ -6,6 +6,7 @@
 package com.luna.showcase.excel.service;
 
 import com.luna.showcase.excel.entity.ExcelData;
+
 import org.apache.poi.hssf.eventusermodel.HSSFListener;
 import org.apache.poi.hssf.record.*;
 
@@ -74,7 +75,12 @@ class Excel2003ImportListener implements HSSFListener {
                         current.setId(Double.valueOf(numrec.getValue()).longValue());
                     } else if(numrec.getColumn() == 1) {//第二列
                         current.setContent(String.valueOf(Double.valueOf(numrec.getValue()).longValue()));
-                        add(current);
+                        try {
+							add(current);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
                     }
                     break;
 
@@ -92,7 +98,12 @@ class Excel2003ImportListener implements HSSFListener {
                     } else if(lrec.getColumn() == 1) {//第二列
                         String value = sstrec.getString(lrec.getSSTIndex()).getString();
                         current.setContent(value);
-                        add(current);
+                        try {
+							add(current);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
                     }
                     break;
                 }
@@ -101,7 +112,7 @@ class Excel2003ImportListener implements HSSFListener {
 
     }
 
-    private void add(final ExcelData current) {
+    private void add(final ExcelData current) throws Exception {
 
         dataList.add(current);
 

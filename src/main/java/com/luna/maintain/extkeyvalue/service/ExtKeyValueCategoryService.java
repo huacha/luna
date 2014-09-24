@@ -34,17 +34,17 @@ public class ExtKeyValueCategoryService extends BaseService<ExtKeyValueCategory,
 		return getExtKeyValueCategoryRepository().findByName(fieldValue);
 	}
 
-    public void save(ExtKeyValueCategory extKeyValueCategory, List<ExtKeyValue> extKeyValueList) {
+    public void save(ExtKeyValueCategory extKeyValueCategory, List<ExtKeyValue> extKeyValueList) throws Exception {
         save(extKeyValueCategory);
         saveOrUpdateExtKeyValue(extKeyValueCategory, extKeyValueList);
     }
 
-    public void update(ExtKeyValueCategory extKeyValueCategory, List<ExtKeyValue> extKeyValueList) {
+    public void update(ExtKeyValueCategory extKeyValueCategory, List<ExtKeyValue> extKeyValueList) throws Exception {
         update(extKeyValueCategory);
         saveOrUpdateExtKeyValue(extKeyValueCategory, extKeyValueList);
     }
 
-    private void saveOrUpdateExtKeyValue(ExtKeyValueCategory extKeyValueCategory, List<ExtKeyValue> extKeyValueList) {
+    private void saveOrUpdateExtKeyValue(ExtKeyValueCategory extKeyValueCategory, List<ExtKeyValue> extKeyValueList) throws Exception {
         for (ExtKeyValue extKeyValue : extKeyValueList) {
             if (extKeyValue == null) {//防止中间有跳过的
                 continue;

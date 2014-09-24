@@ -32,8 +32,9 @@ public class UserOnlineService extends BaseService<UserOnline, String> {
      * 上线
      *
      * @param userOnline
+     * @throws Exception 
      */
-    public void online(UserOnline userOnline) {
+    public void online(UserOnline userOnline) throws Exception {
         save(userOnline);
     }
 
@@ -41,8 +42,9 @@ public class UserOnlineService extends BaseService<UserOnline, String> {
      * 下线
      *
      * @param sid
+     * @throws Exception 
      */
-    public void offline(String sid) {
+    public void offline(String sid) throws Exception {
         UserOnline userOnline = findOne(sid);
         if (userOnline != null) {
             delete(userOnline);

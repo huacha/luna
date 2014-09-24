@@ -17,6 +17,7 @@ import com.luna.maintain.notification.service.NotificationApi;
 import com.luna.showcase.excel.entity.ExcelData;
 import com.luna.showcase.excel.repository.ExcelDataRepository;
 import com.luna.sys.user.entity.User;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -116,8 +117,9 @@ public class ExcelDataService extends BaseService<ExcelData, Long> {
     /**
      * 如果主键冲突 覆盖，否则新增
      * @param dataList
+     * @throws Exception 
      */
-    public void doBatchSave(final List<ExcelData> dataList) {
+    public void doBatchSave(final List<ExcelData> dataList) throws Exception {
         for(ExcelData data : dataList) {
             ExcelData dbData = findOne(data.getId());
             if(dbData == null) {

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/WEB-INF/jsp/common/taglibs.jspf"%>
-<es:contentHeader title="欢迎" index="true"/>
+<es:contentHeader title="luna" index="true"/>
 
     <ul id="tabs-menu" class="dropdown-menu">
         <li><a class="close-current" href="#">关闭</a></li>

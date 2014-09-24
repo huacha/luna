@@ -14,6 +14,7 @@ import com.luna.personal.calendar.entity.Calendar;
 import com.luna.personal.calendar.service.CalendarService;
 import com.luna.sys.user.entity.User;
 import com.luna.sys.user.web.bind.annotation.CurrentUser;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -135,7 +136,11 @@ public class CalendarController extends BaseController<Calendar, Long> {
     @ResponseBody
     public String newCalendar(@ModelAttribute("calendar") Calendar calendar, @CurrentUser User loginUser) {
         calendar.setUserId(loginUser.getId());
-        calendarService.save(calendar);
+        try {
+			calendarService.save(calendar);
+		} catch (Exception e) {
+			log.error("",e);
+		}
         return "ok";
     }
 
@@ -163,7 +168,11 @@ public class CalendarController extends BaseController<Calendar, Long> {
         if(!"00:00:00".equals(DateFormatUtils.format(end, "HH:mm:ss"))) {
             calendar.setEndTime(end);
         }
-        calendarService.copyAndRemove(calendar);
+        try {
+			calendarService.copyAndRemove(calendar);
+		} catch (Exception e) {
+			log.error("",e);
+		}
 
         return "ok";
     }
@@ -172,7 +181,11 @@ public class CalendarController extends BaseController<Calendar, Long> {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String deleteCalendar(@RequestParam("id") Long id) {
-        calendarService.delete(id);
+        try {
+			calendarService.delete(id);
+		} catch (Exception e) {
+			log.error("",e);
+		}
         return "ok";
     }
 

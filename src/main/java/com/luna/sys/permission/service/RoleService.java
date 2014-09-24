@@ -10,6 +10,7 @@ import com.luna.common.service.BaseService;
 import com.luna.sys.permission.entity.Role;
 import com.luna.sys.permission.entity.RoleResourcePermission;
 import com.luna.sys.permission.repository.RoleRepository;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class RoleService extends BaseService<Role, Long> {
     }
 
     @Override
-    public Role update(Role role) {
+    public Role update(Role role) throws Exception {
         List<RoleResourcePermission> localResourcePermissions = role.getResourcePermissions();
         for (int i = 0, l = localResourcePermissions.size(); i < l; i++) {
             RoleResourcePermission localResourcePermission = localResourcePermissions.get(i);

@@ -1,8 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/WEB-INF/jsp/common/taglibs.jspf"%>
 <es:contentHeader/>
-<div class="panel">
-    <div class="row-fluid">
+<div class="row-fluid">
 
 	<!-- start of main -->
     <section id="m-main" class="span10">
@@ -10,8 +9,8 @@
 	    <div id="__gef_palette__" style="float:left;width:260px;">
 		  <ul class="nav nav-tabs" id="myTab">
             <li class="active"><a href="#operation" data-toggle="tab">操作</a></li>
-			<li><a href="#form" data-toggle="tab">表单</a></li>
-			<li><a href="#prop" data-toggle="tab">属性</a></li>
+			<li><a href="#form" data-toggle="tab">字段属性</a></li>
+			<li><a href="#prop" data-toggle="tab">表单属性</a></li>
 		  </ul> 
 		  <div class="tab-content">
 			<div class="tab-pane active" id="operation">
@@ -60,7 +59,7 @@
 			</div>
 			<div class="tab-pane" id="form">
 			  <div class="popover" style="display:block;position:relative;">
-				<h3 class="popover-title">title</h3>
+				<h3 class="popover-title">属性</h3>
 				<div class="popover-content">
 				  <div id="xf-form-attribute" class="controls"></div>
 				</div>
@@ -72,11 +71,11 @@
 				<div class="popover-content">
 				  <div id="xf-form-attribute" class="controls">
 				    <label>
-					  名称
+					  表单名称
 				      <input id="xFormName" type="text">
 					</label>
 				    <label>
-					  标识
+					  数据库表名
 				      <input id="xFormCode" type="text">
                     </label>
 				  </div>
@@ -96,10 +95,9 @@
 			<button class="btn" onclick="doImport()">import</button>
 -->
 			<button class="btn" onclick="xform.addRow()">增加一行</button>
-			<button class="btn" onclick="xform.removeRow()">减少一行</button>
 			<button class="btn" onclick="doChangeMode(this)">切换到合并模式</button>
 			<button class="btn" onclick="doMerge()">合并</button>
-			<button class="btn" onclick="doSplit()">分解</button>
+			<button class="btn" onclick="doSplit()">拆分</button>
 		  </div>
 		</div>
 
@@ -116,20 +114,23 @@
 		</div>
 	  </div>
 
-		</div>
-
+	  </div>
     </section>
 	<!-- end of main -->
 
     <form:form id="f" commandName="m" method="post" style="display:none;">
 	  <input id="__gef_id__" name="id" value="${m.id}">
 	  <input id="__gef_name__" name="name" value="${m.name}">
-	  <input id="__gef_code__" name="code" value="${m.code}">
+	  <input id="__gef_code__" name="code" value="${m.code}" class="validate[required]">
 	  <textarea id="__gef_content__" name="content">${m.content}</textarea>
 	</form:form>
-	</div>
 </div>
 <es:contentFooter/>
 <link href="${ctx}/widgets/xform/styles/xform.css" rel="stylesheet">
 <script src="${ctx}/widgets/xform/adaptor.js" type="text/javascript"></script>
 <script src="${ctx}/widgets/xform/xform-all.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function(){
+	$('#f').validationEngine();
+});
+</script>

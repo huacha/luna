@@ -20,6 +20,9 @@ import com.luna.personal.message.entity.MessageType;
 import com.luna.sys.user.entity.User;
 import com.luna.sys.user.entity.UserStatus;
 import com.luna.sys.user.service.UserService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +46,7 @@ import java.util.List;
  */
 @Service
 public class MessageApiImpl implements MessageApi {
-
+	protected Logger log = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private MessageService messageService;
 
@@ -154,7 +157,11 @@ public class MessageApiImpl implements MessageApi {
 		if (message.getContent() != null) {
 			message.getContent().setMessage(message);
 		}
-		messageService.save(message);
+		try {
+			messageService.save(message);
+		} catch (Exception e) {
+			log.error("",e);
+		}
 	}
 
 	@Override
@@ -175,7 +182,11 @@ public class MessageApiImpl implements MessageApi {
 			}
 		}
 
-		messageService.save(message);
+		try {
+			messageService.save(message);
+		} catch (Exception e) {
+			log.error("",e);
+		}
 
 		pushApi.pushUnreadMessage(message.getReceiverId(),
 				countUnread(message.getReceiverId()));
@@ -249,7 +260,11 @@ public class MessageApiImpl implements MessageApi {
 
 	@Override
 	public void recycle(Long userId, Long messageId) {
-		changeState(userId, messageId, MessageState.trash_box);
+		try {
+			changeState(userId, messageId, MessageState.trash_box);
+		} catch (Exception e) {
+			log.error("",e);
+		}
 	}
 
 	@Override
@@ -261,7 +276,11 @@ public class MessageApiImpl implements MessageApi {
 
 	@Override
 	public void store(Long userId, Long messageId) {
-		changeState(userId, messageId, MessageState.store_box);
+		try {
+			changeState(userId, messageId, MessageState.store_box);
+		} catch (Exception e) {
+			log.error("",e);
+		}
 	}
 
 	@Override
@@ -273,7 +292,11 @@ public class MessageApiImpl implements MessageApi {
 
 	@Override
 	public void delete(Long userId, Long messageId) {
-		changeState(userId, messageId, MessageState.delete_box);
+		try {
+			changeState(userId, messageId, MessageState.delete_box);
+		} catch (Exception e) {
+			log.error("",e);
+		}
 	}
 
 	@Override
@@ -289,8 +312,9 @@ public class MessageApiImpl implements MessageApi {
 	 * @param userId
 	 * @param messageId
 	 * @param state
+	 * @throws Exception 
 	 */
-	private void changeState(Long userId, Long messageId, MessageState state) {
+	private void changeState(Long userId, Long messageId, MessageState state) throws Exception {
 		Message message = messageService.findOne(messageId);
 		if (message == null) {
 			return;
@@ -381,7 +405,11 @@ public class MessageApiImpl implements MessageApi {
 			return;
 		}
 		message.setRead(Boolean.TRUE);
-		messageService.update(message);
+		try {
+			messageService.update(message);
+		} catch (Exception e) {
+			log.error("",e);
+		}
 	}
 
 	@Override
@@ -390,7 +418,11 @@ public class MessageApiImpl implements MessageApi {
 			return;
 		}
 		message.setReplied(Boolean.TRUE);
-		messageService.update(message);
+		try {
+			messageService.update(message);
+		} catch (Exception e) {
+			log.error("",e);
+		}
 	}
 
 	@Override

@@ -131,8 +131,13 @@ public class BpmConfOperationController   extends BaseCRUDController<BpmConfOper
 		if (hasError(bpmConfOperation, result)) {
 			return showCreateForm(model);
 		}
-		baseService.save(bpmConfOperation);
-		redirectAttributes.addFlashAttribute(Constants.MESSAGE, "新增成功");
+		try {
+			baseService.save(bpmConfOperation);
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "新增成功");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+			log.error("",e);
+		}
 		return redirectToUrl(backURL);
 	}
 
@@ -143,10 +148,8 @@ public class BpmConfOperationController   extends BaseCRUDController<BpmConfOper
 			@RequestParam(value = "copy", defaultValue = "false") boolean isCopy) {
 
 		this.permissionList.assertHasEditPermission();
-
 		setCommonData(model);
 		model.addAttribute(Constants.OP_NAME, isCopy ? "复制" : "修改");
-
 		return super.showUpdateForm(bpmConfOperation, model);
 	}
 
@@ -161,26 +164,29 @@ public class BpmConfOperationController   extends BaseCRUDController<BpmConfOper
 				redirectAttributes);
 	}
 
-	
     @RequestMapping(value = "/node-{nodeId}/{id}/delete", method = RequestMethod.POST)
     @ResponseBody
     public BpmConfOperation deleteBpmConfOperation(@PathVariable("id") BpmConfOperation bpmConfOperation) {
 
         this.permissionList.assertHasEditPermission();
 
-        getBpmConfOperationService().delete(bpmConfOperation);
+        try {
+			getBpmConfOperationService().delete(bpmConfOperation);
+		} catch (Exception e) {
+			log.error("",e);
+		}
         return bpmConfOperation;
     }
-
 
     @RequestMapping(value = "/node-{nodeId}/batch/delete")
     @ResponseBody
     public Object deleteBpmConfOperationInBatch(@RequestParam(value = "ids", required = false) Long[] ids) {
-
         this.permissionList.assertHasEditPermission();
-
-        getBpmConfOperationService().delete(ids);
-        //return ids;
+        try {
+			getBpmConfOperationService().delete(ids);
+		} catch (Exception e) {
+			log.error("",e);
+		}
 
         return redirectToUrl(null);
     }

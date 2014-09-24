@@ -93,7 +93,9 @@ public abstract class BaseMovableController<M extends BaseEntity & Movable, ID e
         } catch (IllegalStateException e) {
             ajaxResponse.setSuccess(Boolean.FALSE);
             ajaxResponse.setMessage("优化权重失败了！");
-        }
+        } catch (Exception e) {
+			log.error("优化权重异常", e);
+		}
         return ajaxResponse;
     }
 

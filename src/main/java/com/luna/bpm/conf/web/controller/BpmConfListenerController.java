@@ -14,10 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.luna.bpm.category.entity.BpmCategory;
 import com.luna.bpm.conf.entity.BpmConfListener;
 import com.luna.bpm.conf.entity.BpmConfNode;
-import com.luna.bpm.conf.entity.BpmConfListener;
 import com.luna.bpm.conf.service.BpmConfListenerService;
 import com.luna.bpm.process.entity.BpmProcess;
 import com.luna.common.Constants;
@@ -35,7 +33,6 @@ public class BpmConfListenerController   extends BaseCRUDController<BpmConfListe
 	private BpmConfListenerService getBpmConfListenerService() {
         return (BpmConfListenerService) baseService;
     }
-
 	
 	public BpmConfListenerController() {
 		setResourceIdentity("bpm:conf:listener");
@@ -75,7 +72,6 @@ public class BpmConfListenerController   extends BaseCRUDController<BpmConfListe
         } else {
             response.validateFail(fieldId, "该名称已使用");
         }
-        
         return response.result();
     }
 	
@@ -85,7 +81,6 @@ public class BpmConfListenerController   extends BaseCRUDController<BpmConfListe
         model.addAttribute("bpmconflistenertype", extKeyValueService.findByExtKeyValueCategoryName(bpmConfListenerType));
     }
     
-
 	@RequestMapping(value = "/process-{processId}/node-{nodeId}", method = RequestMethod.GET)
 	@PageableDefaults(sort = "priority=asc")
 	public String list(Searchable searchable,
@@ -101,7 +96,6 @@ public class BpmConfListenerController   extends BaseCRUDController<BpmConfListe
 			searchable.addSearchFilter("bpmConfNode.id", SearchOperator.eq,
 					bpmConfNode.getId());
 		}
-
 		return super.list(searchable, model);
 	}
 
@@ -112,10 +106,8 @@ public class BpmConfListenerController   extends BaseCRUDController<BpmConfListe
 		if (permissionList != null) {
 			this.permissionList.assertHasCreatePermission();
 		}
-
 		setCommonData(model);
 		String result = super.showCreateForm(model);
-
 		if (bpmConfNode != null) {
 			BpmConfListener m = (BpmConfListener) model.asMap().get("m");
 			m.setBpmConfNode(bpmConfNode);
@@ -123,7 +115,6 @@ public class BpmConfListenerController   extends BaseCRUDController<BpmConfListe
 			m.setPriority(1);
 		}
 		model.addAttribute(Constants.OP_NAME, "新增");
-
 		return result;
 	}
 
@@ -141,8 +132,13 @@ public class BpmConfListenerController   extends BaseCRUDController<BpmConfListe
 		if (hasError(bpmConfListener, result)) {
 			return showCreateForm(model);
 		}
-		baseService.save(bpmConfListener);
-		redirectAttributes.addFlashAttribute(Constants.MESSAGE, "新增成功");
+		try {
+			baseService.save(bpmConfListener);
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "新增成功");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+			log.error("",e);
+		}
 		return redirectToUrl(backURL);
 	}
 
@@ -178,7 +174,11 @@ public class BpmConfListenerController   extends BaseCRUDController<BpmConfListe
 
         this.permissionList.assertHasEditPermission();
 
-        getBpmConfListenerService().delete(bpmConfListener);
+        try {
+			getBpmConfListenerService().delete(bpmConfListener);
+		} catch (Exception e) {
+			log.error("",e);
+		}
         return bpmConfListener;
     }
 
@@ -189,8 +189,11 @@ public class BpmConfListenerController   extends BaseCRUDController<BpmConfListe
 
         this.permissionList.assertHasEditPermission();
 
-        getBpmConfListenerService().delete(ids);
-        //return ids;
+        try {
+			getBpmConfListenerService().delete(ids);
+		} catch (Exception e) {
+			log.error("",e);
+		}
 
         return redirectToUrl(null);
     }

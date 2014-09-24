@@ -5,11 +5,6 @@
  */
 package com.luna.sys.user.web.controller;
 
-import com.luna.common.entity.search.Searchable;
-import com.luna.common.utils.MessageUtils;
-import com.luna.common.web.controller.BaseCRUDController;
-import com.luna.sys.user.entity.UserOnline;
-import com.luna.sys.user.service.UserOnlineService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.session.mgt.OnlineSession;
@@ -19,6 +14,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.luna.common.entity.search.Searchable;
+import com.luna.common.utils.MessageUtils;
+import com.luna.common.web.controller.BaseCRUDController;
+import com.luna.sys.user.entity.UserOnline;
 
 /**
  * 
@@ -45,7 +45,7 @@ public class UserOnlineController extends BaseCRUDController<UserOnline, String>
     }
 
     @RequestMapping("/forceLogout")
-    public String forceLogout(@RequestParam(value = "ids") String[] ids) {
+    public String forceLogout(@RequestParam(value = "ids") String[] ids) throws Exception {
 
         if (!SecurityUtils.getSubject().isPermitted("sys:userOnline or monitor:userOnline")) {
             throw new UnauthorizedException(MessageUtils.message("no.view.permission", "sys:userOnline或monitor:userOnline"));

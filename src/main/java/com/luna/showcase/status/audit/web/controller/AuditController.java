@@ -10,6 +10,7 @@ import com.luna.common.plugin.entity.Stateable;
 import com.luna.common.web.controller.BaseCRUDController;
 import com.luna.showcase.status.audit.entity.Audit;
 import com.luna.showcase.status.audit.service.AuditService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +58,7 @@ public class AuditController extends BaseCRUDController<Audit, Long> {
             @PathVariable("status") Stateable.AuditStatus status,
             @RequestParam(value = "comment", required = false) String comment,
             RedirectAttributes redirectAttributes
-    ) {
+    ) throws Exception {
 
         this.permissionList.assertHasPermission("audit");
 

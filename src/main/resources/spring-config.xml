@@ -65,7 +65,7 @@
     </bean>
 
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-		<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="dataSourceProxy" />
 	</bean>
 
     <!-- jpa Entity Factory 配置 -->
@@ -73,7 +73,6 @@
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSourceProxy"/>
         <property name="packagesToScan" value="com.luna.**.entity"/>
-
         <property name="persistenceUnitName" value="${jpa.persistenceUnitName}"/>
         <property name="persistenceProvider">
             <bean class="org.hibernate.jpa.HibernatePersistenceProvider"/>
@@ -96,12 +95,10 @@
                 <!-- jsr303验证模式 因为其要么验证 要么不验证 不能按照规则走 所以此处禁用 -->
                 <!-- #http://docs.jboss.org/hibernate/entitymanager/3.6/reference/en/html/configuration.html -->
                 <entry key="javax.persistence.validation.mode" value="NONE"/>
-
                 <!-- 只扫描class文件，不扫描hbm，默认两个都搜索 -->
                 <entry key="hibernate.archive.autodetection" value="class"/>
                 <!-- 不检查@NamedQuery -->
                 <entry key="hibernate.query.startup_check" value="false"/>
-
                 <entry key="hibernate.query.substitutions" value="${hibernate.query.substitutions}"/>
                 <entry key="hibernate.default_batch_fetch_size" value="${hibernate.default_batch_fetch_size}"/>
                 <entry key="hibernate.max_fetch_depth" value="${hibernate.max_fetch_depth}"/>
@@ -112,7 +109,6 @@
                 <entry key="hibernate.cache.region.factory_class" value="${hibernate.cache.region.factory_class}"/>
                 <entry key="net.sf.ehcache.configurationResourceName" value="${net.sf.ehcache.configurationResourceName}"/>
                 <entry key="hibernate.cache.use_structured_entries" value="${hibernate.cache.use_structured_entries}"/>
-
             </map>
         </property>
     </bean>
@@ -122,7 +118,6 @@
         base-package:扫描的包
         repository-impl-postfix:仓库自定义实现类型的后缀  自动扫描并添加到接口的实现
         factory-class 仓库接口的实现工厂
-
     -->
     <jpa:repositories
             base-package="com.luna.**.repository"
@@ -130,7 +125,6 @@
             factory-class="com.luna.common.repository.support.SimpleBaseRepositoryFactoryBean"
             entity-manager-factory-ref="entityManagerFactory"
             transaction-manager-ref="transactionManager">
-
     </jpa:repositories>
 
 

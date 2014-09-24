@@ -5,11 +5,11 @@
  */
 package com.luna.sys.user.service;
 
+import org.springframework.stereotype.Service;
+
 import com.luna.common.service.BaseService;
 import com.luna.sys.user.entity.UserLastOnline;
 import com.luna.sys.user.repository.UserLastOnlineRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * 
@@ -28,7 +28,7 @@ public class UserLastOnlineService extends BaseService<UserLastOnline, Long> {
         return getUserLastOnlineRepository().findByUserId(userId);
     }
 
-    public void lastOnline(UserLastOnline lastOnline) {
+    public void lastOnline(UserLastOnline lastOnline) throws Exception {
         UserLastOnline dbLastOnline = findByUserId(lastOnline.getUserId());
 
         if (dbLastOnline == null) {

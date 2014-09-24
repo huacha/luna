@@ -166,8 +166,13 @@ public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable
             return updateForm(m, model, redirectAttributes);
         }
 
-        baseService.update(m);
-        redirectAttributes.addFlashAttribute(Constants.MESSAGE, "修改成功");
+        try {
+			baseService.update(m);
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "修改成功");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, "修改失败");
+			
+		}
         return redirectToUrl(viewName("success"));
     }
 
@@ -270,10 +275,13 @@ public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable
             return appendChildForm(parent, model);
         }
 
-        baseService.appendChild(parent, child);
-
-        redirectAttributes.addFlashAttribute(Constants.MESSAGE, "添加子节点成功");
-        return redirectToUrl(viewName("success"));
+        try {
+			baseService.appendChild(parent, child);
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "添加子节点成功");
+		} catch (Exception e) {
+			
+		}
+		return redirectToUrl(viewName("success"));
     }
 
     @RequestMapping(value = "{source}/move", method = RequestMethod.GET)
@@ -336,9 +344,13 @@ public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable
             return showMoveForm(request, async, source, searchable, model);
         }
 
-        baseService.move(source, target, moveType);
-
-        redirectAttributes.addFlashAttribute(Constants.MESSAGE, "移动节点成功");
+        try {
+			baseService.move(source, target, moveType);
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "移动节点成功");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+			log.error("",e);
+		}
         return redirectToUrl(viewName("success"));
     }
 
@@ -452,7 +464,11 @@ public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable
 
         M child = newModel();
         child.setName("新节点");
-        baseService.appendChild(parent, child);
+        try {
+			baseService.appendChild(parent, child);
+		} catch (Exception e) {
+			log.error("",e);
+		}
         return convertToZtree(child, true, true);
     }
 
@@ -480,7 +496,11 @@ public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable
         }
 
         tree.setName(newName);
-        baseService.update(tree);
+        try {
+			baseService.update(tree);
+		} catch (Exception e) {
+			log.error("",e);
+		}
         return convertToZtree(tree, true, true);
     }
 
@@ -491,13 +511,15 @@ public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable
             @PathVariable("sourceId") M source, @PathVariable("targetId") M target,
             @PathVariable("moveType") String moveType) {
 
-
         if (this.permissionList != null) {
             this.permissionList.assertHasEditPermission();
         }
 
-
-        baseService.move(source, target, moveType);
+        try {
+			baseService.move(source, target, moveType);
+		} catch (Exception e) {
+			log.error("",e);
+		}
 
         return source;
     }

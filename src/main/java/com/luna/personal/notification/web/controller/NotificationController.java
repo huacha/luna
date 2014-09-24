@@ -13,6 +13,7 @@ import com.luna.maintain.notification.entity.NotificationData;
 import com.luna.maintain.notification.service.NotificationDataService;
 import com.luna.sys.user.entity.User;
 import com.luna.sys.user.web.bind.annotation.CurrentUser;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,7 +55,11 @@ public class NotificationController extends BaseController {
     @RequestMapping("/markRead")
     @ResponseBody
     public String markRead(@RequestParam("id") Long id) {
-        notificationDataService.markRead(id);
+        try {
+			notificationDataService.markRead(id);
+		} catch (Exception e) {
+			log.error("",e);
+		}
         return "";
     }
 

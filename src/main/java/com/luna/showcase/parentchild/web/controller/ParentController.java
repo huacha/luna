@@ -17,6 +17,7 @@ import com.luna.showcase.parentchild.entity.Parent;
 import com.luna.showcase.parentchild.entity.ParentChildType;
 import com.luna.showcase.parentchild.service.ChildService;
 import com.luna.showcase.parentchild.service.ParentService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+
 import java.util.List;
 
 /**
@@ -73,7 +75,12 @@ public class ParentController extends BaseCRUDController<Parent, Long> {
         if (hasError(parent, result)) {
             return showCreateForm(model);
         }
-        getParentService().save(parent, childList);
+        try {
+			getParentService().save(parent, childList);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         redirectAttributes.addFlashAttribute(Constants.MESSAGE, "创建成功");
         return redirectToUrl(null);
     }
@@ -102,7 +109,12 @@ public class ParentController extends BaseCRUDController<Parent, Long> {
         if (hasError(parent, result)) {
             return showUpdateForm(parent, model);
         }
-        getParentService().update(parent, childList);
+        try {
+			getParentService().update(parent, childList);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         redirectAttributes.addFlashAttribute(Constants.MESSAGE, "修改成功");
         return redirectToUrl(backURL);
     }
@@ -189,7 +201,12 @@ public class ParentController extends BaseCRUDController<Parent, Long> {
 
         this.permissionList.assertHasEditPermission();
 
-        childService.delete(child);
+        try {
+			childService.delete(child);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         return child;
     }
 
@@ -200,7 +217,12 @@ public class ParentController extends BaseCRUDController<Parent, Long> {
 
         this.permissionList.assertHasEditPermission();
 
-        childService.delete(ids);
+        try {
+			childService.delete(ids);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         return ids;
     }
 

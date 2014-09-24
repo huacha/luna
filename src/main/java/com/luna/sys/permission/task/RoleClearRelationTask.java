@@ -12,6 +12,9 @@ import com.luna.sys.permission.entity.RoleResourcePermission;
 import com.luna.sys.permission.service.PermissionService;
 import com.luna.sys.permission.service.RoleService;
 import com.luna.sys.resource.service.ResourceService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,6 +37,8 @@ import java.util.Iterator;
 @Service()
 public class RoleClearRelationTask {
 
+	protected Logger log = LoggerFactory.getLogger(this.getClass());
+	
     @Autowired
     private RoleService roleService;
 
@@ -66,7 +71,7 @@ public class RoleClearRelationTask {
             }
             //清空会话
             RepositoryHelper.clear();
-        } while (rolePage.hasNextPage());
+        } while (rolePage.hasNext());
     }
 
     public void doClear(Collection<Role> roleColl) {
@@ -99,7 +104,11 @@ public class RoleClearRelationTask {
             }
 
             if (needUpdate) {
-                roleService.update(role);
+                try {
+					roleService.update(role);
+				} catch (Exception e) {
+					log.error("",e);
+				}
             }
 
 

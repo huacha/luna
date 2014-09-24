@@ -30,9 +30,9 @@
             |
             <a class="reverse-all" href="javascript:;">反选</a>
         </th>
-        <th style="width: 100px" sort="id">编号</th>
-        <th style="width: 150px" sort="name">名称</th>
-        <th>标识</th>
+        <th style="width: 100px" sort="id">表单编号</th>
+        <th style="width: 150px" sort="name">表单名称</th>
+        <th>数据库表名</th>
         <th>类型</th>
     </tr>
     </thead>

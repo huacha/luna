@@ -5,6 +5,18 @@
  */
 package com.luna.maintain.notification.service;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.luna.common.entity.search.SearchOperator;
@@ -14,15 +26,6 @@ import com.luna.maintain.notification.entity.NotificationData;
 import com.luna.maintain.notification.entity.NotificationTemplate;
 import com.luna.maintain.notification.exception.TemplateNotFoundException;
 import com.luna.maintain.push.service.PushApi;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 
@@ -31,7 +34,7 @@ import java.util.Map;
  */
 @Service
 public class NotificationApiImpl implements NotificationApi {
-
+	protected Logger log = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private NotificationTemplateService notificationTemplateService;
 
@@ -75,8 +78,11 @@ public class NotificationApiImpl implements NotificationApi {
         data.setTitle(title);
         data.setContent(content);
 
-        notificationDataService.save(data);
-
+        try {
+			notificationDataService.save(data);
+		} catch (Exception e) {
+			log.error("",e);
+		}
 
         pushApi.pushNewNotification(userId, topFiveNotification(userId));
 

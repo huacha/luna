@@ -55,7 +55,6 @@ public class BpmConfFormController   extends BaseCRUDController<BpmConfForm, Lon
 			@PathVariable("processId") BpmProcess bpmProcess,
 			@PathVariable("nodeId") BpmConfNode bpmConfNode, Model model) {
 		setCommonData(model);
-		
 		if (bpmProcess != null) {
 			model.addAttribute("bpmProcess", bpmProcess);
 		}
@@ -64,7 +63,6 @@ public class BpmConfFormController   extends BaseCRUDController<BpmConfForm, Lon
 			searchable.addSearchFilter("bpmConfNode.id", SearchOperator.eq,
 					bpmConfNode.getId());
 		}
-
 		return super.list(searchable, model);
 	}
 	
@@ -85,7 +83,6 @@ public class BpmConfFormController   extends BaseCRUDController<BpmConfForm, Lon
             @RequestParam(value = "id", required = false) Long id,
             @RequestParam(value = "bpmConfNodeId", required = true) BpmConfNode bpmConfNode) {
         ValidateResponse response = ValidateResponse.newInstance();
-   
         BpmConfForm bpmConfForm = getBpmConfFormService().findUnique(fieldValue, bpmConfNode);
         if (bpmConfForm == null || (bpmConfForm.getId().equals(id))) {
             //如果msg 不为空 将弹出提示框
@@ -93,28 +90,23 @@ public class BpmConfFormController   extends BaseCRUDController<BpmConfForm, Lon
         } else {
             response.validateFail(fieldId, "该表单已配置");
         }
-        
         return response.result();
     }
 
 	@RequestMapping(value = "/node-{bpmConfNodeId}/create", method = RequestMethod.GET)
 	public String showCreateForm(Model model,
 			@PathVariable("bpmConfNodeId") BpmConfNode bpmConfNode) {
-
 		if (permissionList != null) {
 			this.permissionList.assertHasCreatePermission();
 		}
-
 		setCommonData(model);
 		String result = super.showCreateForm(model);
-
 		if (bpmConfNode != null) {
 			BpmConfForm m = (BpmConfForm) model.asMap().get("m");
 			m.setBpmConfNode(bpmConfNode);
 			m.setStatus(1);
 		}
 		model.addAttribute(Constants.OP_NAME, "新增");
-
 		return result;
 	}
 
@@ -124,16 +116,19 @@ public class BpmConfFormController   extends BaseCRUDController<BpmConfForm, Lon
 			BindingResult result,
 			@RequestParam(value = "BackURL", required = false) String backURL,
 			RedirectAttributes redirectAttributes) {
-
 		if (permissionList != null) {
 			this.permissionList.assertHasCreatePermission();
 		}
-
 		if (hasError(bpmConfForm, result)) {
 			return showCreateForm(model);
 		}
-		baseService.save(bpmConfForm);
-		redirectAttributes.addFlashAttribute(Constants.MESSAGE, "新增成功");
+		try {
+			baseService.save(bpmConfForm);
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "新增成功");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+			log.error("",e);
+		}
 		return redirectToUrl(backURL);
 	}
 
@@ -142,12 +137,9 @@ public class BpmConfFormController   extends BaseCRUDController<BpmConfForm, Lon
 			@PathVariable("nodeId") Long bpmConfNodeId,
 			@PathVariable("id") BpmConfForm bpmConfForm,
 			@RequestParam(value = "copy", defaultValue = "false") boolean isCopy) {
-
 		this.permissionList.assertHasEditPermission();
-
 		setCommonData(model);
 		model.addAttribute(Constants.OP_NAME, isCopy ? "复制" : "修改");
-
 		return super.showUpdateForm(bpmConfForm, model);
 	}
 
@@ -157,7 +149,6 @@ public class BpmConfFormController   extends BaseCRUDController<BpmConfForm, Lon
 			BindingResult result,
 			@RequestParam(value = "BackURL", required = false) String backURL,
 			RedirectAttributes redirectAttributes) {
-
 		return super.update(model, bpmConfForm, result, backURL,
 				redirectAttributes);
 	}
@@ -166,10 +157,12 @@ public class BpmConfFormController   extends BaseCRUDController<BpmConfForm, Lon
     @RequestMapping(value = "/node-{nodeId}/{id}/delete", method = RequestMethod.POST)
     @ResponseBody
     public BpmConfForm deleteBpmConfForm(@PathVariable("id") BpmConfForm bpmConfForm) {
-
         this.permissionList.assertHasEditPermission();
-
-        getBpmConfFormService().delete(bpmConfForm);
+        try {
+			getBpmConfFormService().delete(bpmConfForm);
+		} catch (Exception e) {
+			log.error("",e);
+		}
         return bpmConfForm;
     }
 
@@ -177,12 +170,12 @@ public class BpmConfFormController   extends BaseCRUDController<BpmConfForm, Lon
     @RequestMapping(value = "/node-{nodeId}/batch/delete")
     @ResponseBody
     public Object deleteBpmConfFormInBatch(@RequestParam(value = "ids", required = false) Long[] ids) {
-
         this.permissionList.assertHasEditPermission();
-
-        getBpmConfFormService().delete(ids);
-        //return ids;
-
+        try {
+			getBpmConfFormService().delete(ids);
+		} catch (Exception e) {
+			log.error("",e);
+		}
         return redirectToUrl(null);
     }
 

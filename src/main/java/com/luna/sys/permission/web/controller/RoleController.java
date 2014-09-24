@@ -5,6 +5,22 @@
  */
 package com.luna.sys.permission.web.controller;
 
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.google.common.collect.Sets;
 import com.luna.common.Constants;
 import com.luna.common.entity.enums.AvailableEnum;
@@ -13,17 +29,6 @@ import com.luna.common.web.controller.BaseCRUDController;
 import com.luna.sys.permission.entity.Role;
 import com.luna.sys.permission.entity.RoleResourcePermission;
 import com.luna.sys.permission.service.PermissionService;
-import com.luna.sys.permission.service.RoleService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.Set;
 
 /**
  * 
@@ -129,7 +134,7 @@ public class RoleController extends BaseCRUDController<Role, Long> {
             @PathVariable("newStatus") Boolean newStatus,
             @RequestParam("ids") Long[] ids,
             RedirectAttributes redirectAttributes
-    ) {
+    ) throws Exception {
 
         this.permissionList.assertHasUpdatePermission();
 

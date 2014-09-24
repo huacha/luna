@@ -7,10 +7,13 @@ package org.apache.shiro.session.mgt.eis;
 
 import com.luna.sys.user.entity.UserOnline;
 import com.luna.sys.user.service.UserOnlineService;
+
 import org.apache.shiro.ShiroConstants;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.OnlineSession;
 import org.apache.shiro.session.mgt.OnlineSessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
@@ -24,6 +27,7 @@ import java.util.Date;
  * <p>Version: 1.0
  */
 public class OnlineSessionDAO extends EnterpriseCacheSessionDAO {
+	protected Logger log = LoggerFactory.getLogger(this.getClass());
     /**
      * 上次同步数据库的时间戳
      */
@@ -90,7 +94,11 @@ public class OnlineSessionDAO extends EnterpriseCacheSessionDAO {
             session.resetAttributeChanged();
         }
 
-        userOnlineService.online(UserOnline.fromOnlineSession(session));
+        try {
+			userOnlineService.online(UserOnline.fromOnlineSession(session));
+		} catch (Exception e) {
+			log.error("",e);
+		}
 
     }
 
@@ -110,8 +118,5 @@ public class OnlineSessionDAO extends EnterpriseCacheSessionDAO {
                 //即使删除失败也无所谓
             }
         }
-
     }
-
-
 }

@@ -5,6 +5,24 @@
  */
 package com.luna.sys.user.web.controller;
 
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.luna.common.Constants;
 import com.luna.common.entity.enums.BooleanEnum;
 import com.luna.common.entity.search.Searchable;
@@ -19,18 +37,6 @@ import com.luna.sys.user.entity.UserOrganizationJob;
 import com.luna.sys.user.entity.UserStatus;
 import com.luna.sys.user.service.UserService;
 import com.luna.sys.user.web.bind.annotation.CurrentUser;
-import org.apache.commons.lang3.ArrayUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * 
@@ -181,9 +187,13 @@ public class UserController extends BaseCRUDController<User, Long> {
             @CurrentUser User opUser,
             RedirectAttributes redirectAttributes) {
 
-        getUserService().changePassword(opUser, ids, newPassword);
-
-        redirectAttributes.addFlashAttribute(Constants.MESSAGE, "改密成功！");
+        try {
+			getUserService().changePassword(opUser, ids, newPassword);
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "改密成功！");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+			log.error("",e);
+		}
 
         return redirectToUrl((String) request.getAttribute(Constants.BACK_URL));
     }
@@ -197,19 +207,22 @@ public class UserController extends BaseCRUDController<User, Long> {
             @CurrentUser User opUser,
             RedirectAttributes redirectAttributes) {
 
-        getUserService().changeStatus(opUser, ids, newStatus, reason);
-
-        if (newStatus == UserStatus.normal) {
-            redirectAttributes.addFlashAttribute(Constants.MESSAGE, "解封成功！");
-        } else if (newStatus == UserStatus.blocked) {
-            redirectAttributes.addFlashAttribute(Constants.MESSAGE, "封禁成功！");
-        }
-
+        try {
+			getUserService().changeStatus(opUser, ids, newStatus, reason);
+			if (newStatus == UserStatus.normal) {
+	            redirectAttributes.addFlashAttribute(Constants.MESSAGE, "解封成功！");
+	        } else if (newStatus == UserStatus.blocked) {
+	            redirectAttributes.addFlashAttribute(Constants.MESSAGE, "封禁成功！");
+	        }
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+			log.error("",e);
+		}
         return redirectToUrl((String) request.getAttribute(Constants.BACK_URL));
     }
 
     @RequestMapping(value = "recycle")
-    public String recycle(HttpServletRequest request, @RequestParam("ids") Long[] ids, RedirectAttributes redirectAttributes) {
+    public String recycle(HttpServletRequest request, @RequestParam("ids") Long[] ids, RedirectAttributes redirectAttributes) throws Exception {
         for (Long id : ids) {
             User user = getUserService().findOne(id);
             user.setDeleted(Boolean.FALSE);

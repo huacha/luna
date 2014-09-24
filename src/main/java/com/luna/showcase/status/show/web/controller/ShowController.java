@@ -10,6 +10,7 @@ import com.luna.common.plugin.entity.Stateable;
 import com.luna.common.web.controller.BaseCRUDController;
 import com.luna.showcase.status.show.entity.Show;
 import com.luna.showcase.status.show.service.ShowService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,7 +49,7 @@ public class ShowController extends BaseCRUDController<Show, Long> {
             @RequestParam("ids") Long[] ids,
             @PathVariable("status") Stateable.ShowStatus status,
             RedirectAttributes redirectAttributes
-    ) {
+    ) throws Exception {
 
         this.permissionList.assertHasPermission("audit");
 

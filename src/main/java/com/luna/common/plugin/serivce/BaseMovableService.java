@@ -11,6 +11,7 @@ import com.luna.common.entity.search.Searchable;
 import com.luna.common.plugin.entity.Movable;
 import com.luna.common.repository.RepositoryHelper;
 import com.luna.common.service.BaseService;
+
 import org.springframework.aop.framework.AopContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -54,7 +55,7 @@ public abstract class BaseMovableService<M extends BaseEntity & Movable, ID exte
     }
 
     @Override
-    public M save(M m) {
+    public M save(M m) throws Exception {
         if (m.getWeight() == null) {
             m.setWeight(findNextWeight());
         }
@@ -201,7 +202,7 @@ public abstract class BaseMovableService<M extends BaseEntity & Movable, ID exte
         from.setWeight(newWeight);
     }
 
-    public void reweight() {
+    public void reweight() throws IllegalStateException, Exception {
         int batchSize = 100;
         Sort sort = new Sort(Sort.Direction.DESC, "weight");
         Pageable pageable = new PageRequest(0, batchSize, sort);
@@ -223,7 +224,7 @@ public abstract class BaseMovableService<M extends BaseEntity & Movable, ID exte
         } while (true);
     }
 
-    public void doReweight(Page<M> page) {
+    public void doReweight(Page<M> page) throws Exception {
         int totalElements = (int) page.getTotalElements();
         List<M> moves = page.getContent();
 

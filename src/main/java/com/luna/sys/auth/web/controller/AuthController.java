@@ -13,6 +13,7 @@ import com.luna.sys.auth.entity.Auth;
 import com.luna.sys.auth.entity.AuthType;
 import com.luna.sys.auth.service.AuthService;
 import com.luna.sys.permission.service.RoleService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -102,14 +103,19 @@ public class AuthController extends BaseCRUDController<Auth, Long> {
             return showCreateForm(model);
         }
 
-        if (m.getType() == AuthType.user) {
-            getAuthService().addUserAuth(userIds, m);
-        } else if (m.getType() == AuthType.user_group || m.getType() == AuthType.organization_group) {
-            getAuthService().addGroupAuth(groupIds, m);
-        } else if (m.getType() == AuthType.organization_job) {
-            getAuthService().addOrganizationJobAuth(organizationIds, jobIds, m);
-        }
-        redirectAttributes.addFlashAttribute(Constants.MESSAGE, "新增成功");
+        try {
+			if (m.getType() == AuthType.user) {
+			    getAuthService().addUserAuth(userIds, m);
+			} else if (m.getType() == AuthType.user_group || m.getType() == AuthType.organization_group) {
+			    getAuthService().addGroupAuth(groupIds, m);
+			} else if (m.getType() == AuthType.organization_job) {
+			    getAuthService().addOrganizationJobAuth(organizationIds, jobIds, m);
+			}
+			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "新增成功");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
+			log.error("",e);
+		}
         return redirectToUrl("/admin/sys/auth?search.type_eq=" + m.getType());
     }
 
