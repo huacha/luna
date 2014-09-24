@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.luna.common.service.BaseService;
@@ -16,8 +14,6 @@ import com.luna.xform.repository.FormTemplateRepository;
 
 @Service
 public class FormTemplateService extends BaseService<FormTemplate, Long> {
-
-	private static Logger log = LoggerFactory.getLogger(FormTemplateService.class);
 
 	FormTemplateRepository getFormTemplateRepository() {
 		return (FormTemplateRepository) baseRepository;

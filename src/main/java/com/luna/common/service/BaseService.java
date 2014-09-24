@@ -11,6 +11,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +35,9 @@ import com.luna.common.repository.BaseRepository;
  */
 @SuppressWarnings("rawtypes")
 public abstract class BaseService<M extends AbstractEntity, ID extends Serializable> {
+	
+	protected Logger log = LoggerFactory.getLogger(this.getClass());
+	
 	@PersistenceContext
 	protected EntityManager em;
 	@Autowired
