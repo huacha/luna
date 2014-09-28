@@ -2,3 +2,5 @@
 *.DS_Store
 /log.dir_IS_UNDEFINED/
 /target/
+/log/
+/.gitignore

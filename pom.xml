@@ -14,7 +14,8 @@
 		<spring.version>4.0.6.RELEASE</spring.version>
 		<hibernate.version>4.3.6.Final</hibernate.version>
 		<hibernate.commons.annotaions.version>4.0.5.Final</hibernate.commons.annotaions.version>
-		<jetty.version>8.1.16.v20140903</jetty.version>
+		<jetty.version>9.2.3.v20140905</jetty.version>
+		<jetty.plugin.version>8.1.16.v20140903</jetty.plugin.version>
 		<jcaptcha.version>2.0-alpha-1</jcaptcha.version>
 		<aspectj.version>1.7.4</aspectj.version>
 		<slf4j.version>1.7.7</slf4j.version>
@@ -608,31 +609,14 @@
 			</plugin>
 
 			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
+				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>${jetty.version}</version>
 				<configuration>
 					<webAppSourceDirectory>webapp</webAppSourceDirectory>
-					<reload>manual</reload>
-					<!--<scanIntervalSeconds>2</scanIntervalSeconds> -->
-					<stopPort>9999</stopPort>
-					<webAppConfig>
+					<webApp>
 						<contextPath>/${project.build.finalName}</contextPath>
-					</webAppConfig>
-					<reload>automatic</reload>   <!-- 自动部署默认是 automatic -->
-					<connectors>
-						<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-							<port>8080</port>
-							<!--<maxIdleTime>60000</maxIdleTime> -->
-						</connector>
-					</connectors>
-					<!-- spring profile -->
-					<systemProperties>
-						<systemProperty>
-							<name>spring.profiles.active</name>
-							<value>development</value>
-						</systemProperty>
-					</systemProperties>
+					</webApp>
 				</configuration>
 			</plugin>
 
@@ -663,7 +647,8 @@
 						<param>/sql/update</param>
 					</dbUpdateScriptsDirectory>
 					<dbCreateStatements>
-						create database ${db.name} CHARACTER SET 'utf8';
+						create database ${db.name} CHARACTER SET
+						'utf8';
 					</dbCreateStatements>
 					<dbDropStatements>drop database ${db.name}; </dbDropStatements>
 					<sqlDelimiter>;;</sqlDelimiter>
@@ -678,6 +663,36 @@
 				</dependencies>
 			</plugin>
 
+			<plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            org.apache.maven.plugins
+                                        </groupId>
+                                        <artifactId>
+                                            maven-dependency-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [2.0,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>unpack</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
 		</plugins>
 	</build>
 

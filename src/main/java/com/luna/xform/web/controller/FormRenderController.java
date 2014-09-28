@@ -44,7 +44,7 @@ public class FormRenderController {
 		model.addAttribute("fields", fields);
 		model.addAttribute("formid", formid);
 		
-		return "/xform/render/list";
+		return "xform/render/list";
 	}
 	
 	@RequestMapping(value = "{formid}/create", method = RequestMethod.GET)
@@ -53,7 +53,7 @@ public class FormRenderController {
 		model.addAttribute("m", m);
 		model.addAttribute("formid", formid);
 		
-		return "/xform/render/editForm";
+		return "xform/render/editForm";
 	}
 	
 	@RequestMapping(value = "{formid}/create", method = RequestMethod.POST)
@@ -81,7 +81,7 @@ public class FormRenderController {
 		Map<String, Object> data = dataService.findOne(sql);
 		String json = JsonUtil.toJson(data);
 		model.addAttribute("json", json);
-		return "/xform/render/editForm";
+		return "xform/render/editForm";
 	}
 	
 	@RequestMapping(value = "{formid}/{dataid}/update", method = RequestMethod.POST)
