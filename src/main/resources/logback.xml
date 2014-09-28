@@ -5,7 +5,7 @@
     <!-- 控制台 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d [%thread] %-5level%logger.%M: %msg%n</pattern>
+            <pattern>%date{HH:mm:ss.SSS} %-5level[%thread] %logger.%M: %msg%n</pattern>
         </encoder>
     </appender>
     
@@ -19,7 +19,7 @@
             <maxHistory>60</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>%d [%thread] %-5level%logger.%M: %msg%n</pattern>
+            <pattern>%date{HH:mm:ss.SSS} %-5level[%thread] %logger.%M: %msg%n</pattern>
         </encoder>
     </appender>
 
