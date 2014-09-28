@@ -1,23 +1,20 @@
 package com.luna.common.utils;
 
-import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import org.apache.shiro.SecurityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
-public class LogUtils {
+import javax.servlet.http.HttpServletRequest;
 
-    public static final Logger ERROR_LOG = LoggerFactory.getLogger("es-error");
-    public static final Logger ACCESS_LOG = LoggerFactory.getLogger("es-access");
+import org.apache.shiro.SecurityUtils;
+
+import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
+public class LogUtils {
 
     /**
      * 记录访问日志
@@ -25,7 +22,7 @@ public class LogUtils {
      *
      * @param request
      */
-    public static void logAccess(HttpServletRequest request) {
+    public static String logAccess(HttpServletRequest request) {
         String username = getUsername();
         String jsessionId = request.getRequestedSessionId();
         String ip = IpUtils.getIpAddr(request);
@@ -36,16 +33,18 @@ public class LogUtils {
         String headers = getHeaders(request);
 
         StringBuilder s = new StringBuilder();
+        
+        s.append(getBlock(url));
+        s.append(getBlock(params));
+        s.append(getBlock(headers));
+        s.append(getBlock(request.getHeader("Referer")));
+        
         s.append(getBlock(username));
         s.append(getBlock(jsessionId));
         s.append(getBlock(ip));
         s.append(getBlock(accept));
         s.append(getBlock(userAgent));
-        s.append(getBlock(url));
-        s.append(getBlock(params));
-        s.append(getBlock(headers));
-        s.append(getBlock(request.getHeader("Referer")));
-        getAccessLog().info(s.toString());
+        return s.toString();
     }
 
     /**
@@ -55,13 +54,13 @@ public class LogUtils {
      * @param message
      * @param e
      */
-    public static void logError(String message, Throwable e) {
+    public static String logError(String message) {
         String username = getUsername();
         StringBuilder s = new StringBuilder();
         s.append(getBlock("exception"));
         s.append(getBlock(username));
         s.append(getBlock(message));
-        ERROR_LOG.error(s.toString(), e);
+        return s.toString();
     }
 
     /**
@@ -70,7 +69,7 @@ public class LogUtils {
      *
      * @param request
      */
-    public static void logPageError(HttpServletRequest request) {
+    public static String logPageError(HttpServletRequest request) {
         String username = getUsername();
 
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
@@ -99,7 +98,7 @@ public class LogUtils {
             t = t.getCause();
         }
         s.append(getBlock(sw.toString()));
-        getErrorLog().error(s.toString());
+        return s.toString();
 
     }
 
@@ -137,14 +136,6 @@ public class LogUtils {
 
     protected static String getUsername() {
         return (String) SecurityUtils.getSubject().getPrincipal();
-    }
-
-    public static Logger getAccessLog() {
-        return ACCESS_LOG;
-    }
-
-    public static Logger getErrorLog() {
-        return ERROR_LOG;
     }
 
 }

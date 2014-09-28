@@ -5,17 +5,19 @@
  */
 package com.luna.common.web.controller;
 
-import com.luna.common.Constants;
-import com.luna.common.utils.ImagesUtils;
-import com.luna.common.utils.LogUtils;
-import com.luna.common.utils.MessageUtils;
-import com.luna.common.web.entity.AjaxUploadResponse;
-import com.luna.common.web.upload.FileUploadUtils;
-import com.luna.common.web.upload.exception.FileNameLengthLimitExceededException;
-import com.luna.common.web.upload.exception.InvalidExtensionException;
+import java.io.File;
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,12 +25,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
+import com.luna.common.Constants;
+import com.luna.common.utils.ImagesUtils;
+import com.luna.common.utils.MessageUtils;
+import com.luna.common.web.entity.AjaxUploadResponse;
+import com.luna.common.web.upload.FileUploadUtils;
+import com.luna.common.web.upload.exception.FileNameLengthLimitExceededException;
+import com.luna.common.web.upload.exception.InvalidExtensionException;
 
 /**
  * ajax文件上传/下载
@@ -38,7 +41,7 @@ import java.net.URLEncoder;
  */
 @Controller
 public class AjaxUploadController {
-
+	public static final Logger log = LoggerFactory.getLogger(AjaxUploadController.class);
 
     //最大上传大小 字节为单位
     private long maxSize = FileUploadUtils.DEFAULT_MAX_SIZE;
@@ -81,7 +84,7 @@ public class AjaxUploadController {
                 }
                 continue;
             } catch (IOException e) {
-                LogUtils.logError("file upload error", e);
+            	log.error("file upload error", e);
                 ajaxUploadResponse.add(filename, size, MessageUtils.message("upload.server.error"));
                 continue;
             } catch (InvalidExtensionException e) {

@@ -5,13 +5,8 @@
  */
 package com.luna.sys.permission.task;
 
-import com.luna.common.repository.RepositoryHelper;
-import com.luna.common.utils.LogUtils;
-import com.luna.sys.permission.entity.Role;
-import com.luna.sys.permission.entity.RoleResourcePermission;
-import com.luna.sys.permission.service.PermissionService;
-import com.luna.sys.permission.service.RoleService;
-import com.luna.sys.resource.service.ResourceService;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,8 +17,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Iterator;
+import com.luna.common.repository.RepositoryHelper;
+import com.luna.sys.permission.entity.Role;
+import com.luna.sys.permission.entity.RoleResourcePermission;
+import com.luna.sys.permission.service.PermissionService;
+import com.luna.sys.permission.service.RoleService;
+import com.luna.sys.resource.service.ResourceService;
 
 /**
  * 清理无关联的Role-Resource/Permission关系
@@ -66,7 +65,7 @@ public class RoleClearRelationTask {
                 roleClearRelationTask.doClear(rolePage.getContent());
             } catch (Exception e) {
                 //出异常也无所谓
-                LogUtils.logError("clear role relation error", e);
+                log.error("clear role relation error", e);
 
             }
             //清空会话

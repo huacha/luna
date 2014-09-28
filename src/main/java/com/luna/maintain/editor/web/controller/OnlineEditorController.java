@@ -5,17 +5,23 @@
  */
 package com.luna.maintain.editor.web.controller;
 
-import com.google.common.collect.Lists;
-import com.luna.common.Constants;
-import com.luna.common.utils.LogUtils;
-import com.luna.common.utils.MessageUtils;
-import com.luna.common.web.controller.BaseController;
-import com.luna.common.web.entity.AjaxUploadResponse;
-import com.luna.common.web.upload.FileUploadUtils;
-import com.luna.common.web.upload.exception.FileNameLengthLimitExceededException;
-import com.luna.common.web.upload.exception.InvalidExtensionException;
-import com.luna.common.web.utils.DownloadUtils;
-import com.luna.maintain.editor.web.controller.utils.CompressUtils;
+import static com.luna.maintain.editor.web.controller.utils.OnlineEditorUtils.extractFileInfoMap;
+import static com.luna.maintain.editor.web.controller.utils.OnlineEditorUtils.hasParent;
+import static com.luna.maintain.editor.web.controller.utils.OnlineEditorUtils.sort;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -34,19 +40,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import static com.luna.maintain.editor.web.controller.utils.OnlineEditorUtils.*;
+import com.google.common.collect.Lists;
+import com.luna.common.Constants;
+import com.luna.common.utils.MessageUtils;
+import com.luna.common.web.controller.BaseController;
+import com.luna.common.web.entity.AjaxUploadResponse;
+import com.luna.common.web.upload.FileUploadUtils;
+import com.luna.common.web.upload.exception.FileNameLengthLimitExceededException;
+import com.luna.common.web.upload.exception.InvalidExtensionException;
+import com.luna.common.web.utils.DownloadUtils;
+import com.luna.maintain.editor.web.controller.utils.CompressUtils;
 
 /**
  * 
@@ -57,7 +60,6 @@ import static com.luna.maintain.editor.web.controller.utils.OnlineEditorUtils.*;
 @RequestMapping("/admin/maintain/editor")
 @RequiresPermissions("maintain:onlineEditor:*")
 public class OnlineEditorController extends BaseController {
-
 
     private final String ROOT_DIR = "/";
 
@@ -466,7 +468,7 @@ public class OnlineEditorController extends BaseController {
 
                 continue;
             } catch (IOException e) {
-                LogUtils.logError("file upload error", e);
+                log.error("file upload error", e);
                 ajaxUploadResponse.add(filename, size, MessageUtils.message("upload.server.error"));
                 continue;
             } catch (InvalidExtensionException e) {

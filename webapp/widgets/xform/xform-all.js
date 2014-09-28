@@ -879,8 +879,6 @@ xf.Proxy.prototype.hide = function() {
 	this.move(-100, -100);
 }
 
-
-
 ;
 
 xf.field.FieldFactory = function() {

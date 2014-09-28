@@ -1,9 +1,12 @@
 package com.luna.xform.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 
 public class FieldModel {
     private String name;
     private String type;
+    private String title;
 
     public String getName() {
         return name;
@@ -20,5 +23,15 @@ public class FieldModel {
     public void setType(String type) {
         this.type = type;
     }
+
+	public String getTitle() {
+		if(StringUtils.isBlank(title))
+			title = name;
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
 }

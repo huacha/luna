@@ -5,18 +5,8 @@
  */
 package com.luna.sys.auth.task;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.luna.common.repository.RepositoryHelper;
-import com.luna.common.utils.LogUtils;
-import com.luna.sys.auth.entity.Auth;
-import com.luna.sys.auth.service.AuthService;
-import com.luna.sys.group.service.GroupService;
-import com.luna.sys.organization.service.JobService;
-import com.luna.sys.organization.service.OrganizationService;
-import com.luna.sys.permission.entity.Role;
-import com.luna.sys.permission.service.RoleService;
+import java.util.Collection;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +17,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Set;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.luna.common.repository.RepositoryHelper;
+import com.luna.sys.auth.entity.Auth;
+import com.luna.sys.auth.service.AuthService;
+import com.luna.sys.group.service.GroupService;
+import com.luna.sys.organization.service.JobService;
+import com.luna.sys.organization.service.OrganizationService;
+import com.luna.sys.permission.entity.Role;
+import com.luna.sys.permission.service.RoleService;
 
 /**
  * 清理Auth无关联的关系
@@ -82,7 +81,7 @@ public class AuthRelationClearTask {
                 authRelationClearService.doClear(authPage.getContent(), allRoleIds);
             } catch (Exception e) {
                 //出异常也无所谓
-                LogUtils.logError("clear auth relation error", e);
+                log.error("clear auth relation error", e);
             }
             //清空会话
             RepositoryHelper.clear();

@@ -5,31 +5,38 @@
  */
 package com.luna.maintain.icon.web.controller;
 
+import java.util.List;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.support.ServletContextResource;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.google.common.collect.Lists;
 import com.luna.common.Constants;
 import com.luna.common.entity.search.Searchable;
-import com.luna.common.utils.LogUtils;
 import com.luna.common.web.controller.BaseCRUDController;
 import com.luna.common.web.upload.FileUploadUtils;
 import com.luna.common.web.validate.ValidateResponse;
 import com.luna.maintain.icon.entity.Icon;
 import com.luna.maintain.icon.entity.IconType;
 import com.luna.maintain.icon.service.IconService;
-import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.support.ServletContextResource;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.List;
 
 /**
  * 
@@ -39,7 +46,6 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/admin/maintain/icon")
 public class IconController extends BaseCRUDController<Icon, Long> {
-
     private IconService getIconService() {
         return (IconService) baseService;
     }
@@ -241,7 +247,7 @@ public class IconController extends BaseCRUDController<Icon, Long> {
             ServletContextResource resource = new ServletContextResource(sc, iconClassFile);
             FileUtils.writeLines(resource.getFile(), cssList);
         } catch (Exception e) {
-            LogUtils.logError("gen icon error", e);
+            log.error("gen icon error", e);
             return "生成失败：" + e.getMessage();
         }
 

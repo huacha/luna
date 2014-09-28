@@ -10,9 +10,13 @@ import com.luna.sys.user.entity.User;
 import com.luna.sys.user.exception.UserPasswordNotMatchException;
 import com.luna.sys.user.exception.UserPasswordRetryLimitExceedException;
 import com.luna.sys.user.utils.UserLogUtils;
+
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,7 +30,7 @@ import javax.annotation.PostConstruct;
  */
 @Service
 public class PasswordService {
-
+	static final Logger log = LoggerFactory.getLogger(PasswordService.class);
     @Autowired
     private CacheManager ehcacheManager;
 
@@ -53,10 +57,10 @@ public class PasswordService {
         if (cacheElement != null) {
             retryCount = (Integer) cacheElement.getObjectValue();
             if (retryCount >= maxRetryCount) {
-                UserLogUtils.log(
-                        username,
+                log.info(
+                		UserLogUtils.logInfo(username,
                         "passwordError",
-                        "password error, retry limit exceed! password: {},max retry count {}",
+                        "password error, retry limit exceed! password: {},max retry count {}"),
                         password, maxRetryCount);
                 throw new UserPasswordRetryLimitExceedException(maxRetryCount);
             }
@@ -64,10 +68,10 @@ public class PasswordService {
 
         if (!matches(user, password)) {
             loginRecordCache.put(new Element(username, ++retryCount));
-            UserLogUtils.log(
-                    username,
+            log.info(
+                    UserLogUtils.logInfo(username,
                     "passwordError",
-                    "password error! password: {} retry count: {}",
+                    "password error! password: {} retry count: {}"),
                     password, retryCount);
             throw new UserPasswordNotMatchException();
         } else {

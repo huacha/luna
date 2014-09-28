@@ -5,15 +5,17 @@
  */
 package com.luna.extra.exception.web;
 
-import com.luna.common.utils.LogUtils;
-import com.luna.extra.exception.web.entity.ExceptionResponse;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.luna.extra.exception.web.entity.ExceptionResponse;
 
 /**
  * 
@@ -22,7 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @ControllerAdvice
 public class DefaultExceptionHandler {
-
+	private static final Logger log = LoggerFactory.getLogger(DefaultExceptionHandler.class);
     /**
      * 没有权限 异常
      * <p/>
@@ -31,7 +33,7 @@ public class DefaultExceptionHandler {
     @ExceptionHandler({UnauthorizedException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ModelAndView processUnauthenticatedException(NativeWebRequest request, UnauthorizedException e) {
-        LogUtils.logError("用户权限验证失败", e);
+        log.error("用户权限验证失败", e);
         ExceptionResponse exceptionResponse = ExceptionResponse.from(e);
 
         ModelAndView mv = new ModelAndView();

@@ -5,14 +5,22 @@
  */
 package com.luna.common.web.controller;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.luna.common.utils.LogUtils;
-import com.luna.common.web.upload.FileUploadUtils;
-import com.luna.common.web.upload.exception.FileNameLengthLimitExceededException;
-import com.luna.common.web.upload.exception.InvalidExtensionException;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -22,12 +30,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.luna.common.web.upload.FileUploadUtils;
+import com.luna.common.web.upload.exception.FileNameLengthLimitExceededException;
+import com.luna.common.web.upload.exception.InvalidExtensionException;
 
 /**
  * 
@@ -37,7 +44,7 @@ import java.util.*;
 @Controller
 @RequestMapping(value = "/kindeditor")
 public class KindEditorController {
-
+	public static final Logger log = LoggerFactory.getLogger(KindEditorController.class);
     //图片mime类型
     private static final String[] IMAGE_EXTENSION = FileUploadUtils.IMAGE_EXTENSION;
 
@@ -101,7 +108,7 @@ public class KindEditorController {
             return successResponse(request, file.getOriginalFilename(), url);
 
         } catch (IOException e) {
-            LogUtils.logError("file upload error", e);
+            log.error("file upload error", e);
             return errorResponse("upload.server.error");
         } catch (InvalidExtensionException.InvalidImageExtensionException e) {
             return errorResponse("upload.not.allow.image.extension");

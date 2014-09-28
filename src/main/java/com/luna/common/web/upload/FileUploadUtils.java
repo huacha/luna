@@ -5,24 +5,26 @@
  */
 package com.luna.common.web.upload;
 
-import com.luna.common.utils.LogUtils;
-import com.luna.common.utils.security.Coder;
-import com.luna.common.web.upload.exception.FileNameLengthLimitExceededException;
-import com.luna.common.web.upload.exception.InvalidExtensionException;
-import org.apache.commons.fileupload.FileUploadBase;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
-import static org.apache.commons.fileupload.FileUploadBase.FileSizeLimitExceededException;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.fileupload.FileUploadBase;
+import org.apache.commons.fileupload.FileUploadBase.FileSizeLimitExceededException;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.luna.common.utils.security.Coder;
+import com.luna.common.web.upload.exception.FileNameLengthLimitExceededException;
+import com.luna.common.web.upload.exception.InvalidExtensionException;
 
 /**
  * 文件上传工具类
@@ -31,7 +33,7 @@ import static org.apache.commons.fileupload.FileUploadBase.FileSizeLimitExceeded
  * <p>Version: 1.0
  */
 public class FileUploadUtils {
-
+	public static final Logger log = LoggerFactory.getLogger(FileUploadUtils.class);
     //默认大小 50M
     public static final long DEFAULT_MAX_SIZE = 52428800;
 
@@ -103,7 +105,7 @@ public class FileUploadUtils {
         try {
             return upload(request, getDefaultBaseDir(), file, allowedExtension, DEFAULT_MAX_SIZE, true);
         } catch (IOException e) {
-            LogUtils.logError("file upload error", e);
+            log.error("file upload error", e);
             result.reject("upload.server.error");
         } catch (InvalidExtensionException.InvalidImageExtensionException e) {
             result.reject("upload.not.allow.image.extension");

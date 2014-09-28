@@ -1,4 +1,6 @@
 <%@ page import="com.luna.common.utils.LogUtils" %>
+<%@ page import="org.slf4j.Logger" %>
+<%@ page import="org.slf4j.LoggerFactory" %>
 <%@ page import="java.io.PrintWriter" %>
 <%@ page import="java.io.StringWriter" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -6,8 +8,9 @@
 <es:contentHeader/>
 <div class="panel">
     <%
-        LogUtils.logPageError(request);
-
+    	Logger log = LoggerFactory.getLogger("com.luna.page.404");
+        String error = LogUtils.logPageError(request);
+        log.error(error);
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
         pageContext.setAttribute("statusCode", statusCode);
 

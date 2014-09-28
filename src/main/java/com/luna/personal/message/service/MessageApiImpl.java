@@ -5,21 +5,8 @@
  */
 package com.luna.personal.message.service;
 
-import com.google.common.collect.Lists;
-import com.luna.common.entity.search.SearchOperator;
-import com.luna.common.entity.search.Searchable;
-import com.luna.common.entity.search.filter.SearchFilter;
-import com.luna.common.entity.search.filter.SearchFilterHelper;
-import com.luna.common.repository.RepositoryHelper;
-import com.luna.common.utils.LogUtils;
-import com.luna.maintain.push.service.PushApi;
-import com.luna.personal.message.entity.Message;
-import com.luna.personal.message.entity.MessageContent;
-import com.luna.personal.message.entity.MessageState;
-import com.luna.personal.message.entity.MessageType;
-import com.luna.sys.user.entity.User;
-import com.luna.sys.user.entity.UserStatus;
-import com.luna.sys.user.service.UserService;
+import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +21,20 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.Date;
-import java.util.List;
+import com.google.common.collect.Lists;
+import com.luna.common.entity.search.SearchOperator;
+import com.luna.common.entity.search.Searchable;
+import com.luna.common.entity.search.filter.SearchFilter;
+import com.luna.common.entity.search.filter.SearchFilterHelper;
+import com.luna.common.repository.RepositoryHelper;
+import com.luna.maintain.push.service.PushApi;
+import com.luna.personal.message.entity.Message;
+import com.luna.personal.message.entity.MessageContent;
+import com.luna.personal.message.entity.MessageState;
+import com.luna.personal.message.entity.MessageType;
+import com.luna.sys.user.entity.User;
+import com.luna.sys.user.entity.UserStatus;
+import com.luna.sys.user.service.UserService;
 
 /**
  * 
@@ -236,7 +235,7 @@ public class MessageApiImpl implements MessageApi {
 				((MessageApiImpl) AopContext.currentProxy())
 						.doSendSystemMessage(page.getContent(), message);
 			} catch (Exception e) {
-				LogUtils.logError("send system message to all user error", e);
+				log.error("send system message to all user error", e);
 			}
 			RepositoryHelper.clear();
 		} while (page.hasNext());

@@ -5,14 +5,10 @@
  */
 package com.luna.sys.user.task;
 
-import com.luna.common.repository.RepositoryHelper;
-import com.luna.common.utils.LogUtils;
-import com.luna.sys.organization.service.JobService;
-import com.luna.sys.organization.service.OrganizationService;
-import com.luna.sys.user.entity.User;
-import com.luna.sys.user.entity.UserOrganizationJob;
-import com.luna.sys.user.service.UserService;
+import java.util.Collection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,7 +16,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import com.luna.common.repository.RepositoryHelper;
+import com.luna.sys.organization.service.JobService;
+import com.luna.sys.organization.service.OrganizationService;
+import com.luna.sys.user.entity.User;
+import com.luna.sys.user.entity.UserOrganizationJob;
+import com.luna.sys.user.service.UserService;
 
 /**
  * 清理无关联的User-Organization/Job关系
@@ -32,7 +33,7 @@ import java.util.Collection;
  */
 @Service()
 public class UserClearRelationTask {
-
+	private Logger log = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private UserService userService;
 
@@ -66,7 +67,7 @@ public class UserClearRelationTask {
                 userClearRelationTask.doClear(page.getContent());
             } catch (Exception e) {
                 //出异常也无所谓
-                LogUtils.logError("clear user relation error", e);
+                log.error("clear user relation error", e);
 
             }
             //清空会话
