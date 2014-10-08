@@ -48,7 +48,7 @@ public class ModelerController {
     public String list(org.springframework.ui.Model model) {
         List<Model> models = processEngine.getRepositoryService().createModelQuery().list();
         model.addAttribute("models", models);
-        return "/bpm/modeler/list";
+        return "bpm/modeler/list";
     }
 
     /**
