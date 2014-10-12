@@ -1,4 +1,4 @@
-package com.luna.bpm.process.delegate;
+package com.luna.bpm.delegate;
 
 import java.util.Collection;
 import java.util.Collections;

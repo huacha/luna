@@ -5,9 +5,9 @@ import javax.annotation.Resource;
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.impl.context.Context;
 
+import com.luna.bpm.delegate.entity.DelegateInfo;
+import com.luna.bpm.delegate.service.DelegateService;
 import com.luna.bpm.process.cmd.DelegateTaskCmd;
-import com.luna.bpm.process.delegate.DelegateInfo;
-import com.luna.bpm.process.service.DelegateService;
 
 public class DelegateTaskListener extends DefaultTaskListener {
     /**

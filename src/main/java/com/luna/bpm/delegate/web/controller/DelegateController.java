@@ -1,4 +1,4 @@
-package com.luna.bpm.process.web.controller;
+package com.luna.bpm.delegate.web.controller;
 
 import java.util.Date;
 import java.util.List;
@@ -12,11 +12,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.luna.bpm.delegate.service.DelegateService;
 import com.luna.bpm.process.entity.BpmDelegateHistory;
 import com.luna.bpm.process.entity.BpmDelegateInfo;
 import com.luna.bpm.process.repository.BpmDelegateHistoryManager;
 import com.luna.bpm.process.repository.BpmDelegateInfoManager;
-import com.luna.bpm.process.service.DelegateService;
 import com.luna.sys.user.entity.User;
 import com.luna.sys.user.web.bind.annotation.CurrentUser;
 

@@ -1,4 +1,4 @@
-package com.luna.bpm.process.service;
+package com.luna.bpm.delegate.service;
 
 import java.util.Date;
 import java.util.List;
@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.luna.bpm.process.delegate.DelegateInfo;
+import com.luna.bpm.delegate.entity.DelegateInfo;
 
 @Transactional
 @Component

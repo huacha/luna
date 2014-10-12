@@ -1,4 +1,4 @@
-package com.luna.bpm.process.entity;
+package com.luna.bpm.delegate.entity;
 
 import java.util.Date;
 

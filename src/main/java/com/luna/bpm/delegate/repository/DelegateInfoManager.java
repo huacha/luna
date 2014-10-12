@@ -1,6 +1,6 @@
-package com.luna.bpm.process.repository;
+package com.luna.bpm.delegate.repository;
 
-import com.luna.bpm.process.entity.DelegateInfo;
+import com.luna.bpm.delegate.entity.DelegateInfo;
 import com.luna.common.repository.BaseRepository;
 
 

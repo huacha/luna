@@ -1,4 +1,4 @@
-package com.luna.bpm.process.web.controller;
+package com.luna.bpm.delegate.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.luna.bpm.conf.entity.BpmConfForm;
 import com.luna.bpm.conf.entity.BpmConfNode;
-import com.luna.bpm.process.entity.DelegateInfo;
-import com.luna.bpm.process.service.DelegateInfoService;
+import com.luna.bpm.delegate.entity.DelegateInfo;
+import com.luna.bpm.delegate.service.DelegateInfoService;
 import com.luna.common.Constants;
 import com.luna.common.entity.enums.BooleanEnum;
 import com.luna.common.web.controller.BaseCRUDController;

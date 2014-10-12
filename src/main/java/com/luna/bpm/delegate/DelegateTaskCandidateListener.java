@@ -1,17 +1,18 @@
-package com.luna.bpm.process.delegate;
+package com.luna.bpm.delegate;
 
 import java.util.Set;
 
 import javax.annotation.Resource;
-
-import com.luna.bpm.process.listener.DefaultTaskListener;
-import com.luna.bpm.process.service.DelegateService;
 
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.task.IdentityLink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.luna.bpm.delegate.entity.DelegateInfo;
+import com.luna.bpm.delegate.service.DelegateService;
+import com.luna.bpm.process.listener.DefaultTaskListener;
 
 public class DelegateTaskCandidateListener extends DefaultTaskListener {
     private static Logger logger = LoggerFactory
