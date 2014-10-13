@@ -57,15 +57,29 @@
             <div class="control-group">
                 <form:label path="assignee" cssClass="control-label">委托人</form:label>
                 <div class="controls">
-                    <form:input path="assignee" cssClass="validate[required]" placeholder="请输入委托人"/>
+                    <form:input id="assigneeName" path="assigneeName" cssClass="validate[required]" readonly="true"/>
+                    <form:hidden id="assignee" path="assignee"/>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <form:label path="attorneyType" cssClass="control-label">代理人类型</form:label>
+                <div class="controls inline-radio">
+                    <!-- 
+                    <form:radiobutton path="attorneyType" value="1" cssClass="validate[required]"/>单用户  
+                    <form:radiobutton path="attorneyType" value="2" cssClass="validate[required]"/>用户组
+                     -->
+                    <form:radiobuttons path="attorneyType" items="${attorneyTypeList}" delimiter="&nbsp;&nbsp;" cssClass="validate[required]"/>
                 </div>
             </div>
             
 
             <div class="control-group">
                 <form:label path="attorney" cssClass="control-label">代理人</form:label>
-                <div class="controls">
-                    <form:input path="attorney" cssClass="validate[required]" placeholder="请输入代理人"/>
+                <div class="controls input-append">
+                    <form:input id="attorneyName" path="attorneyName" cssClass="validate[required]" readonly="true"/>
+                    <span class="add-on"><i class="icon-chevron-down"></i></span>
+                    <form:hidden id="attorney" path="attorney"/>
                 </div>
             </div>
 
@@ -150,7 +164,6 @@
             </c:otherwise>
         </c:choose>
         
-        
         $("[name='processDefinitionId']").siblings(".add-on").andSelf().click(function() {
             $.app.modalDialog(
                     "流程列表",
@@ -164,6 +177,39 @@
                         }
                     }
              );
+        });
+        
+        $("[name='attorneyName']").siblings(".add-on").andSelf().click(function() {
+        	var attorneyType = $("input[name='attorneyType']:checked").val();
+        	
+        	if("1"==attorneyType){
+        		$.app.modalDialog(
+                        "用户列表",
+                        "${ctx}/bpm/process/delegate/userselect/single;domId=attorney;domName=attorneyName",
+                        {
+                            width:600,
+                            height:450,
+                            callback : function() {
+                                $("[name='attorneyName']").validationEngine('validate');
+                                return true;
+                            }
+                        }
+                 );
+        	}
+        	else if("2"==attorneyType){
+        		$.app.modalDialog(
+                        "用户组列表",
+                        "${ctx}/bpm/process/delegate/groupselect/single;domId=attorney;domName=attorneyName",
+                        {
+                            width:600,
+                            height:450,
+                            callback : function() {
+                                $("[name='attorneyName']").validationEngine('validate');
+                                return true;
+                            }
+                        }
+                 );
+        	}
         });
         
     });

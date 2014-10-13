@@ -15,6 +15,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.MatrixVariable;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -301,5 +302,23 @@ public class UserController extends BaseCRUDController<User, Long> {
         return response.result();
     }
 
+   //selectType  multiple single
+    @RequestMapping(value = {"select/{selectType}", "select"}, method = RequestMethod.GET)
+    @PageableDefaults(sort = "weight=desc")
+    public String select(
+            Searchable searchable, Model model,
+            @PathVariable(value = "selectType") String selectType,
+            @MatrixVariable(value = "domId", pathVar = "selectType") String domId,
+            @MatrixVariable(value = "domName", pathVar = "selectType", required = false) String domName) {
+
+        this.permissionList.assertHasViewPermission();
+
+        model.addAttribute("selectType", selectType);
+        model.addAttribute("domId", domId);
+        model.addAttribute("domName", domName);
+
+        super.list(searchable, model);
+        return "showcase/product/category/select";
+    }
 
 }

@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -19,6 +20,11 @@ public class DelegateInfo extends BaseEntity<Long> {
 
 	@Column(name = "ASSIGNEE", length = 200)
 	private String assignee;
+	
+
+	@Column(name = "ATTORNEY_TYPE", length = 1)
+	private String attorneyType;
+	
 	@Column(name = "ATTORNEY", length = 200)
 	private String attorney;
 
@@ -37,6 +43,27 @@ public class DelegateInfo extends BaseEntity<Long> {
 
 	@Column(name = "STATUS")
 	private int status;
+	
+	@Transient
+	private String assigneeName;
+	@Transient
+	private String attorneyName;
+
+	public String getAssigneeName() {
+		return assigneeName;
+	}
+
+	public void setAssigneeName(String assigneeName) {
+		this.assigneeName = assigneeName;
+	}
+
+	public String getAttorneyName() {
+		return attorneyName;
+	}
+
+	public void setAttorneyName(String attorneyName) {
+		this.attorneyName = attorneyName;
+	}
 
 	public String getAssignee() {
 		return assignee;
@@ -44,6 +71,14 @@ public class DelegateInfo extends BaseEntity<Long> {
 
 	public void setAssignee(String assignee) {
 		this.assignee = assignee;
+	}
+
+	public String getAttorneyType() {
+		return attorneyType;
+	}
+
+	public void setAttorneyType(String attorneyType) {
+		this.attorneyType = attorneyType;
 	}
 
 	public String getAttorney() {

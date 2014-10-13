@@ -30,9 +30,10 @@
             |
             <a class="reverse-all" href="javascript:;">反选</a>
         </th>
-        <th style="width: 80px" sort="id">编号</th>
-        <th style="width: 150px" sort="assignee">委托人</th>
-        <th style="width: 150px" sort="attorney">被委托人</th>
+        <th style="width: 60px" sort="id">编号</th>
+        <th style="width: 120px" sort="assignee">委托人</th>
+        <th style="width: 80px" sort="attorneyType">代理人类型</th>
+        <th style="width: 120px" sort="attorney">代理人</th>
         <th style="width: 150px" sort="startTime">开始时间</th>
         <th style="width: 150px"  sort="endTime">结束时间</th>
         <th style="width: 180px" sort="processDefinitionId">流程定义</th>
@@ -50,6 +51,8 @@
                 <a class="btn btn-link btn-edit" href="${ctx}/bpm/process/delegate/${m.id}">${m.id}</a>
             </td>
             <td>${m.assignee}</td>
+            <!-- td>${attorneyTypeList[m.attorneyType]}</td -->
+            <td>${attorneyTypeList[m.attorneyType]}</td>
             <td>${m.attorney}</td>
             <td>${m.startTime}</td>
             <td>${m.endTime}</td>
