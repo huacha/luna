@@ -44,7 +44,7 @@ import com.luna.sys.user.web.bind.annotation.CurrentUser;
  * 我的流程 待办流程 已办未结
  */
 @Controller
-@RequestMapping("bpm")
+@RequestMapping("bpm/process/workspace")
 public class WorkspaceController {
 	@Autowired
     private BpmCategoryManager bpmCategoryManager;
@@ -55,15 +55,14 @@ public class WorkspaceController {
     @Autowired
     private ActivitiProcessConnector activitiProcessConnector;
 
-    @RequestMapping("workspace-home")
+    @RequestMapping("home")
     public String home(Model model) {
         List<BpmCategory> bpmCategories = bpmCategoryManager.findAll(new Sort(new String[]{"priority"}));
         model.addAttribute("bpmCategories", bpmCategories);
-
-        return "bpm/workspace-home";
+        return "bpm/process/workspace/home";
     }
 
-    @RequestMapping("workspace-graphProcessDefinition")
+    @RequestMapping("graphProcessDefinition")
     public void graphProcessDefinition(
             @RequestParam("bpmProcessId") Long bpmProcessId,
             HttpServletResponse response) throws Exception {
@@ -81,14 +80,13 @@ public class WorkspaceController {
         IOUtils.copy(is, response.getOutputStream());
     }
 
-    // ~ ======================================================================
-    @RequestMapping("workspace-endProcessInstance")
+    @RequestMapping("endProcessInstance")
     public String endProcessInstance(
             @RequestParam("processInstanceId") String processInstanceId) {
         processEngine.getRuntimeService().deleteProcessInstance(
                 processInstanceId, "end");
 
-        return "redirect:/bpm/workspace-listProcessInstances.do";
+        return "redirect:/bpm/process/workspace/listProcessInstances";
     }
 
     /**
@@ -96,7 +94,7 @@ public class WorkspaceController {
      * 
      * @return
      */
-    @RequestMapping("workspace-listProcessDefinitions")
+    @RequestMapping("listProcessDefinitions")
     public String listProcessDefinitions(Model model) {
         RepositoryService repositoryService = processEngine
                 .getRepositoryService();
@@ -104,10 +102,10 @@ public class WorkspaceController {
                 .createProcessDefinitionQuery().active().list();
         model.addAttribute("processDefinitions", processDefinitions);
 
-        return "bpm/workspace-listProcessDefinitions";
+        return "bpm/process/workspace/listProcessDefinitions";
     }
 
-    @RequestMapping("workspace-listRunningProcessInstances")
+    @RequestMapping("listRunningProcessInstances")
     public String listRunningProcessInstances(@CurrentUser User user,@ModelAttribute Page page,
             Model model) {
     	
@@ -117,7 +115,7 @@ public class WorkspaceController {
         page = activitiProcessConnector.findRunningProcessInstances(userId, page);
         model.addAttribute("page", page);
 
-        return "bpm/workspace-listRunningProcessInstances";
+        return "bpm/process/workspace/listRunningProcessInstances";
     }
 
     /**
@@ -125,14 +123,14 @@ public class WorkspaceController {
      * 
      * @return
      */
-    @RequestMapping("workspace-listCompletedProcessInstances")
+    @RequestMapping("listCompletedProcessInstances")
     public String listCompletedProcessInstances(@CurrentUser User user,@ModelAttribute Page page,
             Model model) {
     	String userId = user.getId().toString();
         page = activitiProcessConnector.findCompletedProcessInstances(userId, page);
         model.addAttribute("page", page);
 
-        return "bpm/workspace-listCompletedProcessInstances";
+        return "bpm/process/workspace/listCompletedProcessInstances";
     }
 
     /**
@@ -140,7 +138,7 @@ public class WorkspaceController {
      * 
      * @return
      */
-    @RequestMapping("workspace-listInvolvedProcessInstances")
+    @RequestMapping("listInvolvedProcessInstances")
     public String listInvolvedProcessInstances(@CurrentUser User user,@ModelAttribute Page page,
             Model model) {
         // TODO: finished(), unfinished()
@@ -148,7 +146,7 @@ public class WorkspaceController {
     	page = activitiProcessConnector.findInvolvedProcessInstances(userId, page);
         model.addAttribute("page", page);
 
-        return "bpm/workspace-listInvolvedProcessInstances";
+        return "bpm/process/workspace/listInvolvedProcessInstances";
     }
 
     /**
@@ -156,7 +154,7 @@ public class WorkspaceController {
      * 
      * @throws Exception
      */
-    @RequestMapping("workspace-graphHistoryProcessInstance")
+    @RequestMapping("graphHistoryProcessInstance")
     public void graphHistoryProcessInstance(
             @RequestParam("processInstanceId") String processInstanceId,
             HttpServletResponse response) throws Exception {
@@ -180,13 +178,13 @@ public class WorkspaceController {
      * 
      * @return
      */
-    @RequestMapping("workspace-listPersonalTasks")
+    @RequestMapping("listPersonalTasks")
     public String listPersonalTasks(@CurrentUser User user,@ModelAttribute Page page, Model model) {
     	String userId = user.getId().toString();
     	page = activitiProcessConnector.findPersonalTasks(userId, page);
         model.addAttribute("page", page);
 
-        return "bpm/workspace-listPersonalTasks";
+        return "bpm/process/workspace/listPersonalTasks";
     }
 
     /**
@@ -194,13 +192,13 @@ public class WorkspaceController {
      * 
      * @return
      */
-    @RequestMapping("workspace-listGroupTasks")
+    @RequestMapping("listGroupTasks")
     public String listGroupTasks(@CurrentUser User user,@ModelAttribute Page page, Model model) {
     	String userId = user.getId().toString();
         page = activitiProcessConnector.findGroupTasks(userId, page);
         model.addAttribute("page", page);
 
-        return "bpm/workspace-listGroupTasks";
+        return "bpm/process/workspace/listGroupTasks";
     }
 
     /**
@@ -208,13 +206,13 @@ public class WorkspaceController {
      * 
      * @return
      */
-    @RequestMapping("workspace-listHistoryTasks")
+    @RequestMapping("listHistoryTasks")
     public String listHistoryTasks(@CurrentUser User user,@ModelAttribute Page page, Model model) {
     	String userId = user.getId().toString();
         page = activitiProcessConnector.findHistoryTasks(userId, page);
         model.addAttribute("page", page);
 
-        return "bpm/workspace-listHistoryTasks";
+        return "bpm/process/workspace/listHistoryTasks";
     }
 
     /**
@@ -222,13 +220,13 @@ public class WorkspaceController {
      * 
      * @return
      */
-    @RequestMapping("workspace-listDelegatedTasks")
+    @RequestMapping("listDelegatedTasks")
     public String listDelegatedTasks(@CurrentUser User user,@ModelAttribute Page page, Model model) {
     	String userId = user.getId().toString();
         page = activitiProcessConnector.findGroupTasks(userId, page);
         model.addAttribute("page", page);
 
-        return "bpm/workspace-listDelegatedTasks";
+        return "bpm/process/workspace/listDelegatedTasks";
     }
 
     // ~ ======================================================================
@@ -237,7 +235,7 @@ public class WorkspaceController {
      * 
      * @return
      */
-    @RequestMapping("workspace-prepareStartProcessInstance")
+    @RequestMapping("prepareStartProcessInstance")
     public String prepareStartProcessInstance(
             @RequestParam("processDefinitionId") String processDefinitionId,
             Model model) {
@@ -246,7 +244,7 @@ public class WorkspaceController {
                 .getStartFormData(processDefinitionId);
         model.addAttribute("startFormData", startFormData);
 
-        return "bpm/workspace prepareStartProcessInstance";
+        return "bpm/process/workspace/prepareStartProcessInstance";
     }
 
     // ~ ======================================================================
@@ -255,7 +253,7 @@ public class WorkspaceController {
      * 
      * @return
      */
-    @RequestMapping("workspace-prepareCompleteTask")
+    @RequestMapping("prepareCompleteTask")
     public String prepareCompleteTask(@RequestParam("taskId") String taskId,
             Model model) {
         FormService formService = processEngine.getFormService();
@@ -264,7 +262,7 @@ public class WorkspaceController {
 
         model.addAttribute("taskFormData", taskFormData);
 
-        return "bpm/workspace-prepareCompleteTask";
+        return "bpm/process/workspace/prepareCompleteTask";
     }
 
     /**
@@ -272,13 +270,13 @@ public class WorkspaceController {
      * 
      * @return
      */
-    @RequestMapping("workspace-claimTask")
+    @RequestMapping("claimTask")
     public String claimTask(@CurrentUser User user,@RequestParam("taskId") String taskId) {
     	String userId = user.getId().toString();
         TaskService taskService = processEngine.getTaskService();
         taskService.claim(taskId, userId);
 
-        return "redirect:/bpm/workspace-listPersonalTasks.do";
+        return "redirect:/bpm/process/workspace/listPersonalTasks";
     }
 
     /**
@@ -286,9 +284,9 @@ public class WorkspaceController {
      * 
      * @return
      */
-    @RequestMapping("workspace-prepareDelegateTask")
+    @RequestMapping("prepareDelegateTask")
     public String prepareDelegateTask() {
-        return "bpm/workspace-prepareDelegateTask";
+        return "bpm/process/workspace/prepareDelegateTask";
     }
 
     /**
@@ -296,13 +294,13 @@ public class WorkspaceController {
      * 
      * @return
      */
-    @RequestMapping("workspace-delegateTask")
+    @RequestMapping("delegateTask")
     public String delegateTask(@RequestParam("taskId") String taskId,
             @RequestParam("userId") String userId) {
         TaskService taskService = processEngine.getTaskService();
         taskService.delegateTask(taskId, userId);
 
-        return "redirect:/bpm/workspace-listPersonalTasks.do";
+        return "redirect:/bpm/process/workspace/listPersonalTasks";
     }
 
     /**
@@ -310,12 +308,12 @@ public class WorkspaceController {
      * 
      * @return
      */
-    @RequestMapping("workspace-resolveTask")
+    @RequestMapping("resolveTask")
     public String resolveTask(@RequestParam("taskId") String taskId) {
         TaskService taskService = processEngine.getTaskService();
         taskService.resolveTask(taskId);
 
-        return "redirect:/bpm/workspace-listPersonalTasks.do";
+        return "redirect:/bpm/process/workspace/listPersonalTasks";
     }
 
     /**
@@ -323,7 +321,7 @@ public class WorkspaceController {
      * 
      * @return
      */
-    @RequestMapping("workspace-viewHistory")
+    @RequestMapping("viewHistory")
     public String viewHistory(
             @RequestParam("processInstanceId") String processInstanceId,
             Model model) {
@@ -338,7 +336,7 @@ public class WorkspaceController {
         model.addAttribute("historicVariableInstances",
                 historicVariableInstances);
 
-        return "bpm/workspace-viewHistory";
+        return "bpm/process/workspace/viewHistory";
     }
 
     // ~ ==================================国内特色流程====================================
@@ -347,13 +345,13 @@ public class WorkspaceController {
      * 
      * @return
      */
-    @RequestMapping("workspace-rollback")
+    @RequestMapping("rollback")
     public String rollback(@RequestParam("taskId") String taskId) {
         Command<Integer> cmd = new RollbackTaskCmd(taskId);
 
         processEngine.getManagementService().executeCommand(cmd);
 
-        return "redirect:/bpm/workspace-listPersonalTasks.do";
+        return "redirect:/bpm/process/workspace/listPersonalTasks";
     }
 
     /**
@@ -361,27 +359,27 @@ public class WorkspaceController {
      * 
      * @return
      */
-    @RequestMapping("workspace-withdraw")
+    @RequestMapping("withdraw")
     public String withdraw(@RequestParam("taskId") String taskId) {
         Command<Integer> cmd = new WithdrawTaskCmd(taskId);
 
         processEngine.getManagementService().executeCommand(cmd);
 
-        return "redirect:/bpm/workspace-listPersonalTasks.do";
+        return "redirect:/bpm/process/workspace/listPersonalTasks";
     }
 
     /**
      * 准备加减签.
      */
-    @RequestMapping("workspace-changeCounterSign")
+    @RequestMapping("changeCounterSign")
     public String changeCounterSign() {
-        return "bpm/workspace-changeCounterSign";
+        return "bpm/process/workspace/changeCounterSign";
     }
 
     /**
      * 进行加减签.
      */
-    @RequestMapping("workspace-saveCounterSign")
+    @RequestMapping("saveCounterSign")
     public String saveCounterSign(
             @RequestParam("operationType") String operationType,
             @RequestParam("userId") String userId,
@@ -390,31 +388,31 @@ public class WorkspaceController {
 
         processEngine.getManagementService().executeCommand(cmd);
 
-        return "redirect:/bpm/workspace-listPersonalTasks.do";
+        return "redirect:/bpm/process/workspace/listPersonalTasks";
     }
 
     /**
      * 转办.
      */
-    @RequestMapping("workspace-doDelegate")
+    @RequestMapping("doDelegate")
     public String doDelegate(@RequestParam("taskId") String taskId,
             @RequestParam("attorney") String attorney) {
         DelegateTaskCmd cmd = new DelegateTaskCmd(taskId, attorney);
         processEngine.getManagementService().executeCommand(cmd);
 
-        return "redirect:/bpm/workspace-listPersonalTasks.do";
+        return "redirect:/bpm/process/workspace/listPersonalTasks";
     }
 
     /**
      * 协办.
      */
-    @RequestMapping("workspace-doDelegateHelp")
+    @RequestMapping("doDelegateHelp")
     public String doDelegateHelp(@RequestParam("taskId") String taskId,
             @RequestParam("attorney") String attorney) {
         TaskService taskService = processEngine.getTaskService();
         taskService.delegateTask(taskId, attorney);
 
-        return "redirect:/bpm/workspace-listPersonalTasks.do";
+        return "redirect:/bpm/process/workspace/listPersonalTasks";
     }
 
 }

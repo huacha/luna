@@ -78,3 +78,19 @@ td.xf-cell-right.active {
 	cursor: move;
 	height: auto;
 }
+
+.xf-cursor{
+	cursor: move;
+}
+
+.xf-cursor-auto{
+	cursor: auto;
+}
+
+.xf-label{
+	display:block;text-align:right;margin-bottom:0px;
+}
+
+.xf-input{
+	margin-bottom:0px;
+}

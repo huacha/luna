@@ -53,6 +53,6 @@ $(function() {
 		$('#xf-form').attr('action', url);
 		$('#xf-form').submit();
 	});
-
+	$('.xf-cursor,.xf-handler').addClass('xf-cursor-auto');
 });
 </script>

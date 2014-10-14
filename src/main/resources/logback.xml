@@ -23,12 +23,14 @@
         </encoder>
     </appender>
 
-    <root level="info">
+    <root level="debug">
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="File" />
 	</root>
 
     <logger name="org.hibernate" level="warn"/>
+    <logger name="net.sf.ehcache" level="info"/>
+    <logger name="org.apache.shiro" level="info"/>
     <logger name="org.springframework" level="warn"/>
 
 </configuration>

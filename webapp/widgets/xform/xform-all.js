@@ -879,6 +879,8 @@ xf.Proxy.prototype.hide = function() {
 	this.move(-100, -100);
 }
 
+
+
 ;
 
 xf.field.FieldFactory = function() {
@@ -939,7 +941,7 @@ xf.field.Label.prototype.updateText = function(text) {
 	var parentNode = xf.$(this.parentId);
 	parentNode.innerHTML = 
 		'<div class="xf-handler">'
-		+ '<label style="display:block;text-align:right;margin-bottom:0px;cursor:move;">' + this.text + '</label>'
+		+ '<label class="xf-label xf-cursor">' + this.text + '</label>'
 		+ '</div>';
 }
 
@@ -985,7 +987,7 @@ xf.field.TextField.prototype.updateName = function(value) {
 	var parentNode = xf.$(this.parentId);
 	parentNode.innerHTML = 
 		'<div class="xf-handler">'
-		+ '<input type="text" name="' + this.name + '" ' + (this.readOnly ? 'readOnly' : '') + ' value="' + (this.value ? this.value : '') + '" style="margin-bottom:0px;cursor:move;">'
+		+ '<input type="text" name="' + this.name + '" ' + (this.readOnly ? 'readOnly' : '') + ' value="' + (this.value ? this.value : '') + '" class="xf-input xf-cursor">'
 		+ '</div>';
 }
 
@@ -1050,7 +1052,7 @@ xf.field.Password.prototype.updateName = function(value) {
 	var parentNode = xf.$(this.parentId);
 	parentNode.innerHTML = 
 		'<div class="xf-handler">'
-		+ '<input type="password" name="' + this.name + '" ' + (this.readOnly ? 'readOnly' : '') + ' style="margin-bottom:0px;cursor:move;">'
+		+ '<input type="password" name="' + this.name + '" ' + (this.readOnly ? 'readOnly' : '') + ' class="xf-input xf-cursor">'
 		+ '</div>';
 }
 
@@ -1109,7 +1111,7 @@ xf.field.TextArea.prototype.updateName = function(value) {
 	var parentNode = xf.$(this.parentId);
 	parentNode.innerHTML = 
 		'<div class="xf-handler">'
-		+ '<textarea name="' + this.name + '" ' + (this.readOnly ? 'readOnly' : '') + ' style="margin-bottom:0px;cursor:move;">' + (this.value ? this.value : '') + '</textarea>'
+		+ '<textarea name="' + this.name + '" ' + (this.readOnly ? 'readOnly' : '') + ' class="xf-input xf-cursor">' + (this.value ? this.value : '') + '</textarea>'
 		+ '</div>';
 }
 
@@ -1183,7 +1185,7 @@ xf.field.Select.prototype.updateItems = function(value) {
 	var parentNode = xf.$(this.parentId);
 	var html = 
 		'<div class="xf-handler">'
-		+ '<select name="' + this.name + '" ' + (this.readOnly ? 'disabled' : '') + ' style="margin-bottom:0px;cursor:move;">';
+		+ '<select name="' + this.name + '" ' + (this.readOnly ? 'disabled' : '') + ' class="xf-input xf-cursor">';
 	var array = this.items.split(',');
 	for (var i = 0; i < array.length; i++) {
 		var item = array[i];
@@ -1267,7 +1269,7 @@ xf.field.Radio.prototype.updateItems = function(value) {
 	for (var i = 0; i < array.length; i++) {
 		var item = array[i];
 		html += '<label class="radio inline">';
-		html += '<input type="radio" name="' + this.name + '" value="' + item + '" ' + (this.readOnly ? 'readOnly' : '') + ' ' + (this.value == item ? 'checked' : '') + ' style="margin:0px;cursor:move;">';
+		html += '<input type="radio" name="' + this.name + '" value="' + item + '" ' + (this.readOnly ? 'readOnly' : '') + ' ' + (this.value == item ? 'checked' : '') + ' class="xf-input xf-cursor">';
 		html += item;
 		html += '</label>';
 	}
@@ -1347,7 +1349,7 @@ xf.field.Checkbox.prototype.updateItems = function(value) {
 	for (var i = 0; i < array.length; i++) {
 		var item = array[i];
 		html += '<label class="checkbox inline">';
-		html += '<input type="checkbox" name="' + this.name + '" value="' + item + '" ' + (this.readOnly ? 'disabled' : '') + ' ' + (this.value == item ? 'checked' : '') + ' style="margin:0px;cursor:move;">';
+		html += '<input type="checkbox" name="' + this.name + '" value="' + item + '" ' + (this.readOnly ? 'disabled' : '') + ' ' + (this.value == item ? 'checked' : '') + ' class="xf-input xf-cursor">';
 		html += item;
 		html += '</label>';
 	}
@@ -1415,7 +1417,7 @@ xf.field.FileUpload.prototype.updateName = function(value) {
 	var parentNode = xf.$(this.parentId);
 	parentNode.innerHTML = 
 		'<div class="xf-handler">'
-		+ '<input type="file" name="' + this.name + '" ' + (this.readOnly ? 'readOnly' : '') + ' style="cursor:move;">'
+		+ '<input type="file" name="' + this.name + '" ' + (this.readOnly ? 'readOnly' : '') + ' class="xf-cursor">'
 		+ '</div>';
 }
 
