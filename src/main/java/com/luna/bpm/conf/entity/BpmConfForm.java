@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.luna.common.entity.BaseEntity;
+import com.luna.xform.entity.FormTemplate;
 
 /**
  * BpmConfForm .
@@ -23,6 +24,10 @@ public class BpmConfForm extends BaseEntity<Long> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "NODE_ID")
     private BpmConfNode bpmConfNode;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "FORM_ID")
+    private FormTemplate formTemplate;
 
     @Column(name = "VALUE", length = 200)
     private String value;
@@ -42,7 +47,15 @@ public class BpmConfForm extends BaseEntity<Long> {
     public BpmConfForm() {
     }
 
-    public BpmConfForm(BpmConfNode bpmConfNode, String value, Integer type,
+    public FormTemplate getFormTemplate() {
+		return formTemplate;
+	}
+
+	public void setFormTemplate(FormTemplate formTemplate) {
+		this.formTemplate = formTemplate;
+	}
+
+	public BpmConfForm(BpmConfNode bpmConfNode, String value, Integer type,
             String originValue, Integer originType, Integer status) {
         this.bpmConfNode = bpmConfNode;
         this.value = value;

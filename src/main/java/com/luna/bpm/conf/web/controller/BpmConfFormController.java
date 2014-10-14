@@ -25,29 +25,33 @@ import com.luna.common.web.bind.annotation.PageableDefaults;
 import com.luna.common.web.controller.BaseCRUDController;
 import com.luna.common.web.validate.ValidateResponse;
 import com.luna.maintain.extkeyvalue.service.ExtKeyValueService;
+import com.luna.xform.entity.FormTemplate;
 
 @Controller
-@RequestMapping(value="/bpm/conf/form")
-public class BpmConfFormController   extends BaseCRUDController<BpmConfForm, Long> {
-    private BpmConfFormService getBpmConfFormService() {
-        return (BpmConfFormService) baseService;
-    }
+@RequestMapping(value = "/bpm/conf/form")
+public class BpmConfFormController extends
+		BaseCRUDController<BpmConfForm, Long> {
+	private BpmConfFormService getBpmConfFormService() {
+		return (BpmConfFormService) baseService;
+	}
 
 	public BpmConfFormController() {
 		setResourceIdentity("bpm:conf:form");
-    }
+	}
 
 	@Autowired
 	ExtKeyValueService extKeyValueService;
-	
+
 	private static final String bpmConfFormType = "BPM_FORM_TYPE";
 	private static final String bpmConfDATASOURCE = "BPM_DATA_SOURCE";
-	
-    @Override
-    protected void setCommonData(Model model) {
-        model.addAttribute("bpmconfformtype", extKeyValueService.findByExtKeyValueCategoryName(bpmConfFormType));
-        model.addAttribute("bpmconfdatasource", extKeyValueService.findByExtKeyValueCategoryName(bpmConfDATASOURCE));
-    }
+
+	@Override
+	protected void setCommonData(Model model) {
+		model.addAttribute("bpmconfformtype", extKeyValueService
+				.findByExtKeyValueCategoryName(bpmConfFormType));
+		model.addAttribute("bpmconfdatasource", extKeyValueService
+				.findByExtKeyValueCategoryName(bpmConfDATASOURCE));
+	}
 
 	@RequestMapping(value = "/process-{processId}/node-{nodeId}", method = RequestMethod.GET)
 	@PageableDefaults(sort = "id=asc")
@@ -65,33 +69,34 @@ public class BpmConfFormController   extends BaseCRUDController<BpmConfForm, Lon
 		}
 		return super.list(searchable, model);
 	}
-	
 
-    /**
-     * 验证返回格式
-     * 单个：[fieldId, 1|0, msg]
-     * 多个：[[fieldId, 1|0, msg],[fieldId, 1|0, msg]]
-     *
-     * @param fieldId
-     * @param fieldValue
-     * @return
-     */
-    @RequestMapping(value = "/validate", method = RequestMethod.GET)
-    @ResponseBody
-    public Object validate(
-            @RequestParam("fieldId") String fieldId, @RequestParam("fieldValue") String fieldValue,
-            @RequestParam(value = "id", required = false) Long id,
-            @RequestParam(value = "bpmConfNodeId", required = true) BpmConfNode bpmConfNode) {
-        ValidateResponse response = ValidateResponse.newInstance();
-        BpmConfForm bpmConfForm = getBpmConfFormService().findUnique(fieldValue, bpmConfNode);
-        if (bpmConfForm == null || (bpmConfForm.getId().equals(id))) {
-            //如果msg 不为空 将弹出提示框
-            response.validateSuccess(fieldId, "");
-        } else {
-            response.validateFail(fieldId, "该表单已配置");
-        }
-        return response.result();
-    }
+	/**
+	 * 验证返回格式 单个：[fieldId, 1|0, msg] 多个：[[fieldId, 1|0, msg],[fieldId, 1|0,
+	 * msg]]
+	 *
+	 * @param fieldId
+	 * @param fieldValue
+	 * @return
+	 */
+	@RequestMapping(value = "/validate", method = RequestMethod.GET)
+	@ResponseBody
+	public Object validate(
+			@RequestParam("fieldId") String fieldId,
+			@RequestParam("fieldValue") String fieldValue,
+			@RequestParam(value = "id", required = false) Long id,
+			@RequestParam(value = "bpmConfNodeId", required = true) BpmConfNode bpmConfNode,
+			@RequestParam(value = "formId", required = true) FormTemplate formTemplate) {
+		ValidateResponse response = ValidateResponse.newInstance();
+		BpmConfForm bpmConfForm = getBpmConfFormService().findUnique(
+				formTemplate, bpmConfNode);
+		if (bpmConfForm == null || (bpmConfForm.getId().equals(id))) {
+			// 如果msg 不为空 将弹出提示框
+			response.validateSuccess(fieldId, "");
+		} else {
+			response.validateFail(fieldId, "该表单已配置");
+		}
+		return response.result();
+	}
 
 	@RequestMapping(value = "/node-{bpmConfNodeId}/create", method = RequestMethod.GET)
 	public String showCreateForm(Model model,
@@ -126,8 +131,9 @@ public class BpmConfFormController   extends BaseCRUDController<BpmConfForm, Lon
 			baseService.save(bpmConfForm);
 			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "新增成功");
 		} catch (Exception e) {
-			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
-			log.error("",e);
+			redirectAttributes.addFlashAttribute(Constants.ERROR,
+					e.getMessage());
+			log.error("", e);
 		}
 		return redirectToUrl(backURL);
 	}
@@ -153,30 +159,41 @@ public class BpmConfFormController   extends BaseCRUDController<BpmConfForm, Lon
 				redirectAttributes);
 	}
 
-	
-    @RequestMapping(value = "/node-{nodeId}/{id}/delete", method = RequestMethod.POST)
-    @ResponseBody
-    public BpmConfForm deleteBpmConfForm(@PathVariable("id") BpmConfForm bpmConfForm) {
-        this.permissionList.assertHasEditPermission();
-        try {
+	@RequestMapping(value = "/node-{nodeId}/{id}/delete", method = RequestMethod.POST)
+	@ResponseBody
+	public BpmConfForm deleteBpmConfForm(
+			@PathVariable("id") BpmConfForm bpmConfForm) {
+		this.permissionList.assertHasEditPermission();
+		try {
 			getBpmConfFormService().delete(bpmConfForm);
 		} catch (Exception e) {
-			log.error("",e);
+			log.error("", e);
 		}
-        return bpmConfForm;
-    }
+		return bpmConfForm;
+	}
 
+	/*
+	 * @RequestMapping(value = "/node-{nodeId}/batch/delete")
+	 * 
+	 * @ResponseBody public Object deleteBpmConfFormInBatch(@RequestParam(value
+	 * = "ids", required = false) Long[] ids) {
+	 * this.permissionList.assertHasEditPermission(); try {
+	 * getBpmConfFormService().delete(ids); } catch (Exception e) {
+	 * log.error("",e); } return redirectToUrl(null); }
+	 */
 
-    @RequestMapping(value = "/node-{nodeId}/batch/delete")
-    @ResponseBody
-    public Object deleteBpmConfFormInBatch(@RequestParam(value = "ids", required = false) Long[] ids) {
-        this.permissionList.assertHasEditPermission();
-        try {
+	@RequestMapping(value = "/node-{nodeId}/batch/delete")
+	public String deleteBpmConfFormInBatch(
+			@RequestParam(value = "ids", required = false) Long[] ids,
+			@RequestParam(value = "BackURL", required = false) String backURL,
+			RedirectAttributes redirectAttributes) {
+		this.permissionList.assertHasEditPermission();
+		try {
 			getBpmConfFormService().delete(ids);
 		} catch (Exception e) {
-			log.error("",e);
+			log.error("", e);
 		}
-        return redirectToUrl(null);
-    }
+		return redirectToUrl(backURL);
+	}
 
 }

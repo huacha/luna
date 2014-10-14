@@ -11,6 +11,7 @@ import com.luna.bpm.conf.entity.BpmConfForm;
 import com.luna.bpm.conf.entity.BpmConfNode;
 import com.luna.bpm.conf.repository.BpmConfFormManager;
 import com.luna.common.service.BaseService;
+import com.luna.xform.entity.FormTemplate;
 
 /**
  * 
@@ -23,7 +24,7 @@ public class BpmConfFormService extends BaseService<BpmConfForm, Long> {
     private BpmConfFormManager getBpmConfFormRepository() {
         return (BpmConfFormManager) baseRepository;
     }
-    public BpmConfForm findUnique(String value, BpmConfNode bpmConfNode){
-    	return this.getBpmConfFormRepository().findUnique(value, bpmConfNode);
+    public BpmConfForm findUnique(FormTemplate formTemplate, BpmConfNode bpmConfNode){
+    	return this.getBpmConfFormRepository().findUnique(formTemplate, bpmConfNode);
     }
 }

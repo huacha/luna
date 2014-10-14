@@ -59,10 +59,13 @@
                 </div>
             </div>
             
+            
             <div class="control-group">
-                <form:label path="value" cssClass="control-label">名称</form:label>
-                <div class="controls">
-                    <form:input path="value" cssClass="validate[required, ajax[ajaxNameCall]]" placeholder="请输入名称"/>
+                <form:label path="value" cssClass="control-label">表单名称</form:label>
+                <div class="controls input-append">
+                    <form:input id="formName" path="value" cssClass="validate[required, ajax[ajaxNameCall]]" readonly="true"/>
+                    <span class="add-on"><i class="icon-chevron-down"></i></span>
+                    <form:hidden id="formId" path="formTemplate.id"/>
                 </div>
             </div>
             
@@ -98,7 +101,7 @@
         $.validationEngineLanguage.allRules.ajaxNameCall= {
             "url": "${ctx}/bpm/conf/form/validate",
             //动态提取的数据。验证时一起发送
-            extraDataDynamic : ['#id', '#bpmConfNodeId'],
+            extraDataDynamic : ['#id', '#bpmConfNodeId', '#formId'],
             //验证失败时的消息
             //"alertText": "* 该名称已被其他人使用",
             //验证成功时的消息
@@ -126,6 +129,22 @@
             updateUrl : "${ctx}/bpm/conf/form/node-${bpmConfNode.id}/{id}/update?BackURL=" + $.table.tableURL($(".table")),
             deleteUrl : "${ctx}/bpm/conf/form/node-${bpmConfNode.id}/{id}/delete",
             alwaysNew : "${param.copy}"
+        });
+        
+
+        $("[name='value']").siblings(".add-on").andSelf().click(function() {
+            $.app.modalDialog(
+                    "表单列表",
+                    "${ctx}/xform/template/select/single;domId=formId;domName=formName",
+                    {
+                        width:600,
+                        height:450,
+                        callback : function() {
+                            $("[name='value']").validationEngine('validate');
+                            return true;
+                        }
+                    }
+             );
         });
     });
 
