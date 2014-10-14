@@ -17,18 +17,23 @@ public class DataService {
 	JdbcTemplate jdbcTemplate;
 
 	
-	public int save(String sql,Map<String,String> map) throws Exception {
+	public int save(String sql,Map<String,?> map) throws Exception {
 		NamedParameterJdbcTemplate nt = new NamedParameterJdbcTemplate(jdbcTemplate);
 		return nt.update(sql, map);
 	}
 
-	public int update(String sql,Map<String,String> map) throws Exception {
+	public int update(String sql,Map<String,?> map) throws Exception {
 		NamedParameterJdbcTemplate nt = new NamedParameterJdbcTemplate(jdbcTemplate);
 		return nt.update(sql, map);
 	}
 
 	public List<Map<String, Object>> findAll(String sql) {
 		return jdbcTemplate.queryForList(sql);
+	}
+	
+	public List<Map<String, Object>> findAll(String sql,Map<String,?> map) {
+		NamedParameterJdbcTemplate nt = new NamedParameterJdbcTemplate(jdbcTemplate);
+		return nt.queryForList(sql, map);
 	}
 	
 	public Pagination find(String sql, int currentPage, int numPerPage) {

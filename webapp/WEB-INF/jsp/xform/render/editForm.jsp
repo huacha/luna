@@ -4,7 +4,7 @@
 <div class="row-fluid">
 
 	<!-- start of main -->
-    <section id="m-main" class="span10" style="float:right">
+    <section id="m-main" class="span10" style="float:center">
 
       <form id="xf-form" method="post" action="" class="xf-form">
 		<div id="xf-form-table"></div>

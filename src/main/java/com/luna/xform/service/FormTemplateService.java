@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -62,6 +63,27 @@ public class FormTemplateService extends BaseService<FormTemplate, Long> {
 		FormTemplate template = this.getFormTemplateRepository().findOne(id);
 		String tableName = template.getCode();
 		StringBuilder sql = new StringBuilder("select * from ").append(tableName);
+		log.info(sql.toString());
+		return sql.toString();
+	}
+	
+	public String getSelectSql(Long id,Map<String,?> map){
+		FormTemplate template = this.getFormTemplateRepository().findOne(id);
+		String tableName = template.getCode();
+		StringBuilder sql = new StringBuilder("select * from ").append(tableName);
+		if(map.size()>0){
+			sql.append(" where ");
+			Set<String> keys = map.keySet();
+			int i = 0;
+			for (String key : keys) {
+				if(i > 0){
+					sql.append(" and ");
+				}
+				String value = map.get(key).toString();
+				sql.append(key).append(" = '").append(value).append("'");
+				i++;
+			}
+		}
 		log.info(sql.toString());
 		return sql.toString();
 	}
