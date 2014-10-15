@@ -15,6 +15,7 @@ import com.luna.sys.group.entity.Group;
 import com.luna.sys.group.entity.GroupType;
 import com.luna.sys.group.service.GroupRelationService;
 import com.luna.sys.group.service.GroupService;
+import com.luna.sys.user.entity.UserStatus;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -254,6 +255,29 @@ public class GroupController extends BaseCRUDController<Group, Long> {
 
         return redirectToUrl(backURL);
     }
+    
 
+	//selectType  multiple single
+    @RequestMapping(value = {"groupselect/{selectType}", "select"}, method = RequestMethod.GET)
+    public String groupselect(
+            Searchable searchable, Model model,
+            @PathVariable(value = "selectType") String selectType,
+            @MatrixVariable(value = "domId", pathVar = "selectType") String domId,
+            @MatrixVariable(value = "domName", pathVar = "selectType", required = false) String domName) {
+
+        this.permissionList.assertHasViewPermission();
+
+        model.addAttribute("selectType", selectType);
+        model.addAttribute("domId", domId);
+        model.addAttribute("domName", domName);
+        
+        model.addAttribute("statusList", UserStatus.values());
+
+        model.addAttribute("page", getGroupService().findAll(searchable));
+        
+        setCommonData(model);
+
+        return "admin/sys/group/groupselect";
+    }
 
 }

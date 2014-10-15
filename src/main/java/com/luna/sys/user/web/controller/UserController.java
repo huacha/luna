@@ -302,23 +302,25 @@ public class UserController extends BaseCRUDController<User, Long> {
         return response.result();
     }
 
-   //selectType  multiple single
-    @RequestMapping(value = {"select/{selectType}", "select"}, method = RequestMethod.GET)
-    @PageableDefaults(sort = "weight=desc")
-    public String select(
+  //selectType  multiple single
+    @RequestMapping(value = {"userselect/{selectType}", "select"}, method = RequestMethod.GET)
+    public String userselect(
             Searchable searchable, Model model,
             @PathVariable(value = "selectType") String selectType,
             @MatrixVariable(value = "domId", pathVar = "selectType") String domId,
             @MatrixVariable(value = "domName", pathVar = "selectType", required = false) String domName) {
 
-        this.permissionList.assertHasViewPermission();
-
         model.addAttribute("selectType", selectType);
         model.addAttribute("domId", domId);
         model.addAttribute("domName", domName);
+        
+        model.addAttribute("statusList", UserStatus.values());
 
-        super.list(searchable, model);
-        return "showcase/product/category/select";
+        model.addAttribute("page", getUserService().findAll(searchable));
+        
+        setCommonData(model);
+
+        return "admin/sys/user/userselect";
     }
 
 }

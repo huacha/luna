@@ -48,7 +48,7 @@
 		</form>
     </div>
     <div>
-      <table id="childTable" class="sort-table table table-bordered table-hover"
+      <table id="selectTable" class="sort-table table table-bordered table-hover"
               data-async="true"
               data-async-container="container">
           <thead>
@@ -85,12 +85,14 @@
 </div>
 <script type="text/javascript">
     $(function() {
-        var table = $("#childTable");
+        var table = $("#selectTable");
         $.table.initTable(table);
 
         var hasDomName = ${not empty domName};
         //参照窗口的dom
         var $openerId = $("#${domId}");
+        
+        
         var ids = $.array.trim($openerId.val().split(","));
         if(hasDomName) {
             var $openerName = $("#${domName}");
@@ -121,6 +123,7 @@
                 }
             }
             var id = $current.val();
+
             if(hasDomName) {
                 var name = $current.closest("tr").find("td.name").text();
             }

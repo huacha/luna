@@ -44,7 +44,7 @@
             <div class="control-group">
                 <form:label path="type" cssClass="control-label">类型</form:label>
                 <div class="controls">
-                    <form:select path="type"  cssClass="validate[required]" placeholder="请选择类型" >
+                    <form:select id="userType" path="type"  cssClass="validate[required]" placeholder="请选择类型" >
                     	<form:options items="${bpmconfusertype}" itemValue="name" itemLabel="value"/>  
                     </form:select>
                 </div>
@@ -60,9 +60,10 @@
             </div>
             
             <div class="control-group">
-                <form:label path="value" cssClass="control-label">名称</form:label>
-                <div class="controls">
-                    <form:input path="value" cssClass="validate[required, ajax[ajaxNameCall]]" placeholder="请输入名称"/>
+                <form:label path="value" cssClass="control-label">用户/用户组</form:label>
+                <div class="controls input-append">
+                    <form:input id="value" path="value" cssClass="validate[required]" readonly="true"/>
+                    <span class="add-on"><i class="icon-chevron-down"></i></span>
                 </div>
             </div>
             
@@ -136,6 +137,55 @@
             updateUrl : "${ctx}/bpm/conf/user/node-${bpmConfNode.id}/{id}/update?BackURL=" + $.table.tableURL($(".table")),
             deleteUrl : "${ctx}/bpm/conf/user/node-${bpmConfNode.id}/{id}/delete",
             alwaysNew : "${param.copy}"
+        });
+        
+        $("[name='value']").siblings(".add-on").andSelf().click(function() {
+
+        	var userType = $("#userType").val();
+        	
+        	if("0"==userType){
+        		$.app.modalDialog(
+                        "用户列表",
+                        "${ctx}/admin/sys/user/userselect/single;domId=value;domName=value",
+                        {
+                            width:600,
+                            height:450,
+                            callback : function() {
+                                $("[name='value']").validationEngine('validate');
+                                return true;
+                            }
+                        }
+                 );
+        	}
+        	else if("1"==userType){
+        		$.app.modalDialog(
+                        "用户列表",
+                        "${ctx}/admin/sys/user/userselect/multiple;domId=value;domName=value",
+                        {
+                            width:600,
+                            height:450,
+                            callback : function() {
+                                $("[name='value']").validationEngine('validate');
+                                return true;
+                            }
+                        }
+                 );
+        	}
+        	else if("2"==userType){
+        		$.app.modalDialog(
+                        "用户组列表",
+                        "${ctx}/admin/sys/group/groupselect/single;domId=value;domName=value",
+                        {
+                            width:600,
+                            height:450,
+                            callback : function() {
+                                $("[name='value']").validationEngine('validate');
+                                return true;
+                            }
+                        }
+                 );
+        	}
+        	
         });
     });
 

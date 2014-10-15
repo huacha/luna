@@ -185,7 +185,7 @@
         	if("1"==attorneyType){
         		$.app.modalDialog(
                         "用户列表",
-                        "${ctx}/bpm/process/delegate/userselect/single;domId=attorney;domName=attorneyName",
+                        "${ctx}/admin/sys/user/userselect/single;domId=attorney;domName=attorneyName",
                         {
                             width:600,
                             height:450,
@@ -199,7 +199,7 @@
         	else if("2"==attorneyType){
         		$.app.modalDialog(
                         "用户组列表",
-                        "${ctx}/bpm/process/delegate/groupselect/single;domId=attorney;domName=attorneyName",
+                        "${ctx}/admin/sys/group/groupselect/single;domId=attorney;domName=attorneyName",
                         {
                             width:600,
                             height:450,
