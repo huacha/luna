@@ -15,7 +15,6 @@ import com.luna.common.entity.search.Searchable;
 import com.luna.common.web.bind.annotation.PageableDefaults;
 import com.luna.common.web.controller.BaseCRUDController;
 import com.luna.common.web.validate.ValidateResponse;
-import com.luna.showcase.sample.entity.Sample;
 
 @Controller
 @RequestMapping("/bpm/category")
