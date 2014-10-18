@@ -36,12 +36,12 @@ var xform;
 $(function() {
 	xform = new xf.Xform('xf-form-table');
 	xform.render();
-	var url = '${ctx}/xform/process/${formid}/start/${processId}';
-	
+	var url = '${ctx}/xform/process/start?processId=${processId}&formid=${formid}';
+/* 	
 	if('${dataid}' != null && '${dataid}' != ''){
 		url = '${ctx}/xform/render/${formid}/${dataid}/update';
 	}
-
+ */
 	if ($('#__gef_content__').val() != '') {
 		xform.doImport($('#__gef_content__').val());
 	} 

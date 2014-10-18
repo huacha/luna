@@ -5,7 +5,7 @@
 	<es:showMessage/>
 	
     <!-- start of main -->
-    <section id="m-main" class="span10" style="float:right">
+    <section id="m-main" class="span12" style="float:center">
 	<c:forEach items="${bpmCategories}" var="bpmCategory">
 	      <div class="row-fluid">
 	      <div class="page-header">

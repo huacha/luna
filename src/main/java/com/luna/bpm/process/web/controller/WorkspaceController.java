@@ -67,39 +67,31 @@ public class WorkspaceController {
             @RequestParam("bpmProcessId") Long bpmProcessId,
             HttpServletResponse response) throws Exception {
         BpmProcess bpmProcess = bpmProcessManager.getOne(bpmProcessId);
-        String processDefinitionId = bpmProcess.getBpmConfBase()
-                .getProcessDefinitionId();
+        String processDefinitionId = bpmProcess.getBpmConfBase().getProcessDefinitionId();
 
-        Command<InputStream> cmd = null;
-        cmd = new ProcessDefinitionDiagramCmd(processDefinitionId);
-
-        InputStream is = processEngine.getManagementService().executeCommand(
-                cmd);
+        Command<InputStream> cmd = new ProcessDefinitionDiagramCmd(processDefinitionId);
+        InputStream is = processEngine.getManagementService().executeCommand(cmd);
         response.setContentType("image/png");
 
         IOUtils.copy(is, response.getOutputStream());
     }
 
-    @RequestMapping("endProcessInstance")
-    public String endProcessInstance(
-            @RequestParam("processInstanceId") String processInstanceId) {
-        processEngine.getRuntimeService().deleteProcessInstance(
-                processInstanceId, "end");
-
-        return "redirect:/bpm/process/workspace/listProcessInstances";
-    }
+//    @RequestMapping("endProcessInstance")
+//    public String endProcessInstance(
+//            @RequestParam("processInstanceId") String processInstanceId) {
+//        processEngine.getRuntimeService().deleteProcessInstance(processInstanceId, "end");
+//        return "redirect:/bpm/process/workspace/listProcessInstances";
+//    }
 
     /**
      * 流程列表（所有的流程定义即流程模型）
-     * 
+     * //TODO 未使用方法？
      * @return
      */
     @RequestMapping("listProcessDefinitions")
     public String listProcessDefinitions(Model model) {
-        RepositoryService repositoryService = processEngine
-                .getRepositoryService();
-        List<ProcessDefinition> processDefinitions = repositoryService
-                .createProcessDefinitionQuery().active().list();
+        RepositoryService repositoryService = processEngine.getRepositoryService();
+        List<ProcessDefinition> processDefinitions = repositoryService.createProcessDefinitionQuery().active().list();
         model.addAttribute("processDefinitions", processDefinitions);
 
         return "bpm/process/workspace/listProcessDefinitions";

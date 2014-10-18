@@ -6,7 +6,10 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Service;
 
 import com.luna.common.repository.Pagination;
@@ -16,6 +19,13 @@ public class DataService {
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
+	public long saveAndGetID(String sql,Map<String,?> map) throws Exception {
+		GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
+		SqlParameterSource paramSource = new MapSqlParameterSource(map);
+		NamedParameterJdbcTemplate nt = new NamedParameterJdbcTemplate(jdbcTemplate);
+		nt.update(sql, paramSource, generatedKeyHolder);
+		return generatedKeyHolder.getKey().longValue();
+	}
 	
 	public int save(String sql,Map<String,?> map) throws Exception {
 		NamedParameterJdbcTemplate nt = new NamedParameterJdbcTemplate(jdbcTemplate);
