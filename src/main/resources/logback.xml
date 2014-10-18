@@ -27,6 +27,8 @@
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="File" />
 	</root>
+	
+	<logger name="org.activiti.engine.impl.persistence.entity" level="DEBUG"/>
 
     <logger name="org.hibernate" level="warn"/>
     <logger name="net.sf.ehcache" level="info"/>

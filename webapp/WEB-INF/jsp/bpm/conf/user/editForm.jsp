@@ -161,7 +161,8 @@
         	else if("1"==userType){
         		$.app.modalDialog(
                         "用户列表",
-                        "${ctx}/admin/sys/user/userselect/multiple;domId=value;domName=showvalue",
+                        //"${ctx}/admin/sys/user/userselect/multiple;domId=value;domName=showvalue",
+                        "${ctx}/admin/sys/user/userselect/single;domId=value;domName=showvalue",
                         {
                             width:600,
                             height:450,

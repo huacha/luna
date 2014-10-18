@@ -3,49 +3,51 @@ package com.luna.bpm.process;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
 
-import org.activiti.engine.identity.Group;
 import org.activiti.engine.impl.persistence.entity.GroupEntity;
+//import org.activiti.engine.identity.Group;
 import org.activiti.engine.impl.persistence.entity.GroupEntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.luna.sys.organization.entity.Organization;
-import com.luna.sys.organization.repository.OrganizationRepository;
+import com.luna.sys.group.entity.Group;
+import com.luna.sys.group.service.GroupRelationService;
+import com.luna.sys.group.service.GroupService;
 import com.luna.sys.user.entity.User;
-import com.luna.sys.user.entity.UserOrganizationJob;
-import com.luna.sys.user.repository.UserRepository;
+import com.luna.sys.user.service.UserService;
 
 public class CustomGroupEntityManager extends GroupEntityManager {
     private static Logger logger = LoggerFactory
             .getLogger(CustomGroupEntityManager.class);
-    private UserRepository userRepository;
-    private OrganizationRepository orgRepository;
+    
+    @Autowired
+    private GroupRelationService groupRelationService;
+    @Autowired
+    private GroupService groupService;
+    @Autowired
+    private UserService userService;
 
     @Override
-    public List<Group> findGroupsByUser(String userId) {
+    public List<org.activiti.engine.identity.Group> findGroupsByUser(String userId) {
         logger.debug("findGroupsByUser : {}", userId);
-        User user=userRepository.findOne(Long.parseLong(userId));
-        List<Group> groups = new ArrayList<Group>();
+        User user=userService.findOne(Long.parseLong(userId));
+        List<org.activiti.engine.identity.Group> groups = new ArrayList<org.activiti.engine.identity.Group>();
+        
+        /*获取用户所在组列表*/
+        List<Long> groupIds = groupRelationService.findGroupIds(user.getId());
 
-        for (UserOrganizationJob orgjob : user.getOrganizationJobs()) {
-        	Organization org=orgRepository.getOne(orgjob.getOrganizationId());
-            GroupEntity groupEntity = new GroupEntity(String.valueOf(org.getId()));
-            groupEntity.setName(org.getName());
-            groupEntity.setType(org.getType().name());
+        for (Long groupId : groupIds) {
+        	Group group = groupService.findOne(groupId);
+
+            GroupEntity groupEntity = new GroupEntity(group.getId().toString());
+            
+            groupEntity.setName(group.getName());
+            groupEntity.setType("用户组");
             groups.add(groupEntity);
         }
 
         return groups;
     }
 
-    @Resource
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-    @Resource
-    public void setOrganizationRepository(OrganizationRepository orgRepository) {
-        this.orgRepository = orgRepository;
-    }
 }

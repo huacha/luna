@@ -5,16 +5,16 @@
  */
 package com.luna.sys.group.service;
 
+import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.stereotype.Service;
+
 import com.google.common.collect.Sets;
 import com.luna.common.service.BaseService;
 import com.luna.sys.group.entity.GroupRelation;
 import com.luna.sys.group.repository.GroupRelationRepository;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.Set;
 
 /**
  * 
@@ -94,5 +94,10 @@ public class GroupRelationService extends BaseService<GroupRelation, Long> {
 
         return Sets.newHashSet(getGroupRelationRepository().findGroupIds(userId, organizationIds));
     }
+    
+    public List<Long> findGroupIds(Long userId){
+    	return getGroupRelationRepository().findGroupIds(userId);
+    }
+    		
 
 }
