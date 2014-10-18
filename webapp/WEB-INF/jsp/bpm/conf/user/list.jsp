@@ -82,7 +82,7 @@
 								<td class="check"><input type="checkbox" name="ids"
 									value="${m.id}"></td>
 								<td>${m.id}</td>
-								<td>${m.value}</td>
+								<td>${m.showValue}</td>
 								<td>
 								<c:forEach items="${bpmconfusertype}" var="item">
 								  <c:if test="${item.name eq m.type}">

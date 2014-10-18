@@ -62,8 +62,9 @@
             <div class="control-group">
                 <form:label path="value" cssClass="control-label">用户/用户组</form:label>
                 <div class="controls input-append">
-                    <form:input id="value" path="value" cssClass="validate[required]" readonly="true"/>
+                    <form:input id="showvalue" path="showValue" cssClass="validate[required]" readonly="true"/>
                     <span class="add-on"><i class="icon-chevron-down"></i></span>
+                    <form:hidden id="value" path="value"/>
                 </div>
             </div>
             
@@ -146,12 +147,12 @@
         	if("0"==userType){
         		$.app.modalDialog(
                         "用户列表",
-                        "${ctx}/admin/sys/user/userselect/single;domId=value;domName=value",
+                        "${ctx}/admin/sys/user/userselect/single;domId=value;domName=showvalue",
                         {
                             width:600,
                             height:450,
                             callback : function() {
-                                $("[name='value']").validationEngine('validate');
+                                $("[name='showvalue']").validationEngine('validate');
                                 return true;
                             }
                         }
@@ -160,12 +161,12 @@
         	else if("1"==userType){
         		$.app.modalDialog(
                         "用户列表",
-                        "${ctx}/admin/sys/user/userselect/multiple;domId=value;domName=value",
+                        "${ctx}/admin/sys/user/userselect/multiple;domId=value;domName=showvalue",
                         {
                             width:600,
                             height:450,
                             callback : function() {
-                                $("[name='value']").validationEngine('validate');
+                                $("[name='showvalue']").validationEngine('validate');
                                 return true;
                             }
                         }
@@ -174,12 +175,12 @@
         	else if("2"==userType){
         		$.app.modalDialog(
                         "用户组列表",
-                        "${ctx}/admin/sys/group/groupselect/single;domId=value;domName=value",
+                        "${ctx}/admin/sys/group/groupselect/single;domId=value;domName=showvalue",
                         {
                             width:600,
                             height:450,
                             callback : function() {
-                                $("[name='value']").validationEngine('validate');
+                                $("[name='showvalue']").validationEngine('validate');
                                 return true;
                             }
                         }

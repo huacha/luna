@@ -10,6 +10,7 @@ import org.activiti.engine.impl.el.ExpressionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.luna.bpm.conf.entity.BpmConfUser;
 import com.luna.bpm.conf.repository.BpmConfUserManager;
@@ -26,7 +27,7 @@ public class ConfUserTaskListener extends DefaultTaskListener {
     @Autowired
     private BpmConfUserManager bpmConfUserManager;
 
-    @Override
+    @Transactional
     public void onCreate(DelegateTask delegateTask) throws Exception {
         List<BpmConfUser> bpmConfUsers = bpmConfUserManager
                 .find(delegateTask.getProcessDefinitionId(), delegateTask

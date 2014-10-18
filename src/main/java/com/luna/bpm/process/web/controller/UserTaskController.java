@@ -59,9 +59,9 @@ public class UserTaskController {
 			@RequestParam("taskstatus") String taskStatus,
 			Searchable searchable, Model model) {
 
-		if (permissionList != null) {
-			this.permissionList.assertHasViewPermission();
-		}
+//		if (permissionList != null) {
+//			this.permissionList.assertHasViewPermission();
+//		}
 
 		if (null != taskStatus && "prepare".equals(taskStatus)) {
 			model.addAttribute(

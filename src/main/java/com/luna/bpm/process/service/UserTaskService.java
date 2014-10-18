@@ -18,6 +18,24 @@ import org.springframework.stereotype.Component;
 public class UserTaskService {
 	@Autowired
 	private ProcessEngine processEngine;
+	
+	/**
+	 * 所有任务.
+	 */
+	public Page<Task> findAllTasks(String userId, Pageable pageable) {
+		TaskService taskService = processEngine.getTaskService();
+
+		long total = taskService.createTaskQuery()
+				.active().count();
+		List<Task> tasks = taskService
+				.createTaskQuery()
+				.active()
+				.listPage(
+						(int) pageable.getPageNumber() * pageable.getPageSize(),
+						pageable.getPageSize());
+
+		return new PageImpl<Task>(tasks, pageable, total);
+	}
 
 	/**
 	 * 待办任务（个人任务）.

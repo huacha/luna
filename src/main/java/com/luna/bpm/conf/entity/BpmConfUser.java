@@ -26,8 +26,11 @@ public class BpmConfUser extends BaseEntity<Long> {
 
     @Column(name = "VALUE", length = 200)
     private String value;
+    
+    @Column(name = "SHOW_VALUE", length = 500)
+    private String showValue;
 
-    @Column(name = "TYPE")
+	@Column(name = "TYPE")
     private Integer type;
 
     @Column(name = "STATUS")
@@ -73,6 +76,15 @@ public class BpmConfUser extends BaseEntity<Long> {
     public void setValue(String value) {
         this.value = value;
     }
+
+    public String getShowValue() {
+		return showValue;
+	}
+
+	public void setShowValue(String showValue) {
+		this.showValue = showValue;
+	}
+
 
     /** @return null. */
     public Integer getType() {

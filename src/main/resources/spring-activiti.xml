@@ -86,7 +86,7 @@
 			<list>
 				<bean class="com.luna.bpm.process.listener.ConfUserTaskListener"/>
 				<bean class="com.luna.bpm.process.listener.TaskConfTaskListener"/>
-				<bean class="com.luna.bpm.process.listener.AssigneeAliasTaskListener"/>
+				<!-- bean class="com.luna.bpm.process.listener.AssigneeAliasTaskListener"/ -->
 				<bean class="com.luna.bpm.process.listener.DelegateTaskListener"/>
 				<bean class="com.luna.bpm.process.listener.CopyTaskListener"/>
 			</list>
