@@ -5,7 +5,7 @@
     <!-- 控制台 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%date{HH:mm:ss.SSS} %-5level[%thread] %logger.%M: %msg%n</pattern>
+            <pattern>[%date{HH:mm:ss.SSS}][%level][%thread][%logger.%M]: %msg%n</pattern>
         </encoder>
     </appender>
     
@@ -19,7 +19,7 @@
             <maxHistory>60</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>%date{HH:mm:ss.SSS} %-5level[%thread] %logger.%M: %msg%n</pattern>
+            <pattern>[%date{HH:mm:ss.SSS}][%level][%thread][%logger.%M]: %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -31,7 +31,7 @@
 	<logger name="org.activiti.engine.impl.persistence.entity" level="DEBUG"/>
 
     <logger name="org.hibernate" level="warn"/>
-    <logger name="net.sf.ehcache" level="info"/>
+    <logger name="net.sf.ehcache" level="warn"/>
     <logger name="org.apache.shiro" level="info"/>
     <logger name="org.springframework" level="warn"/>
 

@@ -27,9 +27,9 @@ public class FormProcessRepository {
 		return null;
 	}
 	
-	public Long getTaskFormId(String taskId) {
+	public Long getTaskFormId(String taskDefinitionKey) {
 		String sql ="select f.FORM_ID from BPM_CONF_NODE n,BPM_CONF_FORM f where f.NODE_ID = n.ID and n.CODE = ?";
-		List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, taskId);
+		List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, taskDefinitionKey);
 		if(list.size() > 0)
 			return (Long)list.get(0).get("FORM_ID");
 		return null;

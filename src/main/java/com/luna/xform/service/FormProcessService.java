@@ -47,7 +47,7 @@ public class FormProcessService {
             identityService.setAuthenticatedUserId(user.getId().toString());
             processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, businessKey, variables);
             String processInstanceId = processInstance.getId();
-            logger.debug("start process of {bkey={}, pid={}, variables={}}", new Object[]{businessKey, processInstanceId, variables});
+            logger.info("启动流程 {businessKey={}, processInstanceId={}, variables={}}", new Object[]{businessKey, processInstanceId, variables});
         } finally {
             identityService.setAuthenticatedUserId(null);
         }
@@ -65,8 +65,8 @@ public class FormProcessService {
 		return fid;
 	}
 	
-	public Long getTaskFormId(String taskId) {
-		Long fid = formProcessRepository.getTaskFormId(taskId);
+	public Long getTaskFormId(String taskDefinitionKey) {
+		Long fid = formProcessRepository.getTaskFormId(taskDefinitionKey);
 		return fid;
 	}
 
@@ -74,10 +74,9 @@ public class FormProcessService {
 		return bpmProcessManager.findOne(processId);
 	}
 	
-	public void getTask(String taskId) {
+	public Task getTask(String taskId) {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-		Map<String, Object> variables = task.getProcessVariables();
-		
+		return task;
 	}
 
 }

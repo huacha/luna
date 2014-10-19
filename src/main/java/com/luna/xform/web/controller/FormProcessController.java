@@ -1,12 +1,16 @@
 package com.luna.xform.web.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +43,8 @@ public class FormProcessController {
 	FormTemplateService formTemplateService;
 	@Autowired
 	DataService dataService;
+	@Autowired
+	private TaskService taskService;
 
     /**
      * 显示启动流程的表单.
@@ -109,20 +115,46 @@ public class FormProcessController {
 	@RequestMapping("viewTaskForm")
 	public String viewTaskForm(Model model, 
 			@CurrentUser User user,
-			@RequestParam("taskId") String taskId) {
-		Long formid = formProcessService.getTaskFormId(taskId);
+			@RequestParam("taskstatus") String taskstatus,
+			@RequestParam("taskId") String taskId) throws IOException {
+		
+		Map<String, Object> variables = taskService.getVariables(taskId);
+		logger.info("流程变量：{}",variables);
+		Set<String> keys = variables.keySet();
+		StringBuilder html = new StringBuilder();
+		for (String key : keys) {
+			String value = variables.get(key).toString();
+			html.append(this.html(key, value));
+		}
+		String data = html.toString();
+		
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		String taskDefinitionKey = task.getTaskDefinitionKey();
+		Long formid = formProcessService.getTaskFormId(taskDefinitionKey);
 		if(formid == null){
     		return "redirect:/xform/process/start?taskId="+taskId;
     	}
     	FormTemplate m = formTemplateService.findOne(formid);
 		model.addAttribute("m", m);
 		model.addAttribute("formid", formid);
-		model.addAttribute("processId", taskId);
+		model.addAttribute("taskId", taskId);
+		model.addAttribute("data", data);
 		logger.debug("找到表单: {}",formid);
 		return "xform/process/viewTaskForm";
 	}
 	
-	
+	private String html(String key,String value) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<div class=\"control-group\">");
+		sb.append("<label class=\"control-label\">");
+		sb.append(key);
+		sb.append("</label>");
+		sb.append("<div class=\"controls\">");
+		sb.append("<input type=\"text\" value=\"").append(value).append("\" readonly=\"true\">");
+		sb.append("</div>");
+		sb.append("</div>");
+		return sb.toString();
+	}
 	
     /**
      * 保存草稿.

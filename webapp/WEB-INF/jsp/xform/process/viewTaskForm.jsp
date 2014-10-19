@@ -2,45 +2,28 @@
 <%@include file="/WEB-INF/jsp/common/taglibs.jspf"%>
 <es:contentHeader/>
 <div class="row-fluid">
-	<section id="m-previous" class="span10" >
-		<div id="previousData"></div>
-	</section>
 	
 	<!-- start of main -->
     <section id="m-main" class="span10" style="float:center">
-		<div id="previousStep"></div>
-		<script>
-		  $.getJSON('${scopePrefix}/rs/bpm/previous', {
-			  processDefinitionId: '${formInfo.processDefinitionId}',
-			  activityId: '${formInfo.activityId}'
-		  }, function(data) {
-			  $('#previousStep').append('上个环节：');
-			  for (var i = 0; i < data.length; i++) {
-				  $('#previousStep').append(data[i].name);
-			  }
-		  });
-		 </script>
-		  
-		<div id="nextStep"></div>
-		<script>
-		  $.getJSON('${scopePrefix}/rs/bpm/next', {
-			  processDefinitionId: '${formInfo.processDefinitionId}',
-			  activityId: '${formInfo.activityId}'
-		  }, function(data) {
-			  $('#nextStep').append('下个环节：');
-			  for (var i = 0; i < data.length; i++) {
-				  $('#nextStep').append(data[i].name);
-			  }
-		  });
-		 </script>
-		  
-      <form id="xf-form" method="post" action="" class="xf-form">
-		<div id="xf-form-table"></div>
+    	<form id="previousData" class="form-horizontal">
+			<fieldset>
+	      	<legend>表单数据</legend>
+			${data}
+			</fieldset>
+		</form>
+		
 		<br>
 		
-		<div style="text-align:center;">
-		  <button id="button0" type="button">发起流程</button>
-		</div>
+		<div id="previousStep"></div>
+		<div id="nextStep"></div>
+		  
+      <form id="xf-form" method="post" action="" class="xf-form">
+	      <fieldset>
+	      	<legend>流程处理</legend>
+			<div id="xf-form-table"></div>
+			<br>
+			<div id="xf-form-button" style="text-align:center;">
+		  </fieldset>
 	  </form>
 
     </section>
@@ -80,6 +63,8 @@ for (var i = 0; i < buttons.length; i++) {
 var xform;
 
 $(function() {
+	$('#xf-form-button').html(html);
+	
 	xform = new xf.Xform('xf-form-table');
 	xform.render();
 
@@ -121,6 +106,26 @@ $(function() {
 				break;
 		}
 	});
-
+/*
+	$.getJSON('${ctx}/rs/bpm/previous', {
+		  processDefinitionId: '${formInfo.processDefinitionId}',
+		  activityId: '${formInfo.activityId}'
+	  }, function(data) {
+		  $('#previousStep').append('上个环节：');
+		  for (var i = 0; i < data.length; i++) {
+			  $('#previousStep').append(data[i].name);
+		  }
+	  });
+	
+	  $.getJSON('${ctx}/rs/bpm/next', {
+		  processDefinitionId: '${formInfo.processDefinitionId}',
+		  activityId: '${formInfo.activityId}'
+	  }, function(data) {
+		  $('#nextStep').append('下个环节：');
+		  for (var i = 0; i < data.length; i++) {
+			  $('#nextStep').append(data[i].name);
+		  }
+	  });
+	  */
 });
 </script>
