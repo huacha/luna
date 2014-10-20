@@ -5,19 +5,17 @@
 	
 	<!-- start of main -->
     <section id="m-main" class="span10" style="float:center">
-    	<form id="previousData" class="form-horizontal">
-			<fieldset>
-	      	<legend>表单数据</legend>
+    	<div id="previousData" class="form-horizontal">
 			${data}
-			</fieldset>
-		</form>
+		</div>
 		
 		<br>
 		
-		<div id="previousStep"></div>
-		<div id="nextStep"></div>
+		<div id="previousStep"></div> <div id="nextStep"></div>
 		  
       <form id="xf-form" method="post" action="" class="xf-form">
+      	<input type="hidden" name="taskId" value="${taskId}">
+      	<input type="hidden" name="formId" value="${formId}">
 	      <fieldset>
 	      	<legend>流程处理</legend>
 			<div id="xf-form-table"></div>
@@ -52,7 +50,7 @@ buttons.push('${item}');
 </c:forEach>
 
 if (buttons.length == 0) {
-	buttons = ['保存草稿', '完成任务'];
+	buttons = ['完成任务'];
 }
 
 var html = '';
@@ -81,15 +79,15 @@ $(function() {
 	$(document).delegate('#xf-form-button button', 'click', function(e) {
 		switch($(this).html()) {
 			case '保存草稿':
-				$('#xf-form').attr('action', 'form-saveDraft.do');
+				$('#xf-form').attr('action', 'saveDraft');
 				$('#xf-form').submit();
 				break;
 			case '完成任务':
-				$('#xf-form').attr('action', 'form-completeTask.do');
+				$('#xf-form').attr('action', '${ctx}/xform/process/completeTask');
 				$('#xf-form').submit();
 				break;
 			case '发起流程':
-				$('#xf-form').attr('action', 'form-startProcessInstance.do');
+				$('#xf-form').attr('action', '');
 				$('#xf-form').submit();
 				break;
 			case '驳回':

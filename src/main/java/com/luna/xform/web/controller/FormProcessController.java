@@ -1,6 +1,7 @@
 package com.luna.xform.web.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import com.luna.sys.user.entity.User;
 import com.luna.sys.user.web.bind.annotation.CurrentUser;
 import com.luna.xform.entity.FormTemplate;
 import com.luna.xform.model.FieldModel;
+import com.luna.xform.model.ProcessVariable;
 import com.luna.xform.service.DataService;
 import com.luna.xform.service.FormProcessService;
 import com.luna.xform.service.FormTemplateService;
@@ -82,6 +85,7 @@ public class FormProcessController {
 			RedirectAttributes redirectAttributes) throws Exception {
 		String businessKey = "";
 		Map<String,Object> variables = new HashMap<String, Object>();
+		List<ProcessVariable> ls = new ArrayList<ProcessVariable>();
 		if(formid != null){
 			List<FieldModel> fields = formTemplateService.getFields(formid);
 			Map<String,Object> map = new HashMap<String, Object>();
@@ -90,8 +94,13 @@ public class FormProcessController {
 				String title = fieldModel.getTitle();
 				String val = request.getParameter(key);
 				map.put(key, val);
-				variables.put(title, val);
+				ProcessVariable pv = new ProcessVariable();
+				pv.setCode(key);
+				pv.setTitle(title);
+				pv.setValue(val);
+				ls.add(pv);
 			}
+			variables.put("开始", ls);
 			String insertSql = formTemplateService.getInsertSql(formid);
 			long id = dataService.saveAndGetID(insertSql, map);
 			businessKey = String.valueOf(id);
@@ -102,16 +111,26 @@ public class FormProcessController {
 		
 		ProcessInstance processInstance = formProcessService.startWorkflow(user,variables,businessKey,processDefinitionKey);
 		
-		redirectAttributes.addFlashAttribute(Constants.MESSAGE, "流程已启动，流程ID：" + processInstance.getId());
+		redirectAttributes.addFlashAttribute(Constants.MESSAGE, "流程已启动，流程实例ID：" + processInstance.getId());
 		
-		return "redirect:/xform/process/startProcessInstance";
+		return "redirect:/xform/process/processInstanceStarted";
 	}
 	
-	@RequestMapping(value = "startProcessInstance")
-	public String startProcessInstance() {
-		return "xform/process/startProcessInstance";
+	@RequestMapping(value = "processInstanceStarted")
+	public String processInstanceStarted() {
+		return "xform/process/success";
 	}
     
+	/**
+	 * 显示任务表单
+	 * 
+	 * @param model
+	 * @param user
+	 * @param taskstatus
+	 * @param taskId
+	 * @return
+	 * @throws IOException
+	 */
 	@RequestMapping("viewTaskForm")
 	public String viewTaskForm(Model model, 
 			@CurrentUser User user,
@@ -123,37 +142,100 @@ public class FormProcessController {
 		Set<String> keys = variables.keySet();
 		StringBuilder html = new StringBuilder();
 		for (String key : keys) {
-			String value = variables.get(key).toString();
-			html.append(this.html(key, value));
+			@SuppressWarnings("unchecked")
+			List<ProcessVariable> value = (List<ProcessVariable>) variables.get(key);
+			html.append(this.htmlProcessVariable(key, value));
 		}
 		String data = html.toString();
+		model.addAttribute("data", data);
 		
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		String taskDefinitionKey = task.getTaskDefinitionKey();
 		Long formid = formProcessService.getTaskFormId(taskDefinitionKey);
-		if(formid == null){
-    		return "redirect:/xform/process/start?taskId="+taskId;
+		if(formid != null){
+			FormTemplate m = formTemplateService.findOne(formid);
+			model.addAttribute("m", m);
+			model.addAttribute("formId", formid);
+			logger.debug("找到表单: {}",formid);
     	}
-    	FormTemplate m = formTemplateService.findOne(formid);
-		model.addAttribute("m", m);
-		model.addAttribute("formid", formid);
+		
+		String processDefinitionId = task.getProcessDefinitionId();
+		List<String> buttons = formProcessService.getButtons(processDefinitionId, taskDefinitionKey);
+		model.addAttribute("buttons", buttons);
 		model.addAttribute("taskId", taskId);
-		model.addAttribute("data", data);
-		logger.debug("找到表单: {}",formid);
+		
 		return "xform/process/viewTaskForm";
 	}
 	
-	private String html(String key,String value) {
+	/**
+	 * 组织表单数据
+	 * 
+	 * @param key
+	 * @param value
+	 * @return
+	 */
+	private String htmlProcessVariable(String key,List<ProcessVariable> val) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("<div class=\"control-group\">");
-		sb.append("<label class=\"control-label\">");
-		sb.append(key);
-		sb.append("</label>");
-		sb.append("<div class=\"controls\">");
-		sb.append("<input type=\"text\" value=\"").append(value).append("\" readonly=\"true\">");
-		sb.append("</div>");
-		sb.append("</div>");
+		sb.append("<fieldset>");
+		sb.append("<legend>").append(key).append("</legend>");
+		
+		for (ProcessVariable variable : val) {
+			String title = variable.getTitle();
+			String value = variable.getValue();
+			sb.append("<div class=\"control-group\">");
+			sb.append("<label class=\"control-label\">");
+			sb.append(title);
+			sb.append("</label>");
+			sb.append("<div class=\"controls\">");
+			sb.append("<input type=\"text\" value=\"").append(value).append("\" readonly=\"true\">");
+			sb.append("</div>");
+			sb.append("</div>");
+		}
+		sb.append("</fieldset>");
 		return sb.toString();
+	}
+	
+	
+	@RequestMapping("completeTask")
+	public String completeTask(
+			HttpServletRequest request,
+			RedirectAttributes redirectAttributes) throws Exception {
+		String taskId = request.getParameter("taskId");
+		String formId = request.getParameter("formId");
+		
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		String taskName = task.getName();
+		
+		Map<String,Object> variables = new HashMap<String, Object>();
+		List<ProcessVariable> ls = new ArrayList<ProcessVariable>();
+		if(StringUtils.isNotBlank(formId)){
+			Long formid = Long.decode(formId);
+			List<FieldModel> fields = formTemplateService.getFields(formid);
+			Map<String,Object> map = new HashMap<String, Object>();
+			for (FieldModel fieldModel : fields) {
+				String key = fieldModel.getName();
+				String title = fieldModel.getTitle();
+				String val = request.getParameter(key);
+				map.put(key, val);
+				ProcessVariable pv = new ProcessVariable();
+				pv.setCode(key);
+				pv.setTitle(title);
+				pv.setValue(val);
+				ls.add(pv);
+			}
+			variables.put(taskName, ls);
+			String insertSql = formTemplateService.getInsertSql(formid);
+			dataService.saveAndGetID(insertSql, map);
+		}
+		
+		taskService.complete(taskId, variables);
+		redirectAttributes.addFlashAttribute(Constants.MESSAGE, "任务已处理，任务名称：" + taskName);
+		return "redirect:/xform/process/taskHasCompleted";
+	}
+	
+	@RequestMapping(value = "taskHasCompleted")
+	public String success() {
+		return "xform/process/success";
 	}
 	
     /**

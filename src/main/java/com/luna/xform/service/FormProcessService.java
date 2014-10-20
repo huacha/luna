@@ -1,5 +1,7 @@
 package com.luna.xform.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.activiti.engine.IdentityService;
@@ -12,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.luna.bpm.conf.entity.BpmConfOperation;
+import com.luna.bpm.conf.repository.BpmConfOperationManager;
 import com.luna.bpm.process.entity.BpmProcess;
 import com.luna.bpm.process.repository.BpmProcessManager;
 import com.luna.sys.user.entity.User;
@@ -31,6 +35,8 @@ public class FormProcessService {
     private IdentityService identityService;
     @Autowired
     BpmProcessManager bpmProcessManager;
+    @Autowired
+    BpmConfOperationManager bpmConfOperationManager;
 
     /**
      * 启动流程
@@ -77,6 +83,15 @@ public class FormProcessService {
 	public Task getTask(String taskId) {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		return task;
+	}
+	
+	public List<String> getButtons(String processDefinitionId, String taskDefinitionKey) {
+		List<String> list = new ArrayList<String>();
+		List<BpmConfOperation> confOperations = bpmConfOperationManager.findBpmConfOperations(processDefinitionId, taskDefinitionKey);
+		for (BpmConfOperation bpmConfOperation : confOperations) {
+			list.add(bpmConfOperation.getValue());
+		}
+		return list;
 	}
 
 }

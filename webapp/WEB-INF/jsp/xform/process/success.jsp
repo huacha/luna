@@ -3,7 +3,7 @@
 <es:contentHeader/>
 <div data-table="table" class="panel">
 
-	流程已启动
+	已成功处理：
     <es:showMessage/>
 
 

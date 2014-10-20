@@ -18,4 +18,7 @@ public interface BpmConfOperationManager extends
 	BpmConfOperation findUnique(String value, BpmConfNode bpmConfNode);
 	
 	List<BpmConfOperation> findByBpmConfNode(BpmConfNode bpmConfNode);
+	
+	@Query("from BpmConfOperation where bpmConfNode.bpmConfBase.processDefinitionId=?1 and bpmConfNode.code=?2")
+	List<BpmConfOperation> findBpmConfOperations(String processDefinitionId,String taskDefinitionKey);
 }
