@@ -8,16 +8,14 @@
     	<div id="previousData" class="form-horizontal">
 			${data}
 		</div>
-		
 		<br>
-		
-		<div id="previousStep"></div> <div id="nextStep"></div>
-		  
       <form id="xf-form" method="post" action="" class="xf-form">
       	<input type="hidden" name="taskId" value="${taskId}">
       	<input type="hidden" name="formId" value="${formId}">
 	      <fieldset>
-	      	<legend>流程处理</legend>
+	      	<legend>当前任务处理</legend>
+	      	<div id="previousStep"></div> 
+	      	<div id="nextStep"></div>
 			<div id="xf-form-table"></div>
 			<br>
 			<div id="xf-form-button" style="text-align:center;">
@@ -104,26 +102,36 @@ $(function() {
 				break;
 		}
 	});
-/*
-	$.getJSON('${ctx}/rs/bpm/previous', {
-		  processDefinitionId: '${formInfo.processDefinitionId}',
-		  activityId: '${formInfo.activityId}'
-	  }, function(data) {
-		  $('#previousStep').append('上个环节：');
-		  for (var i = 0; i < data.length; i++) {
-			  $('#previousStep').append(data[i].name);
-		  }
-	  });
-	
-	  $.getJSON('${ctx}/rs/bpm/next', {
-		  processDefinitionId: '${formInfo.processDefinitionId}',
-		  activityId: '${formInfo.activityId}'
-	  }, function(data) {
-		  $('#nextStep').append('下个环节：');
-		  for (var i = 0; i < data.length; i++) {
-			  $('#nextStep').append(data[i].name);
-		  }
-	  });
-	  */
+
+	$.getJSON('${ctx}/xform/process/previous', {
+		  processDefinitionId: '${processDefinitionId}',
+		  activityId: '${activityId}'
+	}, function(data) {
+		if(data.length > 0){
+			$('#previousStep').append('上个环节：');
+		}
+		for (var i = 0; i < data.length; i++) {
+			if(i != 0){
+				$('#previousStep').append(',');
+			}
+			$('#previousStep').append(data[i]);
+		}
+	});
+
+	$.getJSON('${ctx}/xform/process/next', {
+		  processDefinitionId: '${processDefinitionId}',
+		  activityId: '${activityId}'
+	}, function(data) {
+		if(data.length > 0){
+			$('#nextStep').append('下个环节：');
+		}
+		for (var i = 0; i < data.length; i++) {
+			if(i != 0){
+				$('#nextStep').append(',');
+			}
+			$('#nextStep').append(data[i]);
+		}
+	});
+	  
 });
 </script>

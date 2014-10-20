@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import org.activiti.engine.TaskService;
+import org.activiti.engine.impl.pvm.PvmActivity;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.apache.commons.lang3.StringUtils;
@@ -21,10 +22,12 @@ import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.luna.bpm.process.entity.BpmProcess;
 import com.luna.common.Constants;
+import com.luna.common.utils.JsonUtil;
 import com.luna.sys.user.entity.User;
 import com.luna.sys.user.web.bind.annotation.CurrentUser;
 import com.luna.xform.entity.FormTemplate;
@@ -48,7 +51,7 @@ public class FormProcessController {
 	DataService dataService;
 	@Autowired
 	private TaskService taskService;
-
+	
     /**
      * 显示启动流程的表单.
      */
@@ -160,9 +163,12 @@ public class FormProcessController {
     	}
 		
 		String processDefinitionId = task.getProcessDefinitionId();
+		String activityId = task.getTaskDefinitionKey();
 		List<String> buttons = formProcessService.getButtons(processDefinitionId, taskDefinitionKey);
 		model.addAttribute("buttons", buttons);
 		model.addAttribute("taskId", taskId);
+		model.addAttribute("processDefinitionId", processDefinitionId);
+		model.addAttribute("activityId", activityId);
 		
 		return "xform/process/viewTaskForm";
 	}
@@ -237,6 +243,40 @@ public class FormProcessController {
 	public String success() {
 		return "xform/process/success";
 	}
+	
+	@RequestMapping("previous")
+	@ResponseBody
+	public String previous(String processDefinitionId, String activityId) throws IOException {
+		List<PvmActivity> list = formProcessService.getPreviousActivities(processDefinitionId, activityId);
+		List<String> names = new ArrayList<String>();
+		for (PvmActivity pvmActivity : list) {
+			Object obj = pvmActivity.getProperty("name");
+			if(obj != null){
+				String name = obj.toString();
+				names.add(name);
+			}
+		}
+		String json = JsonUtil.toJson(names);
+		return json;
+	}
+	
+	@RequestMapping("next")
+	@ResponseBody
+	public String next(String processDefinitionId, String activityId) throws IOException {
+		List<PvmActivity> list = formProcessService.getNextActivities(processDefinitionId, activityId);
+		List<String> names = new ArrayList<String>();
+		for (PvmActivity pvmActivity : list) {
+			Object obj = pvmActivity.getProperty("name");
+			if(obj != null){
+				String name = obj.toString();
+				names.add(name);
+			}
+		}
+		String json = JsonUtil.toJson(names);
+		return json;
+	}
+
+    
 	
     /**
      * 保存草稿.

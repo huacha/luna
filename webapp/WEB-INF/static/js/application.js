@@ -12,7 +12,7 @@ $.app = {
 
         var message = $.app.initMessage();
         var notification = $.app.initNotification();
-        var fiveMinute = 5 * 60 * 1000;
+        var fiveMinute = 10 * 60 * 1000;
         var pollingUrl = ctx + "/admin/polling";
         var longPolling = function(url, callback) {
             $.ajax({

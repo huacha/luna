@@ -5,8 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.activiti.engine.IdentityService;
+import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.pvm.PvmActivity;
+import org.activiti.engine.impl.pvm.PvmTransition;
+import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
@@ -30,9 +35,12 @@ public class FormProcessService {
 	@Autowired
 	private TaskService taskService;
 	@Autowired
+	private IdentityService identityService;
+	@Autowired
+	private RepositoryService repositoryService;
+	
+	@Autowired
 	FormProcessRepository formProcessRepository;
-    @Autowired
-    private IdentityService identityService;
     @Autowired
     BpmProcessManager bpmProcessManager;
     @Autowired
@@ -85,6 +93,13 @@ public class FormProcessService {
 		return task;
 	}
 	
+	/**
+	 * 获取流程处理按钮
+	 * 
+	 * @param processDefinitionId
+	 * @param taskDefinitionKey
+	 * @return
+	 */
 	public List<String> getButtons(String processDefinitionId, String taskDefinitionKey) {
 		List<String> list = new ArrayList<String>();
 		List<BpmConfOperation> confOperations = bpmConfOperationManager.findBpmConfOperations(processDefinitionId, taskDefinitionKey);
@@ -93,5 +108,65 @@ public class FormProcessService {
 		}
 		return list;
 	}
+
+	/**
+	 * 获取上个环节
+	 * 
+	 * @param processDefinitionId
+	 * @param activityId
+	 * @return
+	 */
+    public List<PvmActivity> getPreviousActivities(String processDefinitionId, String activityId) {
+    	ProcessDefinitionEntity processDefinitionEntity = (ProcessDefinitionEntity)repositoryService
+                .getProcessDefinition(processDefinitionId);
+        if (processDefinitionEntity == null) {
+            throw new IllegalArgumentException("cannot find processDefinition : " + processDefinitionId);
+        }
+        ActivityImpl activity = processDefinitionEntity.findActivity(activityId);
+        return this.getPreviousActivities(activity);
+    }
+
+    private List<PvmActivity> getPreviousActivities(PvmActivity pvmActivity) {
+        List<PvmActivity> pvmActivities = new ArrayList<PvmActivity>();
+        for (PvmTransition pvmTransition : pvmActivity.getIncomingTransitions()) {
+            PvmActivity targetActivity = pvmTransition.getSource();
+            if ("userTask".equals(pvmActivity.getProperty("type"))) {
+                pvmActivities.add(targetActivity);
+            } else {
+                pvmActivities.addAll(this.getPreviousActivities(targetActivity));
+            }
+        }
+        return pvmActivities;
+    }
+    
+    /**
+     * 获取下个环节
+     * 
+     * @param processDefinitionId
+     * @param activityId
+     * @return
+     */
+    public List<PvmActivity> getNextActivities(String processDefinitionId, String activityId) {
+    	ProcessDefinitionEntity processDefinitionEntity = (ProcessDefinitionEntity)repositoryService
+                .getProcessDefinition(processDefinitionId);
+        if (processDefinitionEntity == null) {
+            throw new IllegalArgumentException("cannot find processDefinition : " + processDefinitionId);
+        }
+        ActivityImpl activity = processDefinitionEntity.findActivity(activityId);
+        return this.getNextActivities(activity);
+    }
+
+    private List<PvmActivity> getNextActivities(PvmActivity pvmActivity) {
+        List<PvmActivity> pvmActivities = new ArrayList<PvmActivity>();
+        for (PvmTransition pvmTransition : pvmActivity.getOutgoingTransitions()) {
+            PvmActivity targetActivity = pvmTransition.getDestination();
+            if ("userTask".equals(pvmActivity.getProperty("type"))) {
+                pvmActivities.add(targetActivity);
+            } else {
+                pvmActivities.addAll(this.getNextActivities(targetActivity));
+            }
+        }
+        return pvmActivities;
+    }
 
 }
