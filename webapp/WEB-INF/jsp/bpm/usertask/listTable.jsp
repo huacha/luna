@@ -54,18 +54,30 @@
 				<td>
 					<c:if test="${param['taskstatus'] eq 'prepare'}">
 					    <a href="${ctx}/xform/process/viewTaskForm?taskId=${m.id}&taskstatus=prepare">处理</a>
+					    &nbsp;
+						<a href="${ctx}/bpm/usertask/unclaim?taskId=${m.id}&taskstatus=prepare">反领取</a>
+						&nbsp;
 					    <a href="#">历史</a>
 		            </c:if>
 					<c:if test="${param['taskstatus'] eq 'preclaim'}">
+					<!-- 
 					    <a href="${ctx}/xform/process/viewTaskForm?taskId=${m.id}&taskstatus=preclaim">领取</a>
+					-->
+						<a href="${ctx}/bpm/usertask/claim?taskId=${m.id}&taskstatus=preclaim">领取</a>
+					    &nbsp;
 					    <a href="#">历史</a>
 		            </c:if>
 					<c:if test="${param['taskstatus'] eq 'claimed'}">
 					    <a href="${ctx}/xform/process/viewTaskForm?taskId=${m.id}&taskstatus=claimed">代理处理</a>
+					    &nbsp;
 					    <a href="#">历史</a>
 		            </c:if>
 					<c:if test="${param['taskstatus'] eq 'finished'}">
+					<!-- 
 					    <a href="${ctx}/xform/process/viewTaskForm?taskId=${m.id}&taskstatus=finished">撤销</a>
+					-->
+						<a href="${ctx}/bpm/usertask/revoke?taskId=${m.id}&taskstatus=finished">撤销</a>
+					    &nbsp;
 					    <a href="#">历史</a>
 		            </c:if>
 				</td>
