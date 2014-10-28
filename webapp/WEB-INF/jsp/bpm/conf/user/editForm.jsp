@@ -147,7 +147,7 @@
         	if("0"==userType){
         		$.app.modalDialog(
                         "用户列表",
-                        "${ctx}/admin/sys/user/userselect/single;domId=value;domName=showvalue",
+                        "${ctx}/admin/sys/user/usernameselect/single;domId=value;domName=showvalue",
                         {
                             width:600,
                             height:450,
@@ -162,7 +162,7 @@
         		$.app.modalDialog(
                         "用户列表",
                         //"${ctx}/admin/sys/user/userselect/multiple;domId=value;domName=showvalue",
-                        "${ctx}/admin/sys/user/userselect/single;domId=value;domName=showvalue",
+                        "${ctx}/admin/sys/user/usernameselect/single;domId=value;domName=showvalue",
                         {
                             width:600,
                             height:450,
@@ -176,7 +176,7 @@
         	else if("2"==userType){
         		$.app.modalDialog(
                         "用户组列表",
-                        "${ctx}/admin/sys/group/groupselect/single;domId=value;domName=showvalue",
+                        "${ctx}/admin/sys/group/groupnameselect/single;domId=value;domName=showvalue",
                         {
                             width:600,
                             height:450,

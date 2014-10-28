@@ -67,25 +67,25 @@ public class UserTaskController {
 			model.addAttribute(
 					"page",
 					userTaskService.findPersonalTasks(
-							String.valueOf(user.getId()), searchable.getPage()));
+							user.getUsername(), searchable.getPage()));
 		}
 		else if(null != taskStatus && "preclaim".equals(taskStatus)) {
 			model.addAttribute(
 					"page",
 					userTaskService.findGroupTasks(
-							String.valueOf(user.getId()), searchable.getPage()));
+							user.getUsername(), searchable.getPage()));
 		}
 		else if(null != taskStatus && "finished".equals(taskStatus)) {
 			model.addAttribute(
 					"page",
 					userTaskService.findHistoryTasks(
-							String.valueOf(user.getId()), searchable.getPage()));
+							user.getUsername(), searchable.getPage()));
 		}
 		else if(null != taskStatus && "claimed".equals(taskStatus)) {
 			model.addAttribute(
 					"page",
 					userTaskService.findDelegatedTasks(
-							String.valueOf(user.getId()), searchable.getPage()));
+							user.getUsername(), searchable.getPage()));
 		}
 
 		if (listAlsoSetCommonData) {

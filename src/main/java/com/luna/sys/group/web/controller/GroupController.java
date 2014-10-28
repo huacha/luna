@@ -280,4 +280,27 @@ public class GroupController extends BaseCRUDController<Group, Long> {
         return "admin/sys/group/groupselect";
     }
 
+	//selectType  multiple single
+    @RequestMapping(value = {"groupnameselect/{selectType}"}, method = RequestMethod.GET)
+    public String groupnameselect(
+            Searchable searchable, Model model,
+            @PathVariable(value = "selectType") String selectType,
+            @MatrixVariable(value = "domId", pathVar = "selectType") String domId,
+            @MatrixVariable(value = "domName", pathVar = "selectType", required = false) String domName) {
+
+        this.permissionList.assertHasViewPermission();
+
+        model.addAttribute("selectType", selectType);
+        model.addAttribute("domId", domId);
+        model.addAttribute("domName", domName);
+        
+        model.addAttribute("statusList", UserStatus.values());
+
+        model.addAttribute("page", getGroupService().findAll(searchable));
+        
+        setCommonData(model);
+
+        return "admin/sys/group/groupnameselect";
+    }
+
 }

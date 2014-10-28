@@ -74,19 +74,20 @@ public class UserProcessController {
 			model.addAttribute(
 					"page",
 					userProcessService.findInvolvedProcessInstances(
-							String.valueOf(user.getId()), searchable.getPage()));
+							user.getUsername(), searchable.getPage()));
+			
 		}
 		else if(null != processStatus && "unfinished".equals(processStatus)) {
 			model.addAttribute(
 					"page",
 					userProcessService.findRunningProcessInstances(
-							String.valueOf(user.getId()), searchable.getPage()));
+							user.getUsername(), searchable.getPage()));
 		}
 		else if(null != processStatus && "finished".equals(processStatus)) {
 			model.addAttribute(
 					"page",
 					userProcessService.findCompletedProcessInstances(
-							String.valueOf(user.getId()), searchable.getPage()));
+							user.getUsername(), searchable.getPage()));
 		}
 		if (listAlsoSetCommonData) {
 			setCommonData(model);

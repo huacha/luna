@@ -322,5 +322,25 @@ public class UserController extends BaseCRUDController<User, Long> {
 
         return "admin/sys/user/userselect";
     }
+  //selectType  multiple single
+    @RequestMapping(value = {"usernameselect/{selectType}"}, method = RequestMethod.GET)
+    public String usernameselect(
+            Searchable searchable, Model model,
+            @PathVariable(value = "selectType") String selectType,
+            @MatrixVariable(value = "domId", pathVar = "selectType") String domId,
+            @MatrixVariable(value = "domName", pathVar = "selectType", required = false) String domName) {
+
+        model.addAttribute("selectType", selectType);
+        model.addAttribute("domId", domId);
+        model.addAttribute("domName", domName);
+        
+        model.addAttribute("statusList", UserStatus.values());
+
+        model.addAttribute("page", getUserService().findAll(searchable));
+        
+        setCommonData(model);
+
+        return "admin/sys/user/usernameselect";
+    }
 
 }

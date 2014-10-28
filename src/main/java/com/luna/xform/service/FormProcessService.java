@@ -58,7 +58,7 @@ public class FormProcessService {
         ProcessInstance processInstance = null;
         try {
             // 用来设置启动流程的人员ID，引擎会自动把用户ID保存到activiti:initiator中
-            identityService.setAuthenticatedUserId(user.getId().toString());
+            identityService.setAuthenticatedUserId(user.getUsername());
             processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, businessKey, variables);
             String processInstanceId = processInstance.getId();
             logger.info("启动流程 {businessKey={}, processInstanceId={}, variables={}}", new Object[]{businessKey, processInstanceId, variables});

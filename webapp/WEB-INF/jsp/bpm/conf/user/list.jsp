@@ -127,7 +127,8 @@
             //createUrl :      "${ctx}/bpm/conf/user/node-${bpmConfNode.id}/create",
             updateUrl :      "${ctx}/bpm/conf/user/node-${bpmConfNode.id}/{id}/update?BackURL=" +$.table.tableURL($(".table")),
             deleteUrl :      "${ctx}/bpm/conf/user/node-${bpmConfNode.id}/{id}/delete?BackURL=${ctx}/bpm/conf/user/node-${bpmConfNode.id}",
-            batchDeleteUrl : "${ctx}/bpm/conf/user/node-${bpmConfNode.id}/batch/delete?BackURL=${ctx}/bpm/conf/user/node-${bpmConfNode.id}"
+            //batchDeleteUrl : "${ctx}/bpm/conf/user/node-${bpmConfNode.id}/batch/delete?BackURL=${ctx}/bpm/conf/user/node-${bpmConfNode.id}"
+            batchDeleteUrl : "${ctx}/bpm/conf/user/node-${bpmConfNode.id}/batch/delete"
 
         });
         

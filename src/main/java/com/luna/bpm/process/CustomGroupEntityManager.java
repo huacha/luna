@@ -29,9 +29,9 @@ public class CustomGroupEntityManager extends GroupEntityManager {
     private UserService userService;
 
     @Override
-    public List<org.activiti.engine.identity.Group> findGroupsByUser(String userId) {
-        logger.debug("findGroupsByUser : {}", userId);
-        User user=userService.findOne(Long.parseLong(userId));
+    public List<org.activiti.engine.identity.Group> findGroupsByUser(String userName) {
+        logger.debug("findGroupsByUser : {}", userName);
+        User user=userService.findByUsername(userName);
         List<org.activiti.engine.identity.Group> groups = new ArrayList<org.activiti.engine.identity.Group>();
         
         /*获取用户所在组列表*/
@@ -40,7 +40,7 @@ public class CustomGroupEntityManager extends GroupEntityManager {
         for (Long groupId : groupIds) {
         	Group group = groupService.findOne(groupId);
 
-            GroupEntity groupEntity = new GroupEntity(group.getId().toString());
+            GroupEntity groupEntity = new GroupEntity(group.getName());
             
             groupEntity.setName(group.getName());
             groupEntity.setType("用户组");
