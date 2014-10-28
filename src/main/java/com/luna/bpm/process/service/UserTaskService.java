@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.interceptor.Command;
+import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.DelegationState;
 import org.activiti.engine.task.Task;
@@ -18,7 +20,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import com.luna.bpm.process.cmd.RollbackTaskCmd;
+import com.luna.bpm.process.cmd.WithdrawTaskCmd;
 
 @Component
 public class UserTaskService {
@@ -150,22 +152,31 @@ public class UserTaskService {
 	public Integer revoke(String taskId){
 		/*根据历史任务ID查询当前流程ID*/
 		//TODO 撤销任务有bug cmd中需要传入当前活动任务的ID，时没有获取到当前活动任务的taskid
-		HistoryService historyService = processEngine.getHistoryService();
-		RuntimeService runtimeService = processEngine.getRuntimeService();
+//		HistoryService historyService = processEngine.getHistoryService();
+//		RuntimeService runtimeService = processEngine.getRuntimeService();
+//		RepositoryService repositoryService = processEngine.getRepositoryService();
+//		
+//		HistoricTaskInstance taskInfo = historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
+//		
+//		ProcessDefinitionEntity pd = (ProcessDefinitionEntity) repositoryService.getProcessDefinition(taskInfo.getProcessDefinitionId());
+//		ProcessInstance pi =runtimeService.createProcessInstanceQuery().processInstanceId(taskInfo.getProcessInstanceId()).singleResult();
+//		
+//		if(null == pi){
+//			return -1;
+//		}
+//		
+//		//获取流程当前节点
+//		String activitiId = pi.getActivityId();
+//		ActivityImpl activity = pd.findActivity(activitiId);
+//		
+//		HistoricProcessInstance processInfo = historyService.createHistoricProcessInstanceQuery().processInstanceId(taskInfo.getProcessInstanceId()).list().get(0);
 		
-		HistoricTaskInstance taskInfo = historyService.createHistoricTaskInstanceQuery().taskId(taskId).list().get(0);
+//		if(null != processInfo.getEndTime()){
+//			return -1;
+//		}
 		
-		ProcessInstance pi =runtimeService.createProcessInstanceQuery().processInstanceId(taskInfo.getProcessInstanceId()).singleResult(); 
-		
-		HistoricProcessInstance processInfo = historyService.createHistoricProcessInstanceQuery().processInstanceId(taskInfo.getProcessInstanceId()).list().get(0);
-		
-		if(null != processInfo.getEndTime()){
-			return -1;
-		}
-		
-		
-		 Command<Integer> cmd = new RollbackTaskCmd(taskId);
+		Command<Integer> cmd = new WithdrawTaskCmd(taskId);
 
-	     return processEngine.getManagementService().executeCommand(cmd);
+        return processEngine.getManagementService().executeCommand(cmd);
 	}
 }
