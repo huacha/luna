@@ -92,12 +92,12 @@ public class ModelerController {
         Model modelData = repositoryService.getModel(id);
         byte[] content = repositoryService.getModelEditorSource(modelData.getId());
         if(content == null){
-        	redirectAttributes.addFlashAttribute(Constants.ERROR, "没有流程图，不能发布！");
+        	redirectAttributes.addFlashAttribute(Constants.ERROR, "未找到模型，流程不能发布！");
         	return redirectUrl;
         }
         JsonNode modelNode = (JsonNode) new ObjectMapper().readTree(content);
         if (modelNode.get(EditorJsonConstants.EDITOR_CHILD_SHAPES) == null) {
-        	redirectAttributes.addFlashAttribute(Constants.ERROR, "没有流程图图形，不能发布！");
+        	redirectAttributes.addFlashAttribute(Constants.ERROR, "模型中没有流程图，流程不能发布！");
         	return redirectUrl;
 		}
 
@@ -120,6 +120,7 @@ public class ModelerController {
         	syncProcessCmd.setProcessDefinitionId(processDefinition.getId());
             processEngine.getManagementService().executeCommand(syncProcessCmd);
         }
+        redirectAttributes.addFlashAttribute(Constants.MESSAGE, processName+" 已发布！");
         return redirectUrl;
     }
 
@@ -140,14 +141,18 @@ public class ModelerController {
 
         if (model == null) {
             model = repositoryService.newModel();
+            model.setName("");
+            model.setMetaInfo("");
+            model.setVersion(1);
+            model.setMetaInfo("");
             repositoryService.saveModel(model);
         }
 
         Map root = new HashMap();
         root.put("modelId", model.getId());
-        root.put("name", "name");
-        root.put("revision", 1);
-        root.put("description", "description");
+        root.put("name", model.getName());
+        root.put("revision", model.getVersion());
+        root.put("description", model.getMetaInfo());
 
         byte[] bytes = repositoryService.getModelEditorSource(model.getId());
 
@@ -208,6 +213,8 @@ public class ModelerController {
 		RepositoryService repositoryService = processEngine.getRepositoryService();
 		Model model = repositoryService.getModel(id);
 		model.setName(name);
+		model.setMetaInfo(description);
+		
 		logger.info("jsonXml : {}",jsonXml);
 		repositoryService.saveModel(model);
 		repositoryService.addModelEditorSource(model.getId(),jsonXml.getBytes("utf-8"));

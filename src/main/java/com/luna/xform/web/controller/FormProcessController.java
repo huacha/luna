@@ -239,6 +239,44 @@ public class FormProcessController {
 		return "redirect:/xform/process/taskHasCompleted";
 	}
 	
+	
+	@RequestMapping("resolveTask")
+	public String resolveTask(
+			HttpServletRequest request,
+			RedirectAttributes redirectAttributes) throws Exception {
+		String taskId = request.getParameter("taskId");
+		String formId = request.getParameter("formId");
+		
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		String taskName = task.getName();
+		
+		Map<String,Object> variables = new HashMap<String, Object>();
+		List<ProcessVariable> ls = new ArrayList<ProcessVariable>();
+		if(StringUtils.isNotBlank(formId)){
+			Long formid = Long.decode(formId);
+			List<FieldModel> fields = formTemplateService.getFields(formid);
+			Map<String,Object> map = new HashMap<String, Object>();
+			for (FieldModel fieldModel : fields) {
+				String key = fieldModel.getName();
+				String title = fieldModel.getTitle();
+				String val = request.getParameter(key);
+				map.put(key, val);
+				ProcessVariable pv = new ProcessVariable();
+				pv.setCode(key);
+				pv.setTitle(title);
+				pv.setValue(val);
+				ls.add(pv);
+			}
+			variables.put(taskName, ls);
+			String insertSql = formTemplateService.getInsertSql(formid);
+			dataService.saveAndGetID(insertSql, map);
+		}
+		taskService.resolveTask(taskId, variables);
+		redirectAttributes.addFlashAttribute(Constants.MESSAGE, "任务已处理，任务名称：" + taskName);
+		return "redirect:/xform/process/taskHasCompleted";
+	}
+	
+	
 	@RequestMapping(value = "taskHasCompleted")
 	public String success() {
 		return "xform/process/success";
