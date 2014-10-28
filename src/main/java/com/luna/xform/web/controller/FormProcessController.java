@@ -102,6 +102,7 @@ public class FormProcessController {
 				pv.setTitle(title);
 				pv.setValue(val);
 				ls.add(pv);
+				variables.put(key, val);
 			}
 			variables.put("开始", ls);
 			String insertSql = formTemplateService.getInsertSql(formid);
@@ -134,6 +135,7 @@ public class FormProcessController {
 	 * @return
 	 * @throws IOException
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("viewTaskForm")
 	public String viewTaskForm(Model model, 
 			@CurrentUser User user,
@@ -145,9 +147,12 @@ public class FormProcessController {
 		Set<String> keys = variables.keySet();
 		StringBuilder html = new StringBuilder();
 		for (String key : keys) {
-			@SuppressWarnings("unchecked")
-			List<ProcessVariable> value = (List<ProcessVariable>) variables.get(key);
-			html.append(this.htmlProcessVariable(key, value));
+			Object var = variables.get(key);
+			if(var instanceof List<?>){
+				List<ProcessVariable> value = (List<ProcessVariable>) var;
+				html.append(this.htmlProcessVariable(key, value));
+			}
+			
 		}
 		String data = html.toString();
 		model.addAttribute("data", data);
@@ -212,7 +217,8 @@ public class FormProcessController {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		String taskName = task.getName();
 		
-		Map<String,Object> variables = new HashMap<String, Object>();
+		Map<String,Object> variables = new HashMap<String, Object>();//全局流程变量
+		Map<String,Object> taskVariables = new HashMap<String, Object>();//任务流程变量
 		List<ProcessVariable> ls = new ArrayList<ProcessVariable>();
 		if(StringUtils.isNotBlank(formId)){
 			Long formid = Long.decode(formId);
@@ -228,12 +234,13 @@ public class FormProcessController {
 				pv.setTitle(title);
 				pv.setValue(val);
 				ls.add(pv);
+				taskVariables.put(key, val);
 			}
 			variables.put(taskName, ls);
 			String insertSql = formTemplateService.getInsertSql(formid);
 			dataService.saveAndGetID(insertSql, map);
 		}
-		
+		taskService.setVariablesLocal(taskId, taskVariables);
 		taskService.complete(taskId, variables);
 		redirectAttributes.addFlashAttribute(Constants.MESSAGE, "任务已处理，任务名称：" + taskName);
 		return "redirect:/xform/process/taskHasCompleted";

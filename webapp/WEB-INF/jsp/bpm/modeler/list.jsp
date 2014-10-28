@@ -43,9 +43,7 @@
 					<td>${m.metaInfo}</td>
 					<td>
 						<a class='btn-custom' href="${ctx}/modeler/remove?id=${m.id}">删除</a> 
-						<c:if test="${m.deploymentId eq '' or m.deploymentId == null}">
-							<a class='btn-custom' href="${ctx}/modeler/deploy?id=${m.id}">发布</a>
-						</c:if>
+						<a class='btn-custom' href="${ctx}/modeler/deploy?id=${m.id}">发布</a>
 					</td>
 				</tr>
 			</c:forEach>
