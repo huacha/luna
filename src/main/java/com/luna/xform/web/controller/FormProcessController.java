@@ -246,6 +246,19 @@ public class FormProcessController {
 		return "redirect:/xform/process/taskHasCompleted";
 	}
 	
+	@RequestMapping("rollbackTask")
+	public String rollbackTask(
+			HttpServletRequest request,
+			RedirectAttributes redirectAttributes) throws Exception {
+		String taskId = request.getParameter("taskId");
+		Integer rollbackTask = formProcessService.rollbackTask(taskId);
+		logger.debug(rollbackTask.toString());
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		String taskName = task.getName();
+		redirectAttributes.addFlashAttribute(Constants.MESSAGE, "任务已驳回，任务名称：" + taskName);
+		
+		return "redirect:/xform/process/taskHasCompleted";
+	}
 	
 	@RequestMapping("resolveTask")
 	public String resolveTask(

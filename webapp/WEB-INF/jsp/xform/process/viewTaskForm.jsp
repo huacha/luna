@@ -48,7 +48,7 @@ buttons.push('${item}');
 </c:forEach>
 
 if (buttons.length == 0) {
-	buttons = ['完成任务'];
+	buttons = ['完成任务','驳回'];
 }
 
 var html = '';
@@ -89,7 +89,7 @@ $(function() {
 				$('#xf-form').submit();
 				break;
 			case '驳回':
-				$('#xf-form').attr('action', '${ctx}/bpm/workspace-rollback.do');
+				$('#xf-form').attr('action', '${ctx}/xform/process/rollbackTask');
 				$('#xf-form').submit();
 				break;
 			case '转办':

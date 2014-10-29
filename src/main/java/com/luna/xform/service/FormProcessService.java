@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.activiti.engine.IdentityService;
+import org.activiti.engine.ManagementService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.impl.interceptor.Command;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.PvmActivity;
 import org.activiti.engine.impl.pvm.PvmTransition;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import com.luna.bpm.conf.entity.BpmConfOperation;
 import com.luna.bpm.conf.repository.BpmConfOperationManager;
+import com.luna.bpm.process.cmd.RollbackTaskCmd;
 import com.luna.bpm.process.entity.BpmProcess;
 import com.luna.bpm.process.repository.BpmProcessManager;
 import com.luna.sys.user.entity.User;
@@ -38,6 +41,8 @@ public class FormProcessService {
 	private IdentityService identityService;
 	@Autowired
 	private RepositoryService repositoryService;
+	@Autowired
+	private ManagementService managementService;
 	
 	@Autowired
 	FormProcessRepository formProcessRepository;
@@ -168,5 +173,11 @@ public class FormProcessService {
         }
         return pvmActivities;
     }
+    
+    public Integer rollbackTask(String taskId) {
+    	Command<Integer> cmd = new RollbackTaskCmd(taskId);
+    	Integer cnt = managementService.executeCommand(cmd);
+    	return cnt;
+	}
 
 }
