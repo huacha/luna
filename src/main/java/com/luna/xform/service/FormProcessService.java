@@ -16,6 +16,7 @@ import org.activiti.engine.impl.pvm.PvmTransition;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import com.luna.bpm.conf.entity.BpmConfOperation;
 import com.luna.bpm.conf.repository.BpmConfOperationManager;
+import com.luna.bpm.delegate.service.DelegateService;
 import com.luna.bpm.process.cmd.RollbackTaskCmd;
 import com.luna.bpm.process.entity.BpmProcess;
 import com.luna.bpm.process.repository.BpmProcessManager;
@@ -50,6 +52,8 @@ public class FormProcessService {
     BpmProcessManager bpmProcessManager;
     @Autowired
     BpmConfOperationManager bpmConfOperationManager;
+    @Autowired
+    DelegateService delegateService;
 
     /**
      * 启动流程
@@ -174,10 +178,41 @@ public class FormProcessService {
         return pvmActivities;
     }
     
+    /**
+     * 回退任务
+     * 
+     * @param taskId
+     * @return
+     */
     public Integer rollbackTask(String taskId) {
     	Command<Integer> cmd = new RollbackTaskCmd(taskId);
     	Integer cnt = managementService.executeCommand(cmd);
     	return cnt;
 	}
 
+    /**
+     * 转办
+     * 
+     * @param taskId
+     * @param attorney
+     */
+    public void doDelegate(String taskId, String attorney, User user) {
+    	String assignee = user.getUsername();
+    	String owner = taskService.createTaskQuery().taskId(taskId).singleResult().getOwner();
+    	if (StringUtils.isBlank(owner)) {
+    		taskService.setOwner(taskId, assignee);
+		}
+    	taskService.setAssignee(taskId, attorney);
+		delegateService.saveRecord(assignee, attorney, taskId);
+	}
+    
+    /**
+     * 协办
+     * 
+     * @param taskId
+     * @param attorney
+     */
+    public void doDelegateHelp(String taskId, String attorney) {
+    	
+    }
 }

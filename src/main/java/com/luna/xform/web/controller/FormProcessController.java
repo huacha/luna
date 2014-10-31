@@ -158,6 +158,7 @@ public class FormProcessController {
 		model.addAttribute("data", data);
 		
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		String taskName = task.getName();
 		String taskDefinitionKey = task.getTaskDefinitionKey();
 		Long formid = formProcessService.getTaskFormId(taskDefinitionKey);
 		if(formid != null){
@@ -172,6 +173,7 @@ public class FormProcessController {
 		List<String> buttons = formProcessService.getButtons(processDefinitionId, taskDefinitionKey);
 		model.addAttribute("buttons", buttons);
 		model.addAttribute("taskId", taskId);
+		model.addAttribute("taskName", taskName);
 		model.addAttribute("processDefinitionId", processDefinitionId);
 		model.addAttribute("activityId", activityId);
 		
@@ -212,10 +214,8 @@ public class FormProcessController {
 			HttpServletRequest request,
 			RedirectAttributes redirectAttributes) throws Exception {
 		String taskId = request.getParameter("taskId");
+		String taskName = request.getParameter("taskName");
 		String formId = request.getParameter("formId");
-		
-		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-		String taskName = task.getName();
 		
 		Map<String,Object> variables = new HashMap<String, Object>();//全局流程变量
 		Map<String,Object> taskVariables = new HashMap<String, Object>();//任务流程变量
@@ -251,15 +251,46 @@ public class FormProcessController {
 			HttpServletRequest request,
 			RedirectAttributes redirectAttributes) throws Exception {
 		String taskId = request.getParameter("taskId");
+		String taskName = request.getParameter("taskName");
+		
 		Integer rollbackTask = formProcessService.rollbackTask(taskId);
 		logger.debug(rollbackTask.toString());
-		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-		String taskName = task.getName();
-		redirectAttributes.addFlashAttribute(Constants.MESSAGE, "任务已驳回，任务名称：" + taskName);
+		
+		redirectAttributes.addFlashAttribute(Constants.MESSAGE, "任务已回退，任务名称：" + taskName);
 		
 		return "redirect:/xform/process/taskHasCompleted";
 	}
 	
+	/**
+	 * 转办.
+	 */
+	@RequestMapping("doDelegate")
+	public String doDelegate(@RequestParam("taskId") String taskId,
+			@RequestParam("attorney") String attorney, @CurrentUser User user) {
+		
+		formProcessService.doDelegate(taskId, attorney, user);
+
+		return "redirect:/xform/process/taskHasCompleted";
+	}
+
+	/**
+	 * 协办.
+	 */
+	@RequestMapping("doDelegateHelp")
+	public String doDelegateHelp(@RequestParam("taskId") String taskId,
+			@RequestParam("attorney") String attorney) {
+		taskService.delegateTask(taskId, attorney);
+
+		return "redirect:/xform/process/taskHasCompleted";
+	}
+
+    /**
+     * 
+     * @param request
+     * @param redirectAttributes
+     * @return
+     * @throws Exception
+     */
 	@RequestMapping("resolveTask")
 	public String resolveTask(
 			HttpServletRequest request,

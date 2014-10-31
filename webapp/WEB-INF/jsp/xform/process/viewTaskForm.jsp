@@ -11,6 +11,7 @@
 		<br>
       <form id="xf-form" method="post" action="" class="xf-form">
       	<input type="hidden" name="taskId" value="${taskId}">
+      	<input type="hidden" name="taskName" value="${taskName}">
       	<input type="hidden" name="formId" value="${formId}">
 	      <fieldset>
 	      	<legend>当前任务处理</legend>
@@ -93,11 +94,11 @@ $(function() {
 				$('#xf-form').submit();
 				break;
 			case '转办':
-				$('#modal form').attr('action', '${ctx}/bpm/workspace-doDelegate.do');
+				$('#modal form').attr('action', '${ctx}/xform/process/doDelegate');
 				$('#modal').modal();
 				break;
 			case '协办':
-				$('#modal form').attr('action', '${ctx}/bpm/workspace-doDelegateHelp.do');
+				$('#modal form').attr('action', '${ctx}/xform/process/doDelegateHelp');
 				$('#modal').modal();
 				break;
 		}
