@@ -76,7 +76,7 @@
             <div class="control-group">
                 <form:label path="bpmConfBase.processDefinitionId" cssClass="control-label">绑定流程</form:label>
                 <div class="controls input-append">
-                    <form:input id="processDefinitionId" path="bpmConfBase.processDefinitionId" cssClass="validate[required]" readonly="true"/>
+                    <form:input id="processDefinitionId" path="bpmConfBase.processDefinitionId" cssClass="validate[required, ajax[ajaxNameCall]]" readonly="true"/>
                     <span class="add-on"><i class="icon-chevron-down"></i></span>
                     <form:hidden id="confBaseId" path="bpmConfBase.id"/>
                 </div>
@@ -157,7 +157,7 @@
                     //"alertText": "* 该名称已被其他人使用",
                     //验证成功时的消息
                     //"alertTextOk": "该名称可以使用",
-                    "alertTextLoad": "* 正在验证，请稍等。。。"
+                    "alertTextLoad": "* 正在验证111，请稍等。。。"
                 };
                 $.validationEngineLanguage.allRules.username={
                     "regex": /^\w{5,10}$/,

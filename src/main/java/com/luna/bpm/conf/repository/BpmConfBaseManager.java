@@ -9,4 +9,6 @@ import com.luna.common.repository.BaseRepository;
 public interface BpmConfBaseManager extends BaseRepository<BpmConfBase,Long> {
 	@Query("from BpmConfBase where processDefinitionKey=?1 and processDefinitionVersion=?2")
 	BpmConfBase findUnique(String processDefinitionKey,int processDefinitionVersion);
+
+	BpmConfBase findByProcessDefinitionId(String processDefinitionId);
 }

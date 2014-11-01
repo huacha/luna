@@ -7,6 +7,7 @@ package com.luna.bpm.process.service;
 
 import org.springframework.stereotype.Service;
 
+import com.luna.bpm.conf.entity.BpmConfBase;
 import com.luna.bpm.process.entity.BpmProcess;
 import com.luna.bpm.process.repository.BpmProcessManager;
 import com.luna.common.service.BaseService;
@@ -25,5 +26,9 @@ public class BpmProcessService extends BaseService<BpmProcess, Long> {
 
 	public BpmProcess findByName(String fieldValue) {
 		return getBpmProcessRepository().findByName(fieldValue);
+	}
+
+	public BpmProcess findByBpmConfBase(BpmConfBase bpmConfBase){
+		return getBpmProcessRepository().findByBpmConfBase(bpmConfBase);
 	}
 }

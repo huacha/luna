@@ -8,7 +8,7 @@
 	<div class="row-fluid tool ui-toolbar">
 		<div class="span4">
 			<div class="btn-group">
-				<a class="btn btn-create"> <i class="icon-file-alt"></i> 新增</a>
+				<a class="btn btn-create"> <i class="icon-file-alt"></i> 新增模型</a>
 			</div>
 		</div>
 		<div class="span8"></div>
@@ -21,12 +21,12 @@
 					<a class="check-all" href="javascript:;">全选</a> | <a class="reverse-all" href="javascript:;">反选</a>
 				</th>
 				<th style="width: 70px">编号</th>
-				<th style="width: 100px">名称</th>
+				<th style="width: 150px">名称</th>
 				<th>创建时间</th>
 				<th>修改时间</th>
 				<th>部署号</th>
 				<th>描述</th>
-				<th style="width: 30px">操作</th>
+				<th style="width: 80px">操作</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -43,7 +43,9 @@
 					<td>${m.metaInfo}</td>
 					<td>
 						<a class='btn-custom' href="${ctx}/modeler/remove?id=${m.id}">删除</a> 
-						<a class='btn-custom' href="${ctx}/modeler/deploy?id=${m.id}">发布</a>
+						&nbsp;&nbsp;&nbsp;
+						<!-- <a class='btn-custom' href="${ctx}/modeler/deploy?id=${m.id}">发布</a> -->
+						<a class='btn-custom' href="${ctx}/modeler/deployModel?modelId=${m.id}">发布</a>
 					</td>
 				</tr>
 			</c:forEach>

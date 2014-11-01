@@ -123,7 +123,7 @@ public class SyncProcessCmd implements Command<Void> {
 			bpmConfNode.setConfUser(2);
 			bpmConfNode.setConfListener(0);
 			bpmConfNode.setConfRule(2);
-			bpmConfNode.setConfForm(0);
+			bpmConfNode.setConfForm(2);
 			bpmConfNode.setConfOperation(2);
 			bpmConfNode.setConfNotice(2);
 			bpmConfNode.setPriority(priority);

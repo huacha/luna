@@ -144,12 +144,13 @@ public class UserTaskController {
         try {
         	boolean confAssigneeFlag = false;
         	Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-
+        	
             List<BpmConfUser> bpmConfUsers = bpmConfUserService.find(task.getProcessDefinitionId(), task.getTaskDefinitionKey());
             
             for (BpmConfUser bpmConfUser : bpmConfUsers) {
-            	if("0".equals(bpmConfUser.getType())){
+            	if(0 == bpmConfUser.getType().intValue()){
             		confAssigneeFlag = true;
+            		break;
             	}
             }
             

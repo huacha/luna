@@ -22,4 +22,8 @@ public class BpmConfBaseService extends BaseService<BpmConfBase, Long> {
     private BpmConfBaseManager getBpmConfBaseRepository() {
         return (BpmConfBaseManager) baseRepository;
     }
+    
+	public BpmConfBase findByProcessDefinitionId(String processDefinitionId){
+		return this.getBpmConfBaseRepository().findByProcessDefinitionId(processDefinitionId);
+	}
 }

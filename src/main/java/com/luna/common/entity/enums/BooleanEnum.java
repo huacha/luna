@@ -28,4 +28,5 @@ public enum BooleanEnum {
     public Boolean getValue() {
         return value;
     }
+    
 }

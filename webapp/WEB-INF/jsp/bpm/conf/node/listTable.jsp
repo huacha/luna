@@ -33,8 +33,8 @@
           <th>类型</th>
           <th>节点</th>
           <th>人员</th>
-          <th>事件</th>
-          <th>规则</th>
+          <!-- <th>事件</th> -->
+          <!-- <th>规则</th> -->
           <th>表单</th>
           <th>操作</th>
           <th>提醒</th>
@@ -57,6 +57,7 @@
 			</c:if>
 			&nbsp;
 	      </td>
+	      <!-- 
           <td>
 		    <c:if test="${item.confListener == 0}">
 			  <a href="${ctx}/bpm/conf/listener/process-${bpmProcess.id}/node-${item.id}" class="btn"><i class="icon-edit"></i></a>
@@ -75,6 +76,7 @@
 			</c:if>
 			&nbsp;
 	      </td>
+	       -->
           <td>
 		    <c:if test="${item.confForm == 0}">
 			  <a href="${ctx}/bpm/conf/form/process-${bpmProcess.id}/node-${item.id}"  class="btn"><i class="icon-edit"></i></a>
