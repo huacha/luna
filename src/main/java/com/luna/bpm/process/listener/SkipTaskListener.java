@@ -53,7 +53,7 @@ public class SkipTaskListener extends DefaultTaskListener {
         MapVariableScope mapVariableScope = new MapVariableScope();
         String initiator = historicProcessInstanceEntity.getStartUserId();
         mapVariableScope.setVariable("initiator",
-        		userRepository.findOne(Long.parseLong(initiator)));
+        		userRepository.findByUsername(initiator));
 
         for (BpmConfRule bpmConfRule : bpmConfRules) {
             String value = bpmConfRule.getValue();
