@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.luna.bpm.process.cmd.CompleteTaskWithCommentCmd;
+import com.luna.common.utils.SpringUtils;
+import com.luna.xform.repository.FormProcessRepository;
 
 public class AutoCompleteFirstTaskListener extends DefaultTaskListener {
     /**
@@ -47,15 +49,17 @@ public class AutoCompleteFirstTaskListener extends DefaultTaskListener {
             return;
         }
 
-        if (targetActivity.getId().equals(
-                delegateTask.getExecution().getCurrentActivityId())) {
+        if (targetActivity.getId().equals(delegateTask.getExecution().getCurrentActivityId())) {
             if ((userId != null) && userId.equals(assignee)) {
-                logger.debug("auto complete first task : {}", delegateTask);
-
-                // ((TaskEntity) delegateTask).complete();
-                // Context.getCommandContext().getHistoryManager().recordTaskId((TaskEntity) delegateTask);
-                new CompleteTaskWithCommentCmd(delegateTask.getId(), null,
-                        "发起流程").execute(Context.getCommandContext());
+            	String taskDefinitionKey = delegateTask.getTaskDefinitionKey();
+            	String processDefinitionId = delegateTask.getProcessDefinitionId();
+            	FormProcessRepository formProcessRepository = (FormProcessRepository)SpringUtils.getBean("formProcessRepository");
+            	Long taskFormId = formProcessRepository.getTaskFormId(processDefinitionId, taskDefinitionKey);
+            	if (taskFormId != null) {
+					return;
+				}
+                logger.info("auto complete first task : {}", delegateTask);
+                new CompleteTaskWithCommentCmd(delegateTask.getId(), null,"发起流程").execute(Context.getCommandContext());
             }
         }
     }
