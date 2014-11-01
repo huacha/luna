@@ -10,6 +10,7 @@
 			</th>
 			<th style="width: 80px" >编号</th>
 			<th style="width: 150px" >名称</th>
+			<th style="width: 150px" >流程定义</th>
 			
 			<c:if test="${param['taskstatus'] ne 'finished'}">
 				<th style="width: 150px" >创建时间</th>
@@ -37,6 +38,7 @@
 				<td class="check"><input type="checkbox" name="ids"	value="${m.id}"></td>
 				<td>${m.id}</td>
 				<td>${m.name}</td>
+				<td>${m.processDefinitionId}</td>
 				
 				<c:if test="${param['taskstatus'] ne 'finished'}">
 					<td><fmt:formatDate value="${m.createTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>

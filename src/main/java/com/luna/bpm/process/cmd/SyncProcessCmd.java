@@ -39,9 +39,16 @@ import com.luna.bpm.process.cmd.graph.Node;
 public class SyncProcessCmd implements Command<Void> {
 	/** 流程定义id. */
 	private String processDefinitionId;
+	
+	/** 流程定义名称 */
+	private String processDefinitionName;
 
 	public void setProcessDefinitionId(String processDefinitionId) {
 		this.processDefinitionId = processDefinitionId;
+	}
+
+	public void setProcessDefinitionName(String processDefinitionName) {
+		this.processDefinitionName = processDefinitionName;
 	}
 
 	@Autowired
@@ -69,10 +76,12 @@ public class SyncProcessCmd implements Command<Void> {
 			bpmConfBase = new BpmConfBase();
 			bpmConfBase.setProcessDefinitionId(processDefinitionId);
 			bpmConfBase.setProcessDefinitionKey(processDefinitionKey);
+			bpmConfBase.setProcessDefinitionName(processDefinitionName);
 			bpmConfBase.setProcessDefinitionVersion(processDefinitionVersion);
 			bpmConfBaseManager.save(bpmConfBase);
 		} else if (bpmConfBase.getProcessDefinitionId() == null) {
 			bpmConfBase.setProcessDefinitionId(processDefinitionId);
+			bpmConfBase.setProcessDefinitionName(processDefinitionName);
 			bpmConfBaseManager.save(bpmConfBase);
 		}
 

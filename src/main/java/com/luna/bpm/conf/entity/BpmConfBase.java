@@ -26,6 +26,9 @@ public class BpmConfBase extends BaseEntity<Long> {
     @Column(name = "PROCESS_DEFINITION_ID", length = 200)
     private String processDefinitionId;
 
+    @Column(name = "PROCESS_DEFINITION_NAME", length = 200)
+    private String processDefinitionName;
+
     @Column(name = "PROCESS_DEFINITION_KEY", length = 200)
     private String processDefinitionKey;
 
@@ -41,17 +44,26 @@ public class BpmConfBase extends BaseEntity<Long> {
     public BpmConfBase() {
     }
 
-    public BpmConfBase(String processDefinitionId, String processDefinitionKey,
+    public BpmConfBase(String processDefinitionId, String processDefinitionName, String processDefinitionKey,
             Integer processDefinitionVersion, Set<BpmConfNode> bpmConfNodes,
             Set<BpmProcess> bpmProcesses) {
         this.processDefinitionId = processDefinitionId;
         this.processDefinitionKey = processDefinitionKey;
+        this.processDefinitionName = processDefinitionName;
         this.processDefinitionVersion = processDefinitionVersion;
         this.bpmConfNodes = bpmConfNodes;
         this.bpmProcesses = bpmProcesses;
     }
 
-    /** @return null. */
+    public String getProcessDefinitionName() {
+		return processDefinitionName;
+	}
+
+	public void setProcessDefinitionName(String processDefinitionName) {
+		this.processDefinitionName = processDefinitionName;
+	}
+
+	/** @return null. */
     public String getProcessDefinitionId() {
         return this.processDefinitionId;
     }

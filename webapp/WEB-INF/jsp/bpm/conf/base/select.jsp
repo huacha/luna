@@ -11,11 +11,12 @@
           <thead>
             <tr>
 
-                <th sort="id">编号</th>
-                <th sort="processDefinitionId">流程ID</th>
-                <th sort="processDefinitionKey">流程键值</th>
-                <th sort="processDefinitionVersion">流程版本</th>
-                <th style="width: 80px">选择</th>
+                <th style="width: 40px" sort="id">编号</th>
+                <th style="width: 120px" sort="processDefinitionId">流程ID</th>
+                <th style="width: 150px" sort="processDefinitionName">流程名称</th>
+                <th style="width: 70px" sort="processDefinitionKey">流程键值</th>
+                <th style="width: 70px" sort="processDefinitionVersion">流程版本</th>
+                <th style="width: 40px">选择</th>
             </tr>
           </thead>
           <tbody>
@@ -24,6 +25,7 @@
 
                 <td>${m.id}</td>
                 <td class="name">${m.processDefinitionId}</td>
+                <td class="processDefinitionName">${m.processDefinitionName}</td>
                 <td class="key">${m.processDefinitionKey}</td>
                 <td class="version">${m.processDefinitionVersion}</td>
                 <td class="check">

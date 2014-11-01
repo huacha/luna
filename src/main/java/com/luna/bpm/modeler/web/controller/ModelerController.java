@@ -118,6 +118,7 @@ public class ModelerController {
 
         for (ProcessDefinition processDefinition : processDefinitions) {
         	syncProcessCmd.setProcessDefinitionId(processDefinition.getId());
+        	syncProcessCmd.setProcessDefinitionName(modelData.getName());
             processEngine.getManagementService().executeCommand(syncProcessCmd);
         }
         redirectAttributes.addFlashAttribute(Constants.MESSAGE, processName+" 已发布！");
