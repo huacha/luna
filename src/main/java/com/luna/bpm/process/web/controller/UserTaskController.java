@@ -1,19 +1,22 @@
 package com.luna.bpm.process.web.controller;
 
-import javax.validation.Valid;
+import java.util.List;
 
 import org.activiti.engine.TaskService;
+import org.activiti.engine.impl.pvm.PvmActivity;
+import org.activiti.engine.impl.pvm.PvmTransition;
+import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.luna.bpm.conf.entity.BpmConfUser;
+import com.luna.bpm.conf.service.BpmConfUserService;
 import com.luna.bpm.process.service.UserTaskService;
 import com.luna.common.Constants;
 import com.luna.common.entity.enums.BooleanEnum;
@@ -32,7 +35,14 @@ public class UserTaskController {
 
 	@Autowired
 	UserTaskService userTaskService;
+	
+	@Autowired
+	TaskService taskService;
+	
+	@Autowired
+	BpmConfUserService bpmConfUserService;
 
+	
 	public UserTaskController() {
 		setResourceIdentity("bpm:process:task");
 	}
@@ -91,7 +101,7 @@ public class UserTaskController {
 		else if(null != taskStatus && "claimed".equals(taskStatus)) {
 			model.addAttribute(
 					"page",
-					userTaskService.findDelegatedTasks(
+					userTaskService.findAllTasks(
 							user.getUsername(), searchable.getPage()));
 		}
 
@@ -132,9 +142,25 @@ public class UserTaskController {
             RedirectAttributes redirectAttributes) {
 
         try {
-        	
-        	userTaskService.unclaim(taskId);
-			redirectAttributes.addFlashAttribute(Constants.MESSAGE, "释放任务成功！");
+        	boolean confAssigneeFlag = false;
+        	Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+
+            List<BpmConfUser> bpmConfUsers = bpmConfUserService.find(task.getProcessDefinitionId(), task.getTaskDefinitionKey());
+            
+            for (BpmConfUser bpmConfUser : bpmConfUsers) {
+            	if("0".equals(bpmConfUser.getType())){
+            		confAssigneeFlag = true;
+            	}
+            }
+            
+        
+        	if(confAssigneeFlag){
+        		redirectAttributes.addFlashAttribute(Constants.ERROR, "该任务已指定任务负责人，不能释放任务！");
+        	}
+        	else{
+	        	userTaskService.unclaim(taskId);
+				redirectAttributes.addFlashAttribute(Constants.MESSAGE, "释放任务成功！");
+        	}
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute(Constants.ERROR, e.getMessage());
 		}

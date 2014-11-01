@@ -28,7 +28,7 @@ public class UserProcessService {
                 .startedBy(userId).unfinished().count();
 		List<HistoricProcessInstance> historicProcessInstances = historyService
                 .createHistoricProcessInstanceQuery().startedBy(userId)
-                .unfinished()
+                .unfinished().orderByProcessInstanceStartTime().desc()
                 .listPage(
 						(int) pageable.getPageNumber() * pageable.getPageSize(),
 						pageable.getPageSize());
@@ -47,7 +47,7 @@ public class UserProcessService {
                 .startedBy(userId).finished().count();
 		List<HistoricProcessInstance> historicProcessInstances = historyService
                 .createHistoricProcessInstanceQuery().startedBy(userId)
-                .finished()
+                .finished().orderByProcessInstanceEndTime().desc()
                 .listPage(
 						(int) pageable.getPageNumber() * pageable.getPageSize(),
 						pageable.getPageSize());
@@ -65,7 +65,7 @@ public class UserProcessService {
         long total = historyService.createHistoricProcessInstanceQuery()
                 .involvedUser(userId).count();
         List<HistoricProcessInstance> historicProcessInstances = historyService
-                .createHistoricProcessInstanceQuery().involvedUser(userId)
+                .createHistoricProcessInstanceQuery().involvedUser(userId).orderByProcessInstanceStartTime().desc()
                 .listPage(
 						(int) pageable.getPageNumber() * pageable.getPageSize(),
 						pageable.getPageSize());

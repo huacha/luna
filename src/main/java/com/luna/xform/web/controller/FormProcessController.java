@@ -111,13 +111,14 @@ public class FormProcessController {
 		}
 		
 		BpmProcess process = formProcessService.getProcess(processId);
-		String processDefinitionKey = process.getBpmConfBase().getProcessDefinitionKey();
+		String processDefinitionId = process.getBpmConfBase().getProcessDefinitionId();
 		
-		ProcessInstance processInstance = formProcessService.startWorkflow(user,variables,businessKey,processDefinitionKey);
+		ProcessInstance processInstance = formProcessService.startWorkflow(user,variables,businessKey,processDefinitionId);
 		
 		redirectAttributes.addFlashAttribute(Constants.MESSAGE, "流程已启动，流程实例ID：" + processInstance.getId());
 		
-		return "redirect:/xform/process/processInstanceStarted";
+		return "redirect:/bpm/userprocess?processstatus=unfinished";
+		//return "redirect:/xform/process/processInstanceStarted";
 	}
 	
 	@RequestMapping(value = "processInstanceStarted")
@@ -160,7 +161,8 @@ public class FormProcessController {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		String taskName = task.getName();
 		String taskDefinitionKey = task.getTaskDefinitionKey();
-		Long formid = formProcessService.getTaskFormId(taskDefinitionKey);
+		String prcessDefinitionId = task.getProcessDefinitionId();
+		Long formid = formProcessService.getTaskFormId(prcessDefinitionId, taskDefinitionKey);
 		if(formid != null){
 			FormTemplate m = formTemplateService.findOne(formid);
 			model.addAttribute("m", m);

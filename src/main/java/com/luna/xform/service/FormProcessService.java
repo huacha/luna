@@ -23,7 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.luna.bpm.conf.entity.BpmConfOperation;
+import com.luna.bpm.conf.entity.BpmConfUser;
 import com.luna.bpm.conf.repository.BpmConfOperationManager;
+import com.luna.bpm.conf.service.BpmConfUserService;
 import com.luna.bpm.delegate.service.DelegateService;
 import com.luna.bpm.process.cmd.RollbackTaskCmd;
 import com.luna.bpm.process.entity.BpmProcess;
@@ -54,6 +56,9 @@ public class FormProcessService {
     BpmConfOperationManager bpmConfOperationManager;
     @Autowired
     DelegateService delegateService;
+    
+	@Autowired
+	BpmConfUserService bpmConfUserService;
 
     /**
      * 启动流程
@@ -63,14 +68,23 @@ public class FormProcessService {
      * @param businessKey 业务主键
      * @return
      */
-    public ProcessInstance startWorkflow(User user, Map<String, Object> variables, String businessKey, String processDefinitionKey) {
+    public ProcessInstance startWorkflow(User user, Map<String, Object> variables, String businessKey, String processDefinitionId) {
         ProcessInstance processInstance = null;
         try {
             // 用来设置启动流程的人员ID，引擎会自动把用户ID保存到activiti:initiator中
             identityService.setAuthenticatedUserId(user.getUsername());
-            processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, businessKey, variables);
+            processInstance = runtimeService.startProcessInstanceById(processDefinitionId, businessKey, variables);
             String processInstanceId = processInstance.getId();
             logger.info("启动流程 {businessKey={}, processInstanceId={}, variables={}}", new Object[]{businessKey, processInstanceId, variables});
+            
+            
+            Task currTask = taskService.createTaskQuery().processInstanceId(processInstanceId).active().singleResult();
+
+            List<BpmConfUser> bpmConfUsers = bpmConfUserService.find(processDefinitionId, currTask.getTaskDefinitionKey());
+            
+            if(0 == bpmConfUsers.size()){
+                taskService.setAssignee(currTask.getId(), user.getUsername());
+            }
         } finally {
             identityService.setAuthenticatedUserId(null);
         }
@@ -88,8 +102,8 @@ public class FormProcessService {
 		return fid;
 	}
 	
-	public Long getTaskFormId(String taskDefinitionKey) {
-		Long fid = formProcessRepository.getTaskFormId(taskDefinitionKey);
+	public Long getTaskFormId(String prcessDefinitionId, String taskDefinitionKey) {
+		Long fid = formProcessRepository.getTaskFormId(prcessDefinitionId, taskDefinitionKey);
 		return fid;
 	}
 

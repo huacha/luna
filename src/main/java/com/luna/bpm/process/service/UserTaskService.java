@@ -15,12 +15,15 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import com.luna.bpm.conf.entity.BpmConfUser;
+import com.luna.bpm.conf.service.BpmConfUserService;
 import com.luna.bpm.process.cmd.WithdrawTaskCmd;
 
 @Component
 public class UserTaskService {
 	@Autowired
 	private ProcessEngine processEngine;
+	
 	
 	/**
 	 * 所有任务.
@@ -32,7 +35,7 @@ public class UserTaskService {
 				.active().count();
 		List<Task> tasks = taskService
 				.createTaskQuery()
-				.active()
+				.active().orderByTaskCreateTime().desc()
 				.listPage(
 						(int) pageable.getPageNumber() * pageable.getPageSize(),
 						pageable.getPageSize());
@@ -51,7 +54,7 @@ public class UserTaskService {
 		List<Task> tasks = taskService
 				.createTaskQuery()
 				.taskAssignee(userId)
-				.active()
+				.active().orderByTaskCreateTime().desc()
 				.listPage(
 						(int) pageable.getPageNumber() * pageable.getPageSize(),
 						pageable.getPageSize());
@@ -70,7 +73,7 @@ public class UserTaskService {
 		List<Task> tasks = taskService
 				.createTaskQuery()
 				.taskCandidateUser(userId)
-				.active()
+				.active().orderByTaskCreateTime().desc()
 				.listPage(
 						(int) pageable.getPageNumber() * pageable.getPageSize(),
 						pageable.getPageSize());
@@ -90,7 +93,7 @@ public class UserTaskService {
 		List<HistoricTaskInstance> historicTaskInstances = historyService
 				.createHistoricTaskInstanceQuery()
 				.taskAssignee(userId)
-				.finished()
+				.finished().orderByHistoricTaskInstanceEndTime().desc()
 				.listPage(
 						(int) pageable.getPageNumber() * pageable.getPageSize(),
 						pageable.getPageSize());
@@ -111,7 +114,7 @@ public class UserTaskService {
 		List<Task> tasks = taskService
 				.createTaskQuery()
 				.taskOwner(userId)
-				.taskDelegationState(DelegationState.PENDING)
+				.taskDelegationState(DelegationState.PENDING).orderByTaskCreateTime().desc()
 				.listPage(
 						(int) pageable.getPageNumber() * pageable.getPageSize(),
 						pageable.getPageSize());
@@ -125,7 +128,10 @@ public class UserTaskService {
 	 * @param taskId 任务号
 	 */
 	public void claim(String userId, String taskId){
+		
 		TaskService taskService = processEngine.getTaskService();
+		
+
         taskService.claim(taskId, userId);
 	}
 	
