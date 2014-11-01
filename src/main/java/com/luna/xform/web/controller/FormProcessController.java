@@ -55,6 +55,7 @@ public class FormProcessController {
     /**
      * 显示启动流程的表单.
      */
+	@Deprecated
     @RequestMapping("viewStartForm")
     public String viewStartForm(@RequestParam("bpmProcessId") Long bpmProcessId, Model model) throws Exception {
     	Long formid = formProcessService.getStartFormId(bpmProcessId);
@@ -82,50 +83,51 @@ public class FormProcessController {
 	@RequestMapping(value = "start")
 	public String start(@CurrentUser User user,
 			Model model, 
-			@RequestParam(value = "formid", required = false) Long formid,
+//			@RequestParam(value = "formid", required = false) Long formid,
 			@RequestParam("processId") Long processId,
 			HttpServletRequest request,
 			RedirectAttributes redirectAttributes) throws Exception {
 		String businessKey = "";
 		Map<String,Object> variables = new HashMap<String, Object>();
-		List<ProcessVariable> ls = new ArrayList<ProcessVariable>();
-		if(formid != null){
-			List<FieldModel> fields = formTemplateService.getFields(formid);
-			Map<String,Object> map = new HashMap<String, Object>();
-			for (FieldModel fieldModel : fields) {
-				String key = fieldModel.getName();
-				String title = fieldModel.getTitle();
-				String val = request.getParameter(key);
-				map.put(key, val);
-				ProcessVariable pv = new ProcessVariable();
-				pv.setCode(key);
-				pv.setTitle(title);
-				pv.setValue(val);
-				ls.add(pv);
-				variables.put(key, val);
-			}
-			variables.put("开始", ls);
-			String insertSql = formTemplateService.getInsertSql(formid);
-			long id = dataService.saveAndGetID(insertSql, map);
-			businessKey = String.valueOf(id);
-		}
+//		List<ProcessVariable> ls = new ArrayList<ProcessVariable>();
+//		if(formid != null){
+//			List<FieldModel> fields = formTemplateService.getFields(formid);
+//			Map<String,Object> map = new HashMap<String, Object>();
+//			for (FieldModel fieldModel : fields) {
+//				String key = fieldModel.getName();
+//				String title = fieldModel.getTitle();
+//				String val = request.getParameter(key);
+//				map.put(key, val);
+//				ProcessVariable pv = new ProcessVariable();
+//				pv.setCode(key);
+//				pv.setTitle(title);
+//				pv.setValue(val);
+//				ls.add(pv);
+//				variables.put(key, val);
+//			}
+//			variables.put("开始", ls);
+//			String insertSql = formTemplateService.getInsertSql(formid);
+//			long id = dataService.saveAndGetID(insertSql, map);
+//			businessKey = String.valueOf(id);
+//		}
 		
 		BpmProcess process = formProcessService.getProcess(processId);
 		String processDefinitionId = process.getBpmConfBase().getProcessDefinitionId();
 		
 		ProcessInstance processInstance = formProcessService.startWorkflow(user,variables,businessKey,processDefinitionId);
+		Task firstActiveTask = formProcessService.getFirstActiveTask(processInstance);
+		formProcessService.setFirstTaskAssignee(user, processDefinitionId, firstActiveTask);
+		Long taskFormId = formProcessService.getTaskFormId(processDefinitionId, firstActiveTask.getTaskDefinitionKey());
+		//如果第一个任务的处理人是发起人自己，且配有表单，则直接导航到viewTaskForm
+		if (firstActiveTask.getAssignee().equals(user.getUsername()) && taskFormId != null) {
+			return "redirect:/xform/process/viewTaskForm?taskId="+firstActiveTask.getId();
+		}
 		
 		redirectAttributes.addFlashAttribute(Constants.MESSAGE, "流程已启动，流程实例ID：" + processInstance.getId());
 		
 		return "redirect:/bpm/userprocess?processstatus=unfinished";
-		//return "redirect:/xform/process/processInstanceStarted";
 	}
-	
-	@RequestMapping(value = "processInstanceStarted")
-	public String processInstanceStarted() {
-		return "xform/process/success";
-	}
-    
+	    
 	/**
 	 * 显示任务表单
 	 * 
@@ -140,7 +142,7 @@ public class FormProcessController {
 	@RequestMapping("viewTaskForm")
 	public String viewTaskForm(Model model, 
 			@CurrentUser User user,
-			@RequestParam("taskstatus") String taskstatus,
+			@RequestParam(value="taskstatus",required=false) String taskstatus,
 			@RequestParam("taskId") String taskId) throws IOException {
 		
 		Map<String, Object> variables = taskService.getVariables(taskId);

@@ -77,19 +77,25 @@ public class FormProcessService {
             String processInstanceId = processInstance.getId();
             logger.info("启动流程 {businessKey={}, processInstanceId={}, variables={}}", new Object[]{businessKey, processInstanceId, variables});
             
-            
-            Task currTask = taskService.createTaskQuery().processInstanceId(processInstanceId).active().singleResult();
-
-            List<BpmConfUser> bpmConfUsers = bpmConfUserService.find(processDefinitionId, currTask.getTaskDefinitionKey());
-            
-            if(0 == bpmConfUsers.size()){
-                taskService.setAssignee(currTask.getId(), user.getUsername());
-            }
         } finally {
             identityService.setAuthenticatedUserId(null);
         }
         return processInstance;
     }
+    
+    public Task getFirstActiveTask(ProcessInstance processInstance) {
+    	Task currTask = taskService.createTaskQuery().processInstanceId(processInstance.getId()).active().singleResult();
+    	return currTask;
+	}
+    
+    public boolean setFirstTaskAssignee(User user,String processDefinitionId,Task task) {
+    	List<BpmConfUser> bpmConfUsers = bpmConfUserService.find(processDefinitionId, task.getTaskDefinitionKey());
+        if(0 == bpmConfUsers.size()){
+            taskService.setAssignee(task.getId(), user.getUsername());
+            return true;
+        }
+        return false;
+	}
 	
     /**
      * 通过流程id找到表单id
@@ -102,6 +108,13 @@ public class FormProcessService {
 		return fid;
 	}
 	
+	/**
+	 * 找到任务节点对应的表单
+	 * 
+	 * @param prcessDefinitionId
+	 * @param taskDefinitionKey
+	 * @return
+	 */
 	public Long getTaskFormId(String prcessDefinitionId, String taskDefinitionKey) {
 		Long fid = formProcessRepository.getTaskFormId(prcessDefinitionId, taskDefinitionKey);
 		return fid;
@@ -111,10 +124,6 @@ public class FormProcessService {
 		return bpmProcessManager.findOne(processId);
 	}
 	
-	public Task getTask(String taskId) {
-		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-		return task;
-	}
 	
 	/**
 	 * 获取流程处理按钮
