@@ -142,6 +142,11 @@ public class FormTemplateService extends BaseService<FormTemplate, Long> {
 		}
 		return list;
 	}
+	
+	public FormTemplate getFormTemplate(Long formid) {
+		FormTemplate template = this.getFormTemplateRepository().findOne(formid);
+		return template;
+	}
 
 	public String getInsertSql(Long formid) throws Exception {
 		FormTemplate template = this.getFormTemplateRepository().findOne(formid);

@@ -2,7 +2,6 @@ package com.luna.xform.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.ManagementService;
@@ -56,7 +55,6 @@ public class FormProcessService {
     BpmConfOperationManager bpmConfOperationManager;
     @Autowired
     DelegateService delegateService;
-    
 	@Autowired
 	BpmConfUserService bpmConfUserService;
 
@@ -68,15 +66,14 @@ public class FormProcessService {
      * @param businessKey 业务主键
      * @return
      */
-    public ProcessInstance startWorkflow(User user, Map<String, Object> variables, String businessKey, String processDefinitionId) {
+    public ProcessInstance startWorkflow(User user, String processDefinitionId) {
         ProcessInstance processInstance = null;
         try {
-            // 用来设置启动流程的人员ID，引擎会自动把用户ID保存到activiti:initiator中
+            //设置启动流程的人员ID，引擎会自动把用户ID保存到activiti:initiator中
             identityService.setAuthenticatedUserId(user.getUsername());
-            processInstance = runtimeService.startProcessInstanceById(processDefinitionId, businessKey, variables);
+            processInstance = runtimeService.startProcessInstanceById(processDefinitionId);
             String processInstanceId = processInstance.getId();
-            logger.info("启动流程 {businessKey={}, processInstanceId={}, variables={}}", new Object[]{businessKey, processInstanceId, variables});
-            
+            logger.info("启动流程 processInstanceId={}", processInstanceId);
         } finally {
             identityService.setAuthenticatedUserId(null);
         }
@@ -96,17 +93,6 @@ public class FormProcessService {
             return true;
         }
         return false;
-	}
-	
-    /**
-     * 通过流程id找到表单id
-     * 
-     * @param processId
-     * @return
-     */
-	public Long getStartFormId(Long processId) {
-		Long fid = formProcessRepository.getStartFormId(processId);
-		return fid;
 	}
 	
 	/**
@@ -230,13 +216,4 @@ public class FormProcessService {
 		delegateService.saveRecord(assignee, attorney, taskId);
 	}
     
-    /**
-     * 协办
-     * 
-     * @param taskId
-     * @param attorney
-     */
-    public void doDelegateHelp(String taskId, String attorney) {
-    	
-    }
 }
