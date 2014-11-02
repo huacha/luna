@@ -15,8 +15,10 @@ import org.springframework.stereotype.Component;
 import com.luna.bpm.conf.entity.BpmConfNotice;
 import com.luna.bpm.conf.repository.BpmConfNoticeManager;
 import com.luna.bpm.process.entity.BpmMailTemplate;
+import com.luna.maintain.notification.entity.NotificationSystem;
+import com.luna.maintain.notification.service.NotificationApi;
 import com.luna.sys.user.entity.User;
-import com.luna.sys.user.repository.UserRepository;
+import com.luna.sys.user.service.UserService;
 
 @Component
 public class NoticeWorker {
@@ -29,7 +31,10 @@ public class NoticeWorker {
 	private BpmConfNoticeManager bpmConfNoticeManager;
 	
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
+	
+	@Autowired
+	private NotificationApi notificationApi;
 
 	public void process(DelegateTask delegateTask, int arrivalType) {
 		String taskDefinitionKey = delegateTask.getTaskDefinitionKey();
@@ -49,10 +54,8 @@ public class NoticeWorker {
 		TaskEntity taskEntity = new TaskEntity();
 		taskEntity.setId(delegateTask.getId());
 		taskEntity.setName(delegateTask.getName());
-		taskEntity.setAssigneeWithoutCascade(userRepository.findOne(
-				Long.parseLong(delegateTask.getAssignee())).getUsername());
-		taskEntity.setVariableLocal("initiator",
-				getInitiator(userRepository, delegateTask));
+		taskEntity.setAssigneeWithoutCascade(delegateTask.getAssignee());
+		taskEntity.setVariableLocal("initiator",delegateTask.getVariables().get("initiator"));
 		logger.debug("initiator : {}", delegateTask.getVariable("initator"));
 		logger.debug("variables : {}", delegateTask.getVariables());
 
@@ -68,20 +71,25 @@ public class NoticeWorker {
 		String content = expressionManager
 				.createExpression(bpmMailTemplate.getContent())
 				.getValue(taskEntity).toString();
-
-		if ("任务接收人".equals(receiver)) {
-			user = userRepository.findOne(Long.parseLong(delegateTask.getAssignee()));
-		} else if ("流程发起人".equals(receiver)) {
-			user = userRepository.findOne(Long.parseLong((String) delegateTask
-					.getVariables().get("initiator")));
-		} else {
+		//String dealLink="<a href=\"{ctx}/xform/process/viewTaskForm?taskId="+delegateTask.getId()+"&taskstatus=prepare\">点击处理</a>";
+		//content=content+dealLink;
+		
+		if ("assignee".equals(receiver)) {
+			//用户接收人
+			user = userService.findByUsername(delegateTask.getAssignee());
+		} 
+		else if ("initiator".equals(receiver)) {
+			//发起人
+			user = userService.findByUsername((String)delegateTask
+					.getVariables().get("initiator"));
+		} 
+		else {
 			HistoricProcessInstanceEntity historicProcessInstanceEntity = Context
 					.getCommandContext()
 					.getHistoricProcessInstanceEntityManager()
 					.findHistoricProcessInstance(
 							delegateTask.getProcessInstanceId());
-			user = userRepository.findOne(Long.parseLong(historicProcessInstanceEntity
-					.getStartUserId()));
+			user = userService.findByUsername(historicProcessInstanceEntity.getStartUserId());
 		}
 
 		this.sendMail(user, subject, content);
@@ -96,15 +104,6 @@ public class NoticeWorker {
 	}
 
 	public void sendSiteMessage(User user, String subject, String content) {
-		//TODO yanyong
-//		MsgConnector msgConnector = ApplicationContextHelper
-//				.getBean(MsgConnector.class);
-//		msgConnector.send(subject, content, String.valueOf(user.getId()), null);
-	}
-
-	public String getInitiator(UserRepository userRepository,DelegateTask delegateTask) {
-		return userRepository.findOne(
-				Long.parseLong((String) delegateTask.getVariables().get("initiator")))
-				.getUsername();
+		notificationApi.notify(user.getId(), NotificationSystem.system, subject, content);
 	}
 }

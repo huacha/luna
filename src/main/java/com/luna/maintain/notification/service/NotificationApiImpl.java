@@ -23,6 +23,7 @@ import com.luna.common.entity.search.SearchOperator;
 import com.luna.common.entity.search.Searchable;
 import com.luna.common.utils.PrettyTimeUtils;
 import com.luna.maintain.notification.entity.NotificationData;
+import com.luna.maintain.notification.entity.NotificationSystem;
 import com.luna.maintain.notification.entity.NotificationTemplate;
 import com.luna.maintain.notification.exception.TemplateNotFoundException;
 import com.luna.maintain.push.service.PushApi;
@@ -74,6 +75,36 @@ public class NotificationApiImpl implements NotificationApi {
                 content = content.replace("{" + key + "}", String.valueOf(context.get(key)));
             }
         }
+
+        data.setTitle(title);
+        data.setContent(content);
+
+        try {
+			notificationDataService.save(data);
+		} catch (Exception e) {
+			log.error("",e);
+		}
+
+        pushApi.pushNewNotification(userId, topFiveNotification(userId));
+
+    }
+    
+
+    /**
+     * 异步发送
+     * @param userId 接收人用户编号
+     * @param system 系统名称
+     * @param title  标题
+     * @param content 消息内容
+     */
+    @Async
+    @Override
+    public void notify(final Long userId, NotificationSystem system, String title, String content) {
+        NotificationData data = new NotificationData();
+
+        data.setUserId(userId);
+        data.setSystem(system);
+        data.setDate(new Date());
 
         data.setTitle(title);
         data.setContent(content);

@@ -45,10 +45,12 @@ public class BpmConfNoticeController   extends BaseCRUDController<BpmConfNotice,
 	BpmMailTemplateService bpmMainTemplateService;
 	
 	private static final String bpmConfNoticeTimeType = "BPM_NOTICETIME_TYPE";
+	private static final String bpmConfNoticeReciverType = "消息接收者";
 	
     @Override
     protected void setCommonData(Model model) {
         model.addAttribute("bpmconfnoticetimetype", extKeyValueService.findByExtKeyValueCategoryName(bpmConfNoticeTimeType));
+        model.addAttribute("bpmConfNoticeReciverType", extKeyValueService.findByExtKeyValueCategoryName(bpmConfNoticeReciverType));
         model.addAttribute("mailtemplate", bpmMainTemplateService.findAll());
     }
 

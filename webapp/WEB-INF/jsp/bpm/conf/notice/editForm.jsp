@@ -53,7 +53,10 @@
             <div class="control-group">
                 <form:label path="receiver" cssClass="control-label">接收人</form:label>
                 <div class="controls">
-                    <form:input path="receiver" cssClass="validate[required]" placeholder="请输入接收人"/>
+                	<form:select path="receiver"  cssClass="validate[required]" placeholder="请选择接收人类型" >
+                    	<form:options items="${bpmConfNoticeReciverType}" itemValue="name" itemLabel="value"/>  
+                    </form:select>
+                	
                 </div>
             </div>
             

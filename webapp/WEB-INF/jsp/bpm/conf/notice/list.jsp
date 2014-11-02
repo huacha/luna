@@ -90,7 +90,13 @@
 								  </c:if>  
 							    </c:forEach>
 							    </td>
-								<td>${m.receiver}</td>
+							    <td>
+								<c:forEach items="${bpmConfNoticeReciverType}" var="item">
+								  <c:if test="${item.name eq m.receiver}">
+								    ${item.value}
+								  </c:if>  
+							    </c:forEach>
+							    </td>
 								<td>${m.dueDate}</td>
 								<td>${m.bpmMailTemplate.name}</td>
 							    <td></td>

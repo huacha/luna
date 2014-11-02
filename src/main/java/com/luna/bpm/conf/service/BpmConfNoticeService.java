@@ -5,8 +5,11 @@
  */
 package com.luna.bpm.conf.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
+import com.luna.bpm.conf.entity.BpmConfNode;
 import com.luna.bpm.conf.entity.BpmConfNotice;
 import com.luna.bpm.conf.repository.BpmConfNoticeManager;
 import com.luna.common.service.BaseService;
@@ -22,4 +25,12 @@ public class BpmConfNoticeService extends BaseService<BpmConfNotice, Long> {
     private BpmConfNoticeManager getBpmConfNoticeRepository() {
         return (BpmConfNoticeManager) baseRepository;
     }
+    
+    public List<BpmConfNotice> find(String processDefinitionId,String taskDefinitionKey){
+    	return this.getBpmConfNoticeRepository().find(processDefinitionId, taskDefinitionKey);
+    }
+	
+	public List<BpmConfNotice> findByBpmConfNode(BpmConfNode bpmConfNode){
+		return this.getBpmConfNoticeRepository().findByBpmConfNode(bpmConfNode);
+	}
 }
