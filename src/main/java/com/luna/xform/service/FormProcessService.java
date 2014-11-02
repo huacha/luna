@@ -92,6 +92,7 @@ public class FormProcessService {
     	List<BpmConfUser> bpmConfUsers = bpmConfUserService.find(processDefinitionId, task.getTaskDefinitionKey());
         if(0 == bpmConfUsers.size()){
             taskService.setAssignee(task.getId(), user.getUsername());
+            task.setAssignee(user.getUsername());
             return true;
         }
         return false;

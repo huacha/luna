@@ -202,11 +202,16 @@ public class UserTaskController {
 
 			List<BpmConfUser> bpmConfUsers = bpmConfUserService.find(
 					task.getProcessDefinitionId(), task.getTaskDefinitionKey());
-
-			for (BpmConfUser bpmConfUser : bpmConfUsers) {
-				if (0 == bpmConfUser.getType().intValue()) {
-					confAssigneeFlag = true;
-					break;
+			
+			if(null == bpmConfUsers || 0 == bpmConfUsers.size()){
+				confAssigneeFlag = true;
+			}
+			else{
+				for (BpmConfUser bpmConfUser : bpmConfUsers) {
+					if (0 == bpmConfUser.getType().intValue()) {
+						confAssigneeFlag = true;
+						break;
+					}
 				}
 			}
 
