@@ -60,6 +60,33 @@ for (var i = 0; i < buttons.length; i++) {
 var xform;
 
 $(function() {
+	
+	function openDelegateForm(title, viewurl, posturl, backurl) {
+        
+        $.app.modalDialog(title, viewurl, {
+            width:600,
+            height:300,
+            ok : function(modal) {
+            	
+				
+                var form = modal.find("#editForm");
+                if(!form.validationEngine('validate')) {
+                    return false;
+                }
+                form.submit();
+				/*
+                $.post(posturl, form.serialize(), function(){
+                	//return false;
+                }
+                
+                );
+				*/
+
+                return true;
+            }
+        });
+    }
+    
 	$('#xf-form-button').html(html);
 	
 	xform = new xf.Xform('xf-form-table');
@@ -94,12 +121,14 @@ $(function() {
 				$('#xf-form').submit();
 				break;
 			case '转办':
-				$('#modal form').attr('action', '${ctx}/xform/process/doDelegate');
-				$('#modal').modal();
+		        var viewurl = "${ctx}/xform/process/doDelegate?taskId=${taskId}";
+                var posturl = "${ctx}/xform/process/doDelegate";
+				openDelegateForm("转办", viewurl, posturl);
 				break;
 			case '协办':
-				$('#modal form').attr('action', '${ctx}/xform/process/doDelegateHelp');
-				$('#modal').modal();
+		        var viewurl = "${ctx}/xform/process/doDelegateHelp?taskId=${taskId}";
+                var posturl = "${ctx}/xform/process/doDelegateHelp";
+				openDelegateForm("协办", viewurl, posturl);
 				break;
 		}
 	});
@@ -133,6 +162,5 @@ $(function() {
 			$('#nextStep').append(data[i]);
 		}
 	});
-	  
 });
 </script>

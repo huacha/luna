@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -266,15 +267,45 @@ public class FormProcessController {
 	}
 	
 	/**
+	 * 转办请求.
+	 */
+	@RequestMapping(value="doDelegate", method = RequestMethod.GET)
+	public String doDelegateView(@RequestParam("taskId") String taskId,
+			@CurrentUser User user,
+			org.springframework.ui.Model model) {
+		model.addAttribute("taskId", taskId);
+		model.addAttribute("m", new User());
+		
+		//formProcessService.doDelegate(taskId, attorney, user);
+
+		return "xform/process/delegateForm";
+	}
+	
+	/**
 	 * 转办.
 	 */
-	@RequestMapping("doDelegate")
+	@RequestMapping(value="doDelegate", method = RequestMethod.POST)
 	public String doDelegate(@RequestParam("taskId") String taskId,
-			@RequestParam("attorney") String attorney, @CurrentUser User user) {
+			@RequestParam("username") String attorney, @CurrentUser User user) {
 		
 		formProcessService.doDelegate(taskId, attorney, user);
 
-		return "redirect:/xform/process/taskHasCompleted";
+		return "redirect:/bpm/usertask?taskstatus=prepare";
+	}
+	
+	/**
+	 * 协办请求.
+	 */
+	@RequestMapping(value="doDelegateHelp", method = RequestMethod.GET)
+	public String doDelegateHelpView(@RequestParam("taskId") String taskId,
+			@CurrentUser User user,
+			org.springframework.ui.Model model) {
+		model.addAttribute("taskId", taskId);
+		model.addAttribute("m", new User());
+		
+		//formProcessService.doDelegate(taskId, attorney, user);
+
+		return "xform/process/delegateForm";
 	}
 
 	/**
@@ -282,10 +313,10 @@ public class FormProcessController {
 	 */
 	@RequestMapping("doDelegateHelp")
 	public String doDelegateHelp(@RequestParam("taskId") String taskId,
-			@RequestParam("attorney") String attorney) {
+			@RequestParam("username") String attorney) {
 		taskService.delegateTask(taskId, attorney);
 
-		return "redirect:/xform/process/taskHasCompleted";
+		return "redirect:/bpm/usertask?taskstatus=prepare";
 	}
 
     /**
