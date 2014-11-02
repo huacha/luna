@@ -15,14 +15,19 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import com.luna.bpm.conf.entity.BpmConfUser;
-import com.luna.bpm.conf.service.BpmConfUserService;
+import com.luna.bpm.conf.service.BpmConfBaseService;
 import com.luna.bpm.process.cmd.WithdrawTaskCmd;
 
 @Component
 public class UserTaskService {
 	@Autowired
 	private ProcessEngine processEngine;
+	
+
+	@Autowired
+	private BpmConfBaseService bpmConfBaseService;
+	@Autowired
+	private BpmProcessService bpmProcessService;
 	
 	
 	/**

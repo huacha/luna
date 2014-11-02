@@ -9,7 +9,7 @@
 				| <a class="reverse-all" href="javascript:;">反选</a>
 			</th>
 			<th style="width: 80px" >编号</th>
-			<th style="width: 150px" >流程定义</th>
+			<th style="width: 150px" >流程名称</th>
 			<th style="width: 150px" >创建时间</th>
 			<th style="width: 150px" >结束时间</th>
 			<th style="width: 120px" >发起人</th>
@@ -24,7 +24,13 @@
 			<tr>
 				<td class="check"><input type="checkbox" name="ids"	value="${m.id}"></td>
 				<td>${m.id}</td>
-				<td>${m.processDefinitionId}</td>
+				<td><!-- ${bpmProcessMap['${m.processDefinitionId}'].name} -->
+				<c:forEach items="${bpmProcessMap}" var="map">
+				  <c:if test="${map.key eq m.processDefinitionId}">
+				    ${map.value.name}
+				  </c:if>  
+			    </c:forEach>
+				</td>
 				
 				<td><fmt:formatDate value="${m.startTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 				<td><fmt:formatDate value="${m.endTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>

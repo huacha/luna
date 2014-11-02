@@ -1,8 +1,13 @@
 package com.luna.bpm.process.web.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -12,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.luna.bpm.delegate.entity.DelegateInfo;
+import com.luna.bpm.conf.service.BpmConfBaseService;
+import com.luna.bpm.process.entity.BpmProcess;
+import com.luna.bpm.process.service.BpmProcessService;
 import com.luna.bpm.process.service.UserProcessService;
 import com.luna.common.Constants;
 import com.luna.common.entity.enums.BooleanEnum;
@@ -32,6 +39,10 @@ public class UserProcessController {
 
 	@Autowired
 	UserProcessService userProcessService;
+	@Autowired
+	private BpmConfBaseService bpmConfBaseService;
+	@Autowired
+	private BpmProcessService bpmProcessService;
 
 	public UserProcessController() {
 		setResourceIdentity("bpm:usertask:userprocess");
@@ -71,23 +82,53 @@ public class UserProcessController {
 //		}
 
 		if (null != processStatus && "involve".equals(processStatus)) {
-			model.addAttribute(
-					"page",
-					userProcessService.findInvolvedProcessInstances(
-							user.getUsername(), searchable.getPage()));
-			
+
+			Page<HistoricProcessInstance> processInstances = userProcessService.findInvolvedProcessInstances(
+					user.getUsername(), searchable.getPage());
+			Map<String, BpmProcess> processMap = new HashMap<String, BpmProcess>();
+			for (HistoricProcessInstance processInstance : processInstances) {
+				String processDefinitionId  = processInstance.getProcessDefinitionId();
+				BpmProcess bpmProcess = bpmProcessService
+						.findByBpmConfBase(bpmConfBaseService
+								.findByProcessDefinitionId(processDefinitionId));
+				if(!processMap.containsKey(processDefinitionId)){
+					processMap.put(processDefinitionId, bpmProcess);
+				}
+			}
+			model.addAttribute("bpmProcessMap", processMap);
+			model.addAttribute("page", processInstances);
 		}
 		else if(null != processStatus && "unfinished".equals(processStatus)) {
-			model.addAttribute(
-					"page",
-					userProcessService.findRunningProcessInstances(
-							user.getUsername(), searchable.getPage()));
+			Page<HistoricProcessInstance> processInstances = userProcessService.findRunningProcessInstances(
+					user.getUsername(), searchable.getPage());
+			Map<String, BpmProcess> processMap = new HashMap<String, BpmProcess>();
+			for (HistoricProcessInstance processInstance : processInstances) {
+				String processDefinitionId  = processInstance.getProcessDefinitionId();
+				BpmProcess bpmProcess = bpmProcessService
+						.findByBpmConfBase(bpmConfBaseService
+								.findByProcessDefinitionId(processDefinitionId));
+				if(!processMap.containsKey(processDefinitionId)){
+					processMap.put(processDefinitionId, bpmProcess);
+				}
+			}
+			model.addAttribute("bpmProcessMap", processMap);
+			model.addAttribute("page", processInstances);
 		}
 		else if(null != processStatus && "finished".equals(processStatus)) {
-			model.addAttribute(
-					"page",
-					userProcessService.findCompletedProcessInstances(
-							user.getUsername(), searchable.getPage()));
+			Page<HistoricProcessInstance> processInstances = userProcessService.findCompletedProcessInstances(
+					user.getUsername(), searchable.getPage());
+			Map<String, BpmProcess> processMap = new HashMap<String, BpmProcess>();
+			for (HistoricProcessInstance processInstance : processInstances) {
+				String processDefinitionId  = processInstance.getProcessDefinitionId();
+				BpmProcess bpmProcess = bpmProcessService
+						.findByBpmConfBase(bpmConfBaseService
+								.findByProcessDefinitionId(processDefinitionId));
+				if(!processMap.containsKey(processDefinitionId)){
+					processMap.put(processDefinitionId, bpmProcess);
+				}
+			}
+			model.addAttribute("bpmProcessMap", processMap);
+			model.addAttribute("page", processInstances);
 		}
 		if (listAlsoSetCommonData) {
 			setCommonData(model);

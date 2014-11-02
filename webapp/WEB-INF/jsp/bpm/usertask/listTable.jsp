@@ -8,25 +8,25 @@
 			    <a class="check-all" href="javascript:;">全选</a>
 				| <a class="reverse-all" href="javascript:;">反选</a>
 			</th>
-			<th style="width: 80px" >编号</th>
-			<th style="width: 150px" >名称</th>
-			<th style="width: 150px" >流程定义</th>
+			<th style="width: 80px" >任务编号</th>
+			<th style="width: 150px" >流程名称</th>
+			<th style="width: 150px" >任务名称</th>
 			
 			<c:if test="${param['taskstatus'] ne 'finished'}">
 				<th style="width: 150px" >创建时间</th>
-				<th style="width: 120px" >负责人</th>
-				<th style="width: 80px" >状态</th>
+				<th style="width: 60px" >负责人</th>
+				<th style="width: 40px" >状态</th>
 			</c:if>
 			
 			
 			<c:if test="${param['taskstatus'] eq 'finished'}">
 				<th style="width: 150px" >开始时间</th>
 				<th style="width: 150px" >结束时间</th>
-				<th style="width: 120px" >负责人</th>
-				<th style="width: 80px" >处理结果</th>
+				<th style="width: 60px" >负责人</th>
+				<th style="width: 60px" >处理结果</th>
 			</c:if>
 			
-			<th style="width: 120px">操作</th>
+			<th style="width: 130px">操作</th>
 			<th></th>
 			
 		</tr>
@@ -37,9 +37,14 @@
 			<tr>
 				<td class="check"><input type="checkbox" name="ids"	value="${m.id}"></td>
 				<td>${m.id}</td>
+				<td><!-- ${bpmProcessMap['${m.processDefinitionId}'].name} -->
+				<c:forEach items="${bpmProcessMap}" var="map">
+				  <c:if test="${map.key eq m.processDefinitionId}">
+				    ${map.value.name}
+				  </c:if>  
+			    </c:forEach>
+				</td>
 				<td>${m.name}</td>
-				<td>${m.processDefinitionId}</td>
-				
 				<c:if test="${param['taskstatus'] ne 'finished'}">
 					<td><fmt:formatDate value="${m.createTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 					<td>${m.assignee}</td>
