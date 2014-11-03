@@ -2,10 +2,10 @@ package com.luna.xform.web.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -34,6 +34,8 @@ import com.luna.sys.user.entity.User;
 import com.luna.sys.user.web.bind.annotation.CurrentUser;
 import com.luna.xform.entity.FormTemplate;
 import com.luna.xform.model.FieldModel;
+import com.luna.xform.model.TaskData;
+import com.luna.xform.model.TaskDataModel;
 import com.luna.xform.service.DataService;
 import com.luna.xform.service.FormProcessService;
 import com.luna.xform.service.FormTemplateService;
@@ -53,7 +55,6 @@ public class FormProcessController {
 	private TaskService taskService;
 	@Autowired
 	private HistoryService historyService;
-
 
 	/**
 	 * 启动流程
@@ -91,7 +92,7 @@ public class FormProcessController {
 				process.getName() + " 流程已启动，流程实例ID：" + processInstance.getId());
 		return "redirect:/bpm/userprocess?processstatus=unfinished";
 	}
-
+	
 	/**
 	 * 显示任务表单
 	 * 
@@ -112,10 +113,10 @@ public class FormProcessController {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		String taskName = task.getName();
 		String taskDefinitionKey = task.getTaskDefinitionKey();
-		String prcessDefinitionId = task.getProcessDefinitionId();
+		String processDefinitionId = task.getProcessDefinitionId();
 		String processInstanceId = task.getProcessInstanceId();
-		
-		Long formid = formProcessService.getTaskFormId(prcessDefinitionId,
+		String processName = formProcessService.getProcessName(processDefinitionId);
+		Long formid = formProcessService.getTaskFormId(processDefinitionId,
 				taskDefinitionKey);
 		if (formid != null) {
 			FormTemplate m = formTemplateService.findOne(formid);
@@ -124,7 +125,6 @@ public class FormProcessController {
 			logger.debug("找到表单: {}", formid);
 		}
 
-		String processDefinitionId = task.getProcessDefinitionId();
 		String activityId = task.getTaskDefinitionKey();
 		List<String> buttons = formProcessService.getButtons(processDefinitionId, taskDefinitionKey);
 		
@@ -132,55 +132,35 @@ public class FormProcessController {
 		model.addAttribute("taskId", taskId);
 		model.addAttribute("taskName", taskName);
 		model.addAttribute("processDefinitionId", processDefinitionId);
+		model.addAttribute("processName", processName);
 		model.addAttribute("activityId", activityId);
 
 		List<HistoricTaskInstance> list = historyService
 				.createHistoricTaskInstanceQuery().finished()
 				.processInstanceId(processInstanceId)
 				.orderByHistoricTaskInstanceEndTime().asc().list();
-		StringBuilder html = new StringBuilder();
+		
+		List<TaskDataModel> ls = new ArrayList<TaskDataModel>();
 		for (HistoricTaskInstance his : list) {
 			String name = his.getName();
+			String assignee = his.getAssignee();
+			Date endTime = his.getEndTime();
+			
 			Map<String, Object> taskBussinessData = dataService.findTaskBussinessData(his.getId());
-			Map<String, String> transData = dataService.translateTaskBussinessData(processDefinitionId, taskDefinitionKey, taskBussinessData);
-			html.append(this.orgTaskData(name,transData));
+			List<TaskData> transData = dataService.translateTaskBussinessData(processDefinitionId, his.getTaskDefinitionKey(), taskBussinessData);
+			
+			TaskDataModel taskDataModel = new TaskDataModel();
+			taskDataModel.setTaskName(name);
+			taskDataModel.setDatas(transData);
+			taskDataModel.setAssignee(assignee);
+			taskDataModel.setEndTime(endTime);
+			
+			ls.add(taskDataModel);
 		}
 		
-		String data = html.toString();
-		model.addAttribute("data", data);
+		model.addAttribute("datas", ls);
 
 		return "xform/process/viewTaskForm";
-	}
-
-	/**
-	 * 组织表单数据
-	 * 
-	 * @param key
-	 * @param value
-	 * @return
-	 */
-	private String orgTaskData(String taskName,Map<String, String> taskBussinessData) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("<fieldset>");
-		sb.append("<legend>").append(taskName).append("</legend>");
-
-		if (taskBussinessData != null) {
-			Set<String> keySet = taskBussinessData.keySet();
-			for (String key : keySet) {
-				String title = key;
-				String value = taskBussinessData.get(key);
-				sb.append("<div class=\"control-group\">");
-				sb.append("<label class=\"control-label\">");
-				sb.append(title);
-				sb.append("</label>");
-				sb.append("<div class=\"controls\">");
-				sb.append("<input type=\"text\" value=\"").append(value).append("\" readonly=\"true\">");
-				sb.append("</div>");
-				sb.append("</div>");
-			}
-		}
-		sb.append("</fieldset>");
-		return sb.toString();
 	}
 
 	/**
@@ -219,7 +199,7 @@ public class FormProcessController {
 		}
 		taskService.setVariablesLocal(taskId, taskVariables);
 		taskService.complete(taskId);
-		redirectAttributes.addFlashAttribute(Constants.MESSAGE, "任务已处理，任务名称：" + taskName);
+		redirectAttributes.addFlashAttribute(Constants.MESSAGE, taskName+" 已处理");
 		return "redirect:/bpm/usertask?taskstatus=prepare";
 	}
 
@@ -262,8 +242,7 @@ public class FormProcessController {
 		Integer rollbackTask = formProcessService.rollbackTask(taskId);
 		logger.debug(rollbackTask.toString());
 
-		redirectAttributes.addFlashAttribute(Constants.MESSAGE, "任务已回退，任务名称："
-				+ taskName);
+		redirectAttributes.addFlashAttribute(Constants.MESSAGE, taskName+" 已回退");
 		return "redirect:/bpm/userprocess?processstatus=unfinished";
 	}
 	

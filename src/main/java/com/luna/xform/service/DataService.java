@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.luna.common.repository.Pagination;
 import com.luna.xform.model.FieldModel;
+import com.luna.xform.model.TaskData;
 import com.luna.xform.repository.FormProcessRepository;
 
 @Service
@@ -88,7 +89,7 @@ public class DataService {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, String> translateTaskBussinessData(
+	public List<TaskData> translateTaskBussinessData(
 			String processDefinitionId, String taskDefinitionKey,
 			Map<String, Object> taskBussinessData) throws Exception {
 		Long formId = formProcessRepository.getTaskFormId(processDefinitionId,
@@ -96,18 +97,21 @@ public class DataService {
 		if (formId == null) {
 			return null;
 		}
-		Map<String, String> map = new HashMap<String, String>();
+		List<TaskData> ls = new ArrayList<TaskData>();
 		List<FieldModel> fields = formTemplateService.getFields(formId);
 		for (FieldModel fieldModel : fields) {
 			String name = fieldModel.getName();
 			String title = fieldModel.getTitle();
 			String val = "";
-			if (taskBussinessData != null) {
+			if (taskBussinessData != null && taskBussinessData.get(name) != null) {
 				val = taskBussinessData.get(name).toString();
 			}
-			map.put(title, val);
+			TaskData taskData = new TaskData();
+			taskData.setTitle(title);
+			taskData.setValue(val);
+			ls.add(taskData);
 		}
-		return map;
+		return ls;
 	}
 
 	/**

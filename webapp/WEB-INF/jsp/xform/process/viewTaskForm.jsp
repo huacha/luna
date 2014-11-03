@@ -2,11 +2,23 @@
 <%@include file="/WEB-INF/jsp/common/taglibs.jspf"%>
 <es:contentHeader/>
 <div class="row-fluid">
-	
+	<h3 align="center">${processName}</h3>
 	<!-- start of main -->
     <section id="m-main" class="span10" style="float:center">
     	<div id="previousData" class="form-horizontal">
-			${data}
+			<c:forEach items="${datas}" var="model">
+				<fieldset>
+					<legend><span class="span5">${model.taskName}</span> <span class="span7" style="font-size:9pt;text-align:right;font-weight:100; ">处理人：${model.assignee}&nbsp;&nbsp;&nbsp;处理时间：<fmt:formatDate value="${model.endTime}" pattern="yyyy-MM-dd HH:mm:ss" /></span></legend>
+					<c:forEach items="${model.datas}" var="data">
+						<div class="control-group form-horizontal">
+							<label class="control-label">${data.title}</label>
+							<div class="controls">
+								<input type="text" value="${data.value}" readonly="true">
+							</div>
+						</div>
+					</c:forEach>
+				</fieldset>
+			</c:forEach>
 		</div>
 		<br>
       <form id="xf-form" method="post" action="" class="xf-form">

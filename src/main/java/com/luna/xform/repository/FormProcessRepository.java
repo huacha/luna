@@ -29,4 +29,12 @@ public class FormProcessRepository {
 		return null;
 	}
 	
+	public String getProcessName(String processDefinitionId) {
+		String sql ="select p.NAME from BPM_CONF_BASE b,BPM_PROCESS p where  p.CONF_BASE_ID = b.ID and b.PROCESS_DEFINITION_ID = ?";
+		List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, processDefinitionId);
+		if(list.size() > 0)
+			return (String)list.get(0).get("NAME");
+		return null;
+	}
+	
 }

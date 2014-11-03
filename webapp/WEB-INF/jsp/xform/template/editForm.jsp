@@ -120,6 +120,7 @@
 
     <form:form id="f" commandName="m" method="post" style="display:none;">
 	  <input id="__gef_id__" name="id" value="${m.id}">
+	  <input id="__gef_type__" name="type" value="${m.type}">
 	  <input id="__gef_name__" name="name" value="${m.name}">
 	  <input id="__gef_code__" name="code" value="${m.code}">
 	  <textarea id="__gef_content__" name="content">${m.content}</textarea>

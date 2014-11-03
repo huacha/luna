@@ -77,6 +77,7 @@ function doSplit() {
 function doSave() {
 	xf.$('__gef_name__').value = xform.name;
 	xf.$('__gef_code__').value = xform.code;
+	xf.$('__gef_type__').value = 1;
 	$('#__gef_content__').val(xform.doExport());
 	$('#f').submit();
 }

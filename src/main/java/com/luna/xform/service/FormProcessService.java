@@ -111,7 +111,9 @@ public class FormProcessService {
 		return bpmProcessManager.findOne(processId);
 	}
 	
-	
+	public String getProcessName(String processDefinitionId) {
+		return formProcessRepository.getProcessName(processDefinitionId);
+	}
 	/**
 	 * 获取流程处理按钮
 	 * 
