@@ -64,29 +64,20 @@
 					    &nbsp;
 						<a href="${ctx}/bpm/usertask/unclaim?taskId=${m.id}&taskstatus=prepare">释放任务</a>
 						&nbsp;
-					    <a href="#">历史</a>
 		            </c:if>
 					<c:if test="${param['taskstatus'] eq 'preclaim'}">
-					<!-- 
-					    <a href="${ctx}/xform/process/viewTaskForm?taskId=${m.id}&taskstatus=preclaim">领取</a>
-					-->
 						<a href="${ctx}/bpm/usertask/claim?taskId=${m.id}&taskstatus=preclaim">领取</a>
 					    &nbsp;
-					    <a href="#">历史</a>
 		            </c:if>
 					<c:if test="${param['taskstatus'] eq 'claimed'}">
 					    <a href="${ctx}/xform/process/viewTaskForm?taskId=${m.id}&taskstatus=claimed">代理处理</a>
 					    &nbsp;
-					    <a href="#">历史</a>
 		            </c:if>
 					<c:if test="${param['taskstatus'] eq 'finished'}">
-					<!-- 
-					    <a href="${ctx}/xform/process/viewTaskForm?taskId=${m.id}&taskstatus=finished">撤销</a>
-					-->
 						<a href="${ctx}/bpm/usertask/revoke?taskId=${m.id}&taskstatus=finished">撤销</a>
 					    &nbsp;
-					    <a href="#">历史</a>
 		            </c:if>
+		            <a href="${ctx}/bpm/process/workspace/viewHistory?processInstanceId=${m.processInstanceId}">历史</a>
 				</td>
 				<td></td>
 			</tr>

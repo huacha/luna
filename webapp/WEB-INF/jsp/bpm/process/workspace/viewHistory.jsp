@@ -11,6 +11,21 @@
 			</a>
 		</div>
 	</div>
+	<table id="nodeTable" class="table table-bordered table-hover" >
+		<h4 class="title">流程信息</h4>
+		<tr>
+			<td style="width: 100px; text-align:right" >流程名称:</td>
+			<td style="width: 250px">${bpmProcess.name} </td>
+			<td style="width: 100px; text-align:right" align="right">发起人：</td>
+			<td style="width: 250px">${historicProcess.startUserId} </td>
+		</tr>
+		<tr>
+			<td style="text-align:right">发起时间:</td>
+			<td ><fmt:formatDate value="${historicProcess.startTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
+			<td style="text-align:right">结束时间:</td>
+			<td ><fmt:formatDate value="${historicProcess.endTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
+		</tr>
+	</table>
 
 	<article class="m-widget">
 		<header class="header">
