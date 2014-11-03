@@ -8,17 +8,12 @@
     <div class="row-fluid tool ui-toolbar">
         <div class="span4">
             <div class="btn-group">
-                <shiro:hasPermission name="bpm:process:process:create">
-                <a class="btn btn-create">
-                    <i class="icon-file-alt"></i>
-                    新增
-                </a>
-                </shiro:hasPermission>
                 <shiro:hasPermission name="bpm:process:process:update">
                 <a id="update" class="btn btn-update">
                     <i class="icon-edit"></i>
                     修改
                 </a>
+                <!-- 
                 </shiro:hasPermission>
                 <shiro:hasPermission name="bpm:process:process:delete">
                 <a class="btn btn-delete">
@@ -26,6 +21,7 @@
                     删除
                 </a>
                 </shiro:hasPermission>
+                -->
                 <shiro:hasPermission name="bpm:process:process:config">
                 <a  id="config" class="btn btn-link config-process">
                     <i class="icon-cog"></i>

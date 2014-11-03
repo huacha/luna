@@ -4,18 +4,6 @@
 <div class="panel">
 
     <ul class="nav nav-tabs">
-        <shiro:hasPermission name="bpm:process:process:create">
-        <c:if test="${op eq '新增'}">
-            <li ${op eq '新增' ? 'class="active"' : ''}>
-                <a href="${ctx}/bpm/process/process/create?BackURL=<es:BackURL/>">
-                    <i class="icon-file-alt"></i>
-                    新增
-                </a>
-            </li>
-        </c:if>
-        </shiro:hasPermission>
-
-
         <c:if test="${not empty m.id}">
             <li ${op eq '查看' ? 'class="active"' : ''}>
                 <a href="${ctx}/bpm/process/process/${m.id}?BackURL=<es:BackURL/>">
@@ -31,7 +19,7 @@
                 </a>
             </li>
             </shiro:hasPermission>
-
+			<!-- 
             <shiro:hasPermission name="bpm:process:process:delete">
             <li ${op eq '删除' ? 'class="active"' : ''}>
                 <a href="${ctx}/bpm/process/process/${m.id}/delete?BackURL=<es:BackURL/>">
@@ -40,6 +28,7 @@
                 </a>
             </li>
             </shiro:hasPermission>
+            -->
         </c:if>
         <li>
             <a href="<es:BackURL/>" class="btn btn-link">
@@ -75,16 +64,10 @@
             
             <div class="control-group">
                 <form:label path="bpmConfBase.processDefinitionId" cssClass="control-label">绑定流程</form:label>
-                <div class="controls input-append">
-                    <form:input id="processDefinitionId" path="bpmConfBase.processDefinitionId" cssClass="validate[required, ajax[ajaxNameCall]]" readonly="true"/>
-                    <span class="add-on"><i class="icon-chevron-down"></i></span>
+                <div class="controls">
+                	<form:input id="processDefinitionId" path="bpmConfBase.processDefinitionId" cssClass="validate[required]" readonly="true"/>
                     <form:hidden id="confBaseId" path="bpmConfBase.id"/>
                 </div>
-                <!--  
-                <div class="controls">
-                    <form:input path="code" cssClass="validate[required]" placeholder="请选择绑定流程"/>
-                </div>
-                -->
             </div>
             
             <div class="control-group">
@@ -177,21 +160,6 @@
                         height:450,
                         callback : function() {
                             $("[name='bpmCategory.name']").validationEngine('validate');
-                            return true;
-                        }
-                    }
-             );
-        });
-        
-        $("[name='bpmConfBase.processDefinitionId']").siblings(".add-on").andSelf().click(function() {
-            $.app.modalDialog(
-                    "流程列表",
-                    "${ctx}/bpm/conf/base/select/single;domId=confBaseId;domName=processDefinitionId",
-                    {
-                        width:600,
-                        height:450,
-                        callback : function() {
-                            $("[name='bpmConfBase.processDefinitionKey']").validationEngine('validate');
                             return true;
                         }
                     }
