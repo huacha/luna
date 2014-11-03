@@ -220,7 +220,7 @@ public class FormProcessController {
 		taskService.setVariablesLocal(taskId, taskVariables);
 		taskService.complete(taskId);
 		redirectAttributes.addFlashAttribute(Constants.MESSAGE, "任务已处理，任务名称：" + taskName);
-		return "redirect:/bpm/userprocess?processstatus=unfinished";
+		return "redirect:/bpm/usertask?taskstatus=prepare";
 	}
 
 	/**
@@ -276,8 +276,6 @@ public class FormProcessController {
 			org.springframework.ui.Model model) {
 		model.addAttribute("taskId", taskId);
 		model.addAttribute("m", new User());
-		
-		//formProcessService.doDelegate(taskId, attorney, user);
 
 		return "xform/process/delegateForm";
 	}

@@ -41,7 +41,7 @@
 					    <a href="${ctx}/bpm/userprocess/${m.id}/terminate">终止</a>
 		            &nbsp;&nbsp;
 		            </c:if>
-					<a href="#">历史</a>
+					<a href="${ctx}/bpm/process/workspace/viewHistory?processInstanceId=${m.processInstanceId}">历史</a>
 				</td>
 				<td></td>
 			</tr>
