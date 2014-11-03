@@ -26,6 +26,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="search"]
     line-height: 16px;
     height: 16px;
     padding: 5px;
+    margin-bottom:0px;
 }
 
 
