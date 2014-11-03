@@ -176,7 +176,7 @@
         	else if("2"==userType){
         		$.app.modalDialog(
                         "用户组列表",
-                        "${ctx}/admin/sys/group/groupnameselect/single;domId=value;domName=showvalue",
+                        "${ctx}/admin/sys/group/groupnameselect/user/single;domId=value;domName=showvalue",
                         {
                             width:600,
                             height:450,

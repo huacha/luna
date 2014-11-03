@@ -258,10 +258,11 @@ public class GroupController extends BaseCRUDController<Group, Long> {
     
 
 	//selectType  multiple single
-    @RequestMapping(value = {"groupselect/{selectType}", "select"}, method = RequestMethod.GET)
+    @RequestMapping(value = "groupselect/{type}/{selectType}", method = RequestMethod.GET)
     public String groupselect(
             Searchable searchable, Model model,
             @PathVariable(value = "selectType") String selectType,
+            @PathVariable(value = "type") GroupType type, 
             @MatrixVariable(value = "domId", pathVar = "selectType") String domId,
             @MatrixVariable(value = "domName", pathVar = "selectType", required = false) String domName) {
 
@@ -272,7 +273,7 @@ public class GroupController extends BaseCRUDController<Group, Long> {
         model.addAttribute("domName", domName);
         
         model.addAttribute("statusList", UserStatus.values());
-
+        searchable.addSearchParam("type_eq", type);
         model.addAttribute("page", getGroupService().findAll(searchable));
         
         setCommonData(model);
@@ -281,10 +282,11 @@ public class GroupController extends BaseCRUDController<Group, Long> {
     }
 
 	//selectType  multiple single
-    @RequestMapping(value = {"groupnameselect/{selectType}"}, method = RequestMethod.GET)
+    @RequestMapping(value = "groupnameselect/{type}/{selectType}", method = RequestMethod.GET)
     public String groupnameselect(
             Searchable searchable, Model model,
             @PathVariable(value = "selectType") String selectType,
+            @PathVariable(value = "type") GroupType type, 
             @MatrixVariable(value = "domId", pathVar = "selectType") String domId,
             @MatrixVariable(value = "domName", pathVar = "selectType", required = false) String domName) {
 
@@ -295,7 +297,7 @@ public class GroupController extends BaseCRUDController<Group, Long> {
         model.addAttribute("domName", domName);
         
         model.addAttribute("statusList", UserStatus.values());
-
+        searchable.addSearchParam("type_eq", type);
         model.addAttribute("page", getGroupService().findAll(searchable));
         
         setCommonData(model);
