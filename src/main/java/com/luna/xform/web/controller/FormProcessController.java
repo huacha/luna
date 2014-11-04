@@ -2,16 +2,13 @@ package com.luna.xform.web.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.activiti.engine.HistoryService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.pvm.PvmActivity;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
@@ -34,9 +31,8 @@ import com.luna.sys.user.entity.User;
 import com.luna.sys.user.web.bind.annotation.CurrentUser;
 import com.luna.xform.entity.FormTemplate;
 import com.luna.xform.model.FieldModel;
-import com.luna.xform.model.TaskData;
 import com.luna.xform.model.TaskDataModel;
-import com.luna.xform.service.DataService;
+import com.luna.xform.service.FormDataService;
 import com.luna.xform.service.FormProcessService;
 import com.luna.xform.service.FormTemplateService;
 
@@ -50,11 +46,9 @@ public class FormProcessController {
 	@Autowired
 	FormTemplateService formTemplateService;
 	@Autowired
-	DataService dataService;
+	FormDataService formDataService;
 	@Autowired
 	private TaskService taskService;
-	@Autowired
-	private HistoryService historyService;
 
 	/**
 	 * 启动流程
@@ -135,29 +129,7 @@ public class FormProcessController {
 		model.addAttribute("processName", processName);
 		model.addAttribute("activityId", activityId);
 
-		List<HistoricTaskInstance> list = historyService
-				.createHistoricTaskInstanceQuery().finished()
-				.processInstanceId(processInstanceId)
-				.orderByHistoricTaskInstanceEndTime().asc().list();
-		
-		List<TaskDataModel> ls = new ArrayList<TaskDataModel>();
-		for (HistoricTaskInstance his : list) {
-			String name = his.getName();
-			String assignee = his.getAssignee();
-			Date endTime = his.getEndTime();
-			
-			Map<String, Object> taskBussinessData = dataService.findTaskBussinessData(his.getId());
-			List<TaskData> transData = dataService.translateTaskBussinessData(processDefinitionId, his.getTaskDefinitionKey(), taskBussinessData);
-			
-			TaskDataModel taskDataModel = new TaskDataModel();
-			taskDataModel.setTaskName(name);
-			taskDataModel.setDatas(transData);
-			taskDataModel.setAssignee(assignee);
-			taskDataModel.setEndTime(endTime);
-			
-			ls.add(taskDataModel);
-		}
-		
+		List<TaskDataModel> ls = formProcessService.getHistoricTaskDataModel(processInstanceId, processDefinitionId);
 		model.addAttribute("datas", ls);
 
 		return "xform/process/viewTaskForm";
@@ -190,12 +162,12 @@ public class FormProcessController {
 				taskVariables.put(key, val);
 			}
 			String insertSql = formTemplateService.getInsertSql(formid);
-			long bussid = dataService.saveAndGetID(insertSql, map);
+			long bussid = formDataService.saveAndGetID(insertSql, map);
 			FormTemplate formTemplate = formTemplateService.getFormTemplate(formid);
 			String tableName = formTemplate.getCode();
 			Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 			String processInstanceId = task.getProcessInstanceId();
-			dataService.saveTaskBussiness(processInstanceId, taskId, taskName, tableName, bussid);
+			formDataService.saveTaskBussiness(processInstanceId, taskId, taskName, tableName, bussid);
 		}
 		taskService.setVariablesLocal(taskId, taskVariables);
 		taskService.complete(taskId);
@@ -230,12 +202,12 @@ public class FormProcessController {
 				taskVariables.put(key, val);
 			}
 			String insertSql = formTemplateService.getInsertSql(formid);
-			long bussid = dataService.saveAndGetID(insertSql, map);
+			long bussid = formDataService.saveAndGetID(insertSql, map);
 			FormTemplate formTemplate = formTemplateService.getFormTemplate(formid);
 			String tableName = formTemplate.getCode();
 			Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 			String processInstanceId = task.getProcessInstanceId();
-			dataService.saveTaskBussiness(processInstanceId, taskId, taskName, tableName, bussid);
+			formDataService.saveTaskBussiness(processInstanceId, taskId, taskName, tableName, bussid);
 		}
 		taskService.setVariablesLocal(taskId, taskVariables);
 

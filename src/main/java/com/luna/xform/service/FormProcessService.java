@@ -1,13 +1,17 @@
 package com.luna.xform.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.ManagementService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.interceptor.Command;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.PvmActivity;
@@ -30,6 +34,8 @@ import com.luna.bpm.process.cmd.RollbackTaskCmd;
 import com.luna.bpm.process.entity.BpmProcess;
 import com.luna.bpm.process.repository.BpmProcessManager;
 import com.luna.sys.user.entity.User;
+import com.luna.xform.model.TaskData;
+import com.luna.xform.model.TaskDataModel;
 import com.luna.xform.repository.FormProcessRepository;
 
 @Service
@@ -46,6 +52,8 @@ public class FormProcessService {
 	private RepositoryService repositoryService;
 	@Autowired
 	private ManagementService managementService;
+	@Autowired
+	private HistoryService historyService;
 	
 	@Autowired
 	FormProcessRepository formProcessRepository;
@@ -57,6 +65,8 @@ public class FormProcessService {
     DelegateService delegateService;
 	@Autowired
 	BpmConfUserService bpmConfUserService;
+	@Autowired
+	FormDataService formDataService;
 
     /**
      * 启动流程
@@ -218,4 +228,37 @@ public class FormProcessService {
 		delegateService.saveRecord(assignee, attorney, taskId);
 	}
     
+    /**
+     * 获取流程中已完成任务的业务数据
+     * 
+     * @param processInstanceId
+     * @param processDefinitionId
+     * @return
+     * @throws Exception
+     */
+    public List<TaskDataModel> getHistoricTaskDataModel(String processInstanceId, String processDefinitionId) throws Exception {
+    	List<HistoricTaskInstance> list = historyService
+				.createHistoricTaskInstanceQuery().finished()
+				.processInstanceId(processInstanceId)
+				.orderByHistoricTaskInstanceEndTime().asc().list();
+		
+		List<TaskDataModel> ls = new ArrayList<TaskDataModel>();
+		for (HistoricTaskInstance his : list) {
+			String name = his.getName();
+			String assignee = his.getAssignee();
+			Date endTime = his.getEndTime();
+			
+			Map<String, Object> taskBussinessData = formDataService.findTaskBussinessData(his.getId());
+			List<TaskData> transData = formDataService.translateTaskBussinessData(processDefinitionId, his.getTaskDefinitionKey(), taskBussinessData);
+			
+			TaskDataModel taskDataModel = new TaskDataModel();
+			taskDataModel.setTaskName(name);
+			taskDataModel.setDatas(transData);
+			taskDataModel.setAssignee(assignee);
+			taskDataModel.setEndTime(endTime);
+			
+			ls.add(taskDataModel);
+		}
+		return ls;
+	}
 }

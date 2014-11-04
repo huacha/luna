@@ -19,7 +19,7 @@ import com.luna.xform.model.TaskData;
 import com.luna.xform.repository.FormProcessRepository;
 
 @Service
-public class DataService {
+public class FormDataService {
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 	@Autowired
