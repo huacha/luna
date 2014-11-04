@@ -72,8 +72,7 @@ public class FormProcessService {
      * 启动流程
      * 
      * @param user 流程启动用户
-     * @param variables 流程变量
-     * @param businessKey 业务主键
+     * @param processDefinitionId
      * @return
      */
     public ProcessInstance startWorkflow(User user, String processDefinitionId) {
@@ -90,11 +89,23 @@ public class FormProcessService {
         return processInstance;
     }
     
+    /**
+     * 获取第一个已激活的任务
+     * @param processInstance
+     * @return
+     */
     public Task getFirstActiveTask(ProcessInstance processInstance) {
     	Task currTask = taskService.createTaskQuery().processInstanceId(processInstance.getId()).active().singleResult();
     	return currTask;
 	}
     
+    /**
+     * 设置第一个任务的处理人
+     * @param user
+     * @param processDefinitionId
+     * @param task
+     * @return
+     */
     public boolean setFirstTaskAssignee(User user,String processDefinitionId,Task task) {
     	List<BpmConfUser> bpmConfUsers = bpmConfUserService.find(processDefinitionId, task.getTaskDefinitionKey());
         if(0 == bpmConfUsers.size()){
@@ -117,13 +128,24 @@ public class FormProcessService {
 		return fid;
 	}
 
+	/**
+	 * 获取流程实体
+	 * @param processId
+	 * @return
+	 */
 	public BpmProcess getProcess(Long processId) {
 		return bpmProcessManager.findOne(processId);
 	}
 	
+	/**
+	 * 获取流程显示的名称
+	 * @param processDefinitionId
+	 * @return
+	 */
 	public String getProcessName(String processDefinitionId) {
 		return formProcessRepository.getProcessName(processDefinitionId);
 	}
+	
 	/**
 	 * 获取流程处理按钮
 	 * 
