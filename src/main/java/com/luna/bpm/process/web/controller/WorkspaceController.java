@@ -29,6 +29,8 @@ import com.luna.bpm.process.cmd.HistoryProcessInstanceDiagramCmd;
 import com.luna.bpm.process.cmd.ProcessDefinitionDiagramCmd;
 import com.luna.bpm.process.entity.BpmProcess;
 import com.luna.bpm.process.service.BpmProcessService;
+import com.luna.xform.model.TaskDataModel;
+import com.luna.xform.service.FormProcessService;
 
 /**
  * 我的流程 待办流程 已办未结
@@ -46,6 +48,8 @@ public class WorkspaceController {
     private ProcessEngine processEngine;
     @Autowired
     private ActivitiProcessConnector activitiProcessConnector;
+    @Autowired
+	FormProcessService formProcessService;
 
     @RequestMapping("home")
     public String home(Model model) {
@@ -117,11 +121,12 @@ public class WorkspaceController {
      * 查看历史【包含流程跟踪、任务列表（完成和未完成）、流程变量】
      * 
      * @return
+     * @throws Exception 
      */
     @RequestMapping("viewHistory")
     public String viewHistory(
             @RequestParam("processInstanceId") String processInstanceId,
-            Model model) {
+            Model model) throws Exception {
         HistoryService historyService = processEngine.getHistoryService();
         HistoricProcessInstance historicProcess = historyService
         		.createHistoricProcessInstanceQuery()
@@ -132,14 +137,19 @@ public class WorkspaceController {
         List<HistoricVariableInstance> historicVariableInstances = historyService
                 .createHistoricVariableInstanceQuery()
                 .processInstanceId(processInstanceId).list();
+        
+        String processDefinitionId = historicProcess.getProcessDefinitionId();
         BpmProcess bpmProcess = bpmProcessService
         		.findByBpmConfBase(bpmConfBaseService
-        				.findByProcessDefinitionId(historicProcess.getProcessDefinitionId()));
+        				.findByProcessDefinitionId(processDefinitionId));
         model.addAttribute("bpmProcess", bpmProcess);
         model.addAttribute("historicProcess", historicProcess);
         model.addAttribute("historicTasks", historicTasks);
         model.addAttribute("historicVariableInstances",
                 historicVariableInstances);
+        
+		List<TaskDataModel> ls = formProcessService.getHistoricTaskDataModel(processInstanceId, processDefinitionId);
+		model.addAttribute("datas", ls);
 
         return "bpm/process/workspace/viewHistory";
     }

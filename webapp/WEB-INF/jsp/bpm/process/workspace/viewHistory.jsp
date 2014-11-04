@@ -64,6 +64,28 @@
 		</tbody>
 	</table>
 
+	<div id="previousData" class="form-horizontal">
+	<h4 class="title">流程表单数据</h4>
+		<c:forEach items="${datas}" var="model">
+			<fieldset>
+				<legend>
+					<span class="span5">${model.taskName}</span> 
+					<span class="span7" style="font-size: 9pt; text-align: right; font-weight: 100;">
+						处理人：${model.assignee}&nbsp;&nbsp;&nbsp;处理时间：
+						<fmt:formatDate value="${model.endTime}" pattern="yyyy-MM-dd HH:mm:ss" />
+					</span>
+				</legend>
+				<c:forEach items="${model.datas}" var="data">
+					<div class="control-group form-horizontal">
+						<label class="control-label">${data.title}</label>
+						<div class="controls">
+							<input type="text" value="${data.value}" readonly="true">
+						</div>
+					</div>
+				</c:forEach>
+			</fieldset>
+		</c:forEach>
+	</div>
 	<br /> <br />
 
 </div>
