@@ -71,18 +71,21 @@ $.app = {
             }
             setTimeout(function() {
                 $.tabs.activeTab($.tabs.nextCustomTabIndex(), "个人资料", url, true)
+            	//$.tabs.activeTab('grzl', "个人资料", url, true)
             }, 0);
         });
         $(".btn-view-message,.btn-message").click(function() {
             var url = ctx + "/admin/personal/message";
             setTimeout(function() {
-                $.tabs.activeTab($.tabs.nextCustomTabIndex(), "我的消息", url, true)
+                //$.tabs.activeTab($.tabs.nextCustomTabIndex(), "我的消息", url, true)
+            	 //$.tabs.activeTab('wdxx', "我的消息", url, true)
             }, 0);
         });
         $(".btn-view-notice").click(function() {
             var url = ctx + "/office/personal/notice/list?read=false";
             setTimeout(function() {
                 $.tabs.activeTab($.tabs.nextCustomTabIndex(), "我的通知", url, true)
+            	//$.tabs.activeTab('wdtz', "我的通知", url, true)
             }, 0);
         });
         $(".btn-view-worklist,.btn-view-work").click(function() {

@@ -14,7 +14,7 @@
 		<div class="span8"></div>
 	</div>
 
-	<table id="table" class="sort-table table table-bordered table-hover" data-async="true">
+	<table id="table" class="sort-table table table-bordered table-hover" data-async="false">
 		<thead>
 			<tr>
 				<th style="width: 70px">

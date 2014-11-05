@@ -26,7 +26,7 @@
     
 <h4 class="hr">流程节点配置</h4>
 
-<table id="table" class="sort-table table table-bordered table-hover" data-async="true">
+<table id="table" class="sort-table table table-bordered table-hover" data-async="false">
     <thead>
     <tr>
           <th>编号</th>

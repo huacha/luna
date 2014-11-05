@@ -22,7 +22,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/WEB-INF/jsp/common/taglibs.jspf"%>
-<table id="table" class="sort-table table table-bordered table-hover" data-async="true">
+<table id="table" class="sort-table table table-bordered table-hover" data-async="false">
     <thead>
     <tr>
         <th style="width: 80px">
