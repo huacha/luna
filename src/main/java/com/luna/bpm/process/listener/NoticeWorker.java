@@ -17,6 +17,10 @@ import com.luna.bpm.conf.repository.BpmConfNoticeManager;
 import com.luna.bpm.process.entity.BpmMailTemplate;
 import com.luna.maintain.notification.entity.NotificationSystem;
 import com.luna.maintain.notification.service.NotificationApi;
+import com.luna.personal.message.entity.Message;
+import com.luna.personal.message.entity.MessageContent;
+import com.luna.personal.message.entity.MessageType;
+import com.luna.personal.message.service.MessageApi;
 import com.luna.sys.user.entity.User;
 import com.luna.sys.user.service.UserService;
 
@@ -35,6 +39,8 @@ public class NoticeWorker {
 	
 	@Autowired
 	private NotificationApi notificationApi;
+	@Autowired
+	private MessageApi messageApi;
 
 	public void process(DelegateTask delegateTask, int arrivalType) {
 		String taskDefinitionKey = delegateTask.getTaskDefinitionKey();
@@ -91,13 +97,31 @@ public class NoticeWorker {
 							delegateTask.getProcessInstanceId());
 			user = userService.findByUsername(historicProcessInstanceEntity.getStartUserId());
 		}
+		String sendUserName = (String)delegateTask.getVariable("initator");
+		if(null == sendUserName || 0 == sendUserName.length()){
+			sendUserName="admin";
+		}
+		User sendUser = userService.findByUsername(sendUserName);
 
-		this.sendMail(user, subject, content);
+		this.sendMail(sendUser, user, subject, content);
 		this.sendSiteMessage(user, subject, content);
 	}
 
-	public void sendMail(User user, String subject, String content) {
+	public void sendMail(User sendUser, User user, String subject, String content) {
 		//TODO yanyong
+		Message message = new Message();
+		MessageContent messageContent = new MessageContent();
+		message.setTitle(subject);
+		messageContent.setContent(content);
+		messageContent.setMessage(message);
+		message.setContent(messageContent);
+		
+		message.setType(MessageType.system_message);
+		
+		Long[] ids = {user.getId()};
+		
+		messageApi.sendSystemMessage(ids, message);
+		
 //		MailFacade mailFacade = ApplicationContextHelper
 //				.getBean(MailFacade.class);
 //		mailFacade.sendMail(user.getEmail(), subject, content);

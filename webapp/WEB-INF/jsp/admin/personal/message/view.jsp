@@ -27,7 +27,14 @@
                 我
             </c:when>
             <c:otherwise>
-                <sys:showUsername id="${m.senderId}" needLink="false"/>
+            	<c:if test="${m.type eq 'system_message'}">
+	            	系统
+	            </c:if>
+	            <c:if test="${m.type ne 'system_message'}">
+	            	<sys:showUsername id="${m.senderId}" needLink="false"/>
+	            </c:if>
+                
+                
             </c:otherwise>
         </c:choose>
         发给
@@ -53,7 +60,13 @@
                     <a class="accordion-toggle bold no-underline" data-toggle="collapse" href="#collapse${message.id}">
                         ${message.title}
                         <span class="muted" style="float: right;padding-right: 20px;">
-                            <sys:showUsername id="${message.senderId}" needLink="false"/>
+                            
+                            <c:if test="${message.type eq 'system_message'}">
+				            	系统
+				            </c:if>
+				            <c:if test="${message.type ne 'system_message'}">
+				            	<sys:showUsername id="${message.senderId}" needLink="false"/>
+				            </c:if>
                             &nbsp;&nbsp;&nbsp;
                             <spring:eval expression="message.sendDate"/>
                         </span>
@@ -72,7 +85,12 @@
                 <a class="accordion-toggle bold no-underline" data-toggle="collapse" href="#collapse${m.id}">
                     ${m.title}
                     <span class="muted" style="float: right;padding-right: 20px;">
-                        <sys:showUsername id="${m.senderId}" needLink="false"/>
+                    		<c:if test="${m.type eq 'system_message'}">
+				            	系统
+				            </c:if>
+				            <c:if test="${m.type ne 'system_message'}">
+                        		<sys:showUsername id="${m.senderId}" needLink="false"/>
+				            </c:if>
                         &nbsp;&nbsp;&nbsp;
                         <spring:eval expression="m.sendDate"/>
                     </span>
@@ -93,7 +111,12 @@
                         <a class="accordion-toggle bold no-underline" data-toggle="collapse" href="#collapse${message.id}">
                                 ${message.title}
                                 <span class="muted" style="float: right;padding-right: 20px;">
-                                    <sys:showUsername id="${message.senderId}" needLink="false"/>
+                                    <c:if test="${message.type eq 'system_message'}">
+						            	系统
+						            </c:if>
+						            <c:if test="${message.type ne 'system_message'}">
+						            	<sys:showUsername id="${message.senderId}" needLink="false"/>
+						            </c:if>
                                     &nbsp;&nbsp;&nbsp;
                                     <spring:eval expression="message.sendDate"/>
                                 </span>

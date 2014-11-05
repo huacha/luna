@@ -44,7 +44,14 @@
             </td>
 
             <c:if test="${state ne 'out_box'}">
-            <td><sys:showUsername id="${m.senderId}"/></td>
+	            <c:if test="${m.type eq 'system_message'}">
+	            	<td>系统</td>
+	            </c:if>
+	            <c:if test="${m.type ne 'system_message'}">
+	            	<td><sys:showUsername id="${m.senderId}"/></td>
+	            </c:if>
+            
+            	
             </c:if>
 
             <c:if test="${state ne 'in_box'}">
