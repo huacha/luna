@@ -34,6 +34,13 @@ public class NoticeTaskListener extends DefaultTaskListener {
     public void onCreate(DelegateTask delegateTask) throws Exception {
     	noticeWorker.process(delegateTask,NoticeWorker.TYPE_ARRIVAL);
     }
+    
+
+    @Override
+    public void onAssignment(DelegateTask delegateTask) throws Exception {
+    	noticeWorker.process(delegateTask,NoticeWorker.TYPE_ARRIVAL);
+    }
+
 
     @Override
     public void onComplete(DelegateTask delegateTask) throws Exception {

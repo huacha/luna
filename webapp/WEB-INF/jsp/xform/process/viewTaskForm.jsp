@@ -1,6 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/WEB-INF/jsp/common/taglibs.jspf"%>
 <es:contentHeader/>
+<div data-table="table" class="sort-table table table-bordered table-hover" data-async="true">
+
+	<es:showMessage />
+	<div class="row-fluid tool ui-toolbar">
+		<div class="span4">
+			<a href="<es:BackURL/>"> <i class="icon-reply"></i> 返回
+			</a>
+		</div>
+	</div>
+</div>
 <div class="row-fluid">
 	<h3 align="center">${processName}</h3>
 	<!-- start of main -->
@@ -26,7 +36,7 @@
       	<input type="hidden" name="taskName" value="${taskName}">
       	<input type="hidden" name="formId" value="${formId}">
 	      <fieldset>
-	      	<legend>当前任务处理</legend>
+	      	<legend>当前任务处理-${taskName}</legend>
 	      	<div id="previousStep"></div> 
 	      	<div id="nextStep"></div>
 			<div id="xf-form-table"></div>
@@ -66,7 +76,7 @@ if (buttons.length == 0) {
 
 var html = '';
 for (var i = 0; i < buttons.length; i++) {
-	html += '<button type="button">' + buttons[i] + '</button>';
+	html += '<button type="button">' + buttons[i] + '</button>&nbsp;&nbsp;';
 }
 
 var xform;

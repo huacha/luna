@@ -1,8 +1,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/WEB-INF/jsp/common/taglibs.jspf"%>
 <es:contentHeader/>
-<div class="row-fluid">
+<div data-table="table" class="sort-table table table-bordered table-hover" data-async="true">
 
+	<es:showMessage />
+	<div class="row-fluid tool ui-toolbar">
+		<div class="span4">
+			<a href="<es:BackURL/>"> <i class="icon-reply"></i> 返回
+			</a>
+		</div>
+	</div>
+</div>
+<div class="row-fluid">
 	<!-- start of main -->
     <section id="m-main" class="span10" style="float:center">
 
